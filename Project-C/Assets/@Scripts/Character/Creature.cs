@@ -21,6 +21,20 @@ public class Creature : BaseObject
 
     public Vector2 MoveDir;
 
+    bool _lookLeft = false;
+    public bool LookLeft
+    {
+        get { return _lookLeft; }
+        set 
+        {
+            if (_lookLeft != value)
+            {
+                _lookLeft = value;
+                SpriteRenderer.flipX = _lookLeft;
+            }
+        }
+    }
+
     public float MoveSpeed { get; protected set; }
 
     public override bool Init()
@@ -40,12 +54,17 @@ public class Creature : BaseObject
 
     protected virtual void UpdateAnimation()
     {
+
         switch (State)  // TODO: 애니메이션 연결
         {
             case ECreatureState.Idle:
+                Animator.Play("Idle");
                 break;
+
             case ECreatureState.Run:
+                Animator.Play("Run");
                 break;
+
             case ECreatureState.Jump:
                 break;
             case ECreatureState.DoubleJump:
@@ -58,7 +77,7 @@ public class Creature : BaseObject
                 break;
             case ECreatureState.WallCling:
                 break;
-            case ECreatureState.OnDamaged:
+            case ECreatureState.Hurt:
                 break;
             case ECreatureState.Dead:
                 break;
@@ -90,7 +109,7 @@ public class Creature : BaseObject
             case ECreatureState.WallCling:
                 UpdateWallCling();
                 break;
-            case ECreatureState.OnDamaged:
+            case ECreatureState.Hurt:
                 break;
             case ECreatureState.Dead:
                 break;

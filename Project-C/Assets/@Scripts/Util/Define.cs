@@ -25,7 +25,7 @@ public class Define
         Dash,
         WallClimbing,   // 벽 타기
         WallCling,  // 벽 매달림
-        OnDamaged,
+        Hurt,
         Dead,
     }
 }
