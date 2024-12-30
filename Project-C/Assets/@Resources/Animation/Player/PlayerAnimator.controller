@@ -24,12 +24,12 @@ AnimatorController:
     m_Controller: {fileID: 9100000}
 --- !u!1102 &1102035934852008378
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: acquire
+  m_Name: Acquire
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -50,12 +50,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102063518031655116
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: jump attack
+  m_Name: JumpAttack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -76,12 +76,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102187506299095840
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: skill3
+  m_Name: Skill3
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -102,12 +102,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102192441802740392
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: skill1
+  m_Name: Skill1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -128,12 +128,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102283809607545446
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: run
+  m_Name: Run
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -154,12 +154,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102348803605771196
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: jump
+  m_Name: Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -180,12 +180,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102383133927037836
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: dash
+  m_Name: Dash
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -206,12 +206,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102404871985305866
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: skill4 jump
+  m_Name: Skill4Jump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -232,12 +232,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102511940654701118
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: hurt
+  m_Name: Hurt
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -258,12 +258,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102585210523537332
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: double jump
+  m_Name: DoubleJump
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -284,12 +284,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102586384152074862
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: skill2
+  m_Name: Skill2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -310,12 +310,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102625723358063888
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: idle
+  m_Name: Idle
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -336,12 +336,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102739058761170296
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: climb
+  m_Name: Climb
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -362,12 +362,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102812121349353156
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: die
+  m_Name: Dead
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -388,12 +388,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102879334909029550
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: skill4
+  m_Name: Skill4
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -414,12 +414,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102948292026880006
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: attack
+  m_Name: Attack
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -440,12 +440,12 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1102 &1102987759744466836
 AnimatorState:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: wallslide
+  m_Name: WallSlide
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -466,7 +466,7 @@ AnimatorState:
   m_TimeParameter: 
 --- !u!1107 &1107725628798592960
 AnimatorStateMachine:
-  serializedVersion: 5
+  serializedVersion: 6
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -484,7 +484,7 @@ AnimatorStateMachine:
     m_Position: {x: 270, y: 130, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102739058761170296}
-    m_Position: {x: 305, y: 195, z: 0}
+    m_Position: {x: 300, y: 200, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102383133927037836}
     m_Position: {x: 340, y: 260, z: 0}
@@ -502,7 +502,7 @@ AnimatorStateMachine:
     m_Position: {x: 480, y: 520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102063518031655116}
-    m_Position: {x: 515, y: 585, z: 0}
+    m_Position: {x: 520, y: 590, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1102283809607545446}
     m_Position: {x: 550, y: 650, z: 0}
