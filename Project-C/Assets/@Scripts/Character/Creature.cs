@@ -33,6 +33,11 @@ public class Creature : BaseObject
         return true;
     }
 
+    void Update()
+    {
+        UpdateController();
+    }
+
     protected virtual void UpdateAnimation()
     {
         switch (State)  // TODO: 애니메이션 연결
@@ -60,8 +65,46 @@ public class Creature : BaseObject
         }
     }
 
+    protected virtual void UpdateController()
+    {
+        switch (State)
+        {
+            case ECreatureState.Idle:
+                UpdateIdle();
+                break;
+            case ECreatureState.Run:
+                UpdateRun();
+                break;
+            case ECreatureState.Jump:
+                break;
+            case ECreatureState.DoubleJump:
+                break;
+            case ECreatureState.Skill:
+                break;
+            case ECreatureState.Dash:
+                UpdateDash();
+                break;
+            case ECreatureState.WallClimbing:
+                UpdateWallClimbing();
+                break;
+            case ECreatureState.WallCling:
+                UpdateWallCling();
+                break;
+            case ECreatureState.OnDamaged:
+                break;
+            case ECreatureState.Dead:
+                break;
+        }
+    }
+
     protected virtual void UpdateIdle() { }
-    protected virtual void UpdateRun() { }
+    
+    protected virtual void UpdateRun() 
+    {
+        Rigidbody.MovePosition(Rigidbody.position + MoveDir * MoveSpeed * Time.deltaTime);
+    }
+
     protected virtual void UpdateDash() { }
     protected virtual void UpdateWallClimbing() { }
+    protected virtual void UpdateWallCling() { }
 }

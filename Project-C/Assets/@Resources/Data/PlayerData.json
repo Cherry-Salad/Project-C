@@ -11,7 +11,7 @@
         "MpLevel": 0,
         "Atk": 10.0,
         "AtkLevel": 0,
-        "Speed": 10.0,
+        "Speed": 5.0,
         "MaxAccessorySlot": 3,
         "SkillIdList": [
         ]
