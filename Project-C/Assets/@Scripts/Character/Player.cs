@@ -6,6 +6,9 @@ using static Define;
 public class Player : Creature
 {
     bool _moveDirKeyPressed = false;
+    
+    float _dashCoolTime = 1.0f; // 대시 쿨타임
+    bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
 
     public override bool Init()
     {
@@ -18,8 +21,22 @@ public class Player : Creature
         return true;
     }
 
-    void GetMoveDirInput()  // 입력을 감지하여 MoveDir를 얻는다
+    void GetInput() // 입력 감지, TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다.
     {
+        // TODO: 코드 리팩토링, 내가 봐도 이 코드 진짜 별로다. 일단 기능만 잘 구현하고 리팩토링할 계획이다.
+        if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
+            return;
+        
+        // 대시키 입력
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Debug.Log("LeftShift");
+            _moveDirKeyPressed = false;
+            OnDash();
+            return;
+        }
+
+        // 방향키 입력
         bool upPressed = Input.GetKey(KeyCode.UpArrow);
         bool leftPressed = Input.GetKey(KeyCode.LeftArrow);
         bool downPressed = Input.GetKey(KeyCode.DownArrow);
@@ -37,24 +54,28 @@ public class Player : Creature
         if (upPressed)
         {
             // TODO: 벽 감지
+            Debug.Log("upPressed");
             _moveDirKeyPressed = true;
             return; // TODO: 벽 타기
         }
         else if (leftPressed)
         {
             // TODO: 벽 감지
+            Debug.Log("leftPressed");
             MoveDir = Vector2.left;
             _moveDirKeyPressed = true;
         }
         else if (downPressed)
         {
             // TODO: 벽 감지
+            Debug.Log("downPressed");
             _moveDirKeyPressed = true;
             return; // TODO: 벽 타기
         }
         else if (rightPressed)
         {
             // TODO: 벽 감지
+            Debug.Log("rightPressed");
             MoveDir = Vector2.right;
             _moveDirKeyPressed = true;
         }
@@ -70,7 +91,7 @@ public class Player : Creature
 
     protected override void UpdateController()
     {
-        GetMoveDirInput();
+        GetInput();
         base.UpdateController();
     }
 
@@ -95,13 +116,19 @@ public class Player : Creature
         base.UpdateRun();
     }
 
-    protected override void UpdateDash()
+    protected override void OnDash()
     {
-        base.UpdateDash();
-    }
+        if (_isDashCooldownComplete == false)
+            return;
 
-    protected override void UpdateWallClimbing()
+        StartCoroutine(CoDashCooldown());
+        base.OnDash();
+    }
+    
+    IEnumerator CoDashCooldown()
     {
-        base.UpdateWallClimbing();
+        _isDashCooldownComplete = false;
+        yield return new WaitForSeconds(_dashCoolTime);
+        _isDashCooldownComplete = true;
     }
 }

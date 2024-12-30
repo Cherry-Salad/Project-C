@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BaseObject : InitBase
 {
-    public Define.EObjectType ObjectType = Define.EObjectType.None;
+    public Define.EObjectType ObjectType { get; protected set; } = Define.EObjectType.None;
     
     public SpriteRenderer SpriteRenderer { get; protected set; }
     public Rigidbody2D Rigidbody { get; protected set; }
