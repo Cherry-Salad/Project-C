@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace Assets.PixelFantasy.PixelMonsters.Common.Scripts.ExampleScripts
 {
-    [RequireComponent(typeof(Monster))]
+    [RequireComponent(typeof(ExMonster))]
     [RequireComponent(typeof(MonsterController2D))]
     [RequireComponent(typeof(MonsterAnimation))]
     public class MonsterControls : MonoBehaviour
     {
-        private Monster _monster;
+        private ExMonster _monster;
         private MonsterController2D _controller;
         private MonsterAnimation _animation;
 
         public void Start()
         {
-            _monster = GetComponent<Monster>();
+            _monster = GetComponent<ExMonster>();
             _controller = GetComponent<MonsterController2D>();
             _animation = GetComponent<MonsterAnimation>();
         }

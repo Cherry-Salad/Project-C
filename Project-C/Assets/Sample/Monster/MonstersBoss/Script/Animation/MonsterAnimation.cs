@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using Assets.PixelFantasy.Common.Scripts;
 using UnityEngine;
 
 namespace Assets.PixelFantasy.PixelMonsters.Common.Scripts.ExampleScripts
 {
-    [RequireComponent(typeof(Monster))]
+    [RequireComponent(typeof(ExMonster))]
     public class MonsterAnimation : MonoBehaviour
     {
-        private Monster _monster;
+        private ExMonster _monster;
 
         public void Start()
         {
-            _monster = GetComponent<Monster>();
+            _monster = GetComponent<ExMonster>();
         }
 
         public void SetState(MonsterState state)
