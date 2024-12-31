@@ -9,7 +9,7 @@ public class BaseObject : InitBase
     
     public SpriteRenderer SpriteRenderer { get; protected set; }
     public Rigidbody2D Rigidbody { get; protected set; }
-    public CircleCollider2D Collider { get; protected set; }
+    public CapsuleCollider2D Collider { get; protected set; }
     public Animator Animator { get; protected set; }
 
     public override bool Init()
@@ -19,7 +19,7 @@ public class BaseObject : InitBase
 
         SpriteRenderer = GetComponent<SpriteRenderer>();
         Rigidbody = GetComponent<Rigidbody2D>();
-        Collider = GetComponent<CircleCollider2D>();
+        Collider = GetComponent<CapsuleCollider2D>();
         Animator = GetComponent<Animator>();
 
         Rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;  // Z축 고정

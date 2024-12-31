@@ -48,7 +48,7 @@ public class Creature : BaseObject
         return true;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         UpdateController();
     }
@@ -72,9 +72,11 @@ public class Creature : BaseObject
             case ECreatureState.Dash:
                 Animator.Play("Dash");
                 break;
-            case ECreatureState.WallClimbing:
-                break;
             case ECreatureState.WallCling:
+                Animator.Play("WallSlide");
+                break;
+            case ECreatureState.WallClimbing:
+                Animator.Play("WallSlide");
                 break;
             case ECreatureState.Hurt:
                 break;
@@ -93,6 +95,12 @@ public class Creature : BaseObject
             case ECreatureState.Run:
                 UpdateRun();
                 break;
+            case ECreatureState.WallCling:
+                UpdateWallCling();
+                break;
+            case ECreatureState.WallClimbing:
+                UpdateWallClimbing();
+                break;
         }
     }
 
@@ -104,21 +112,52 @@ public class Creature : BaseObject
     protected virtual void UpdateRun() 
     {
         MoveDir = MoveDir.normalized;   // 방향 정규화
-        Rigidbody.MovePosition(Rigidbody.position + MoveDir * MoveSpeed * Time.deltaTime);
+        
+        // 벽 감지
+        if (CheckWall())
+            State = ECreatureState.WallCling;
+        
+        Rigidbody.velocity = MoveDir * MoveSpeed;
+        //Rigidbody.MovePosition(Rigidbody.position + MoveDir * MoveSpeed * Time.deltaTime);
+    }
+
+    protected virtual void UpdateWallCling()
+    {
+
+    }
+
+    protected virtual void UpdateWallClimbing()
+    {
+        if (CheckWall() == false)
+        {
+            // TODO: 낙하로 변경
+            State = ECreatureState.Idle;
+            return;
+        }
+
+        float wallClimbingSpeed = MoveSpeed / 3f;
+        Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
     }
 
     protected virtual void OnDash()
     {
+        // 벽에 매달린 상태에서 방향키를 누르지 않고 대시하면 반대 방향으로 대시한다
+        if (State == ECreatureState.WallCling)
+        {
+            LookLeft = !LookLeft;
+            MoveDir = MoveDir.x < 0 ? Vector2.right : Vector2.left;
+        }
+
         State = ECreatureState.Dash;
         StartCoroutine(CoDash());
     }
 
     IEnumerator CoDash()
     {
-        MoveDir = MoveDir.normalized;   // 방향 정규화
         float distance = 3f;    // 대시 거리
         float dashSpeed = MoveSpeed * 3f;
 
+        // 해당 방향으로 distance만큼 대시로 지나갈 수 있는 지
         RaycastHit2D hit = Physics2D.Raycast(Rigidbody.position, MoveDir, distance, LayerMask.GetMask("Impassable"));
 
         // 목적지 설정
@@ -137,5 +176,12 @@ public class Creature : BaseObject
         }
 
         State = ECreatureState.Idle;
+    }
+
+    protected bool CheckWall()
+    {
+        // 벽 감지
+        RaycastHit2D wall = Physics2D.Raycast(Rigidbody.position, MoveDir, 0.5f, LayerMask.GetMask("Wall"));
+        return wall.collider != null;
     }
 }

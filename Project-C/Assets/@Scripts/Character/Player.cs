@@ -37,12 +37,10 @@ public class Player : Creature
         }
 
         // 방향키 입력
-        bool upPressed = Input.GetKey(KeyCode.UpArrow);
         bool leftPressed = Input.GetKey(KeyCode.LeftArrow);
-        bool downPressed = Input.GetKey(KeyCode.DownArrow);
         bool rightPressed = Input.GetKey(KeyCode.RightArrow);
 
-        int pressedCount = (upPressed ? 1 : 0) + (leftPressed ? 1 : 0) + (downPressed ? 1 : 0) + (rightPressed ? 1 : 0);
+        int pressedCount = (leftPressed ? 1 : 0) + (rightPressed ? 1 : 0);
         
         // 방향키 입력을 두 개 이상 눌렸다면 입력 취소
         if (pressedCount > 1)
@@ -51,32 +49,16 @@ public class Player : Creature
             return;
         }
 
-        if (upPressed)
+        if (leftPressed)
         {
-            // TODO: 벽 감지
-            Debug.Log("upPressed");
-            _moveDirKeyPressed = true;
-            return; // TODO: 벽 타기
-        }
-        else if (leftPressed)
-        {
-            // TODO: 벽 감지
-            Debug.Log("leftPressed");
             MoveDir = Vector2.left;
+            MoveDir = MoveDir.normalized;   // 방향 정규화
             _moveDirKeyPressed = true;
-        }
-        else if (downPressed)
-        {
-            // TODO: 벽 감지
-            Debug.Log("downPressed");
-            _moveDirKeyPressed = true;
-            return; // TODO: 벽 타기
         }
         else if (rightPressed)
         {
-            // TODO: 벽 감지
-            Debug.Log("rightPressed");
             MoveDir = Vector2.right;
+            MoveDir = MoveDir.normalized;   // 방향 정규화
             _moveDirKeyPressed = true;
         }
         else
@@ -114,6 +96,27 @@ public class Player : Creature
         }
        
         base.UpdateRun();
+    }
+
+    protected override void UpdateWallCling()
+    {
+        base.UpdateWallCling();
+
+        if (_moveDirKeyPressed)
+        {
+            State = ECreatureState.WallClimbing;
+        }
+    }
+
+    protected override void UpdateWallClimbing()
+    {
+        if (_moveDirKeyPressed == false)
+        {
+            State = ECreatureState.WallCling;
+            return;
+        }
+
+        base.UpdateWallClimbing();
     }
 
     protected override void OnDash()
