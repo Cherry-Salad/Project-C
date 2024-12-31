@@ -52,13 +52,11 @@ public class Player : Creature
         if (leftPressed)
         {
             MoveDir = Vector2.left;
-            MoveDir = MoveDir.normalized;   // 방향 정규화
             _moveDirKeyPressed = true;
         }
         else if (rightPressed)
         {
             MoveDir = Vector2.right;
-            MoveDir = MoveDir.normalized;   // 방향 정규화
             _moveDirKeyPressed = true;
         }
         else

@@ -106,13 +106,11 @@ public class Creature : BaseObject
 
     protected virtual void UpdateIdle() 
     {
-
+        Rigidbody.velocity = new Vector2(Vector2.zero.x, Rigidbody.velocity.y);
     }
     
     protected virtual void UpdateRun() 
     {
-        MoveDir = MoveDir.normalized;   // 방향 정규화
-        
         // 벽 감지
         if (CheckWall())
             State = ECreatureState.WallCling;
