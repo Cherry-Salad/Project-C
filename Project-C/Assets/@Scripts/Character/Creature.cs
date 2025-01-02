@@ -50,11 +50,13 @@ public class Creature : BaseObject
 
     void FixedUpdate()
     {
+        //Debug.Log(Rigidbody.velocity);
         UpdateController();
     }
 
     protected virtual void UpdateAnimation()
     {
+        // State pattern
         switch (State)  // TODO: 애니메이션 연결
         {
             case ECreatureState.Idle:
@@ -87,6 +89,7 @@ public class Creature : BaseObject
 
     protected virtual void UpdateController()
     {
+        // State pattern
         switch (State)
         {
             case ECreatureState.Idle:
@@ -111,8 +114,8 @@ public class Creature : BaseObject
     
     protected virtual void UpdateRun()
     {
-        // 벽 감지
-        if (CheckWall())
+        // 캐릭터가 공중에 있으면서 벽을 감지, TODO: 바닥에 있다면 점프를 사용해서 벽 타기
+        if (CheckGround() == false && CheckWall())
             State = ECreatureState.WallCling;
         
         Rigidbody.velocity = new Vector2(MoveDir.x * MoveSpeed, Rigidbody.velocity.y);
@@ -120,10 +123,21 @@ public class Creature : BaseObject
 
     protected virtual void UpdateWallCling()
     {
+        // 캐릭터가 바닥에 닿거나 벽을 감지하지 못한 경우
+        if (CheckGround() || CheckWall() == false)
+        {
+            State = ECreatureState.Idle;
+            return;
+        }
+
+        // 천천히 아래로 떨어지는 속도 유지
+        float speed = MoveSpeed / 2f;
+        Rigidbody.velocity = Vector2.down * speed;
     }
 
     protected virtual void UpdateWallClimbing()
     {
+        // 벽을 감지하지 못한 경우
         if (CheckWall() == false)
         {
             State = ECreatureState.Idle;
@@ -132,7 +146,6 @@ public class Creature : BaseObject
 
         float wallClimbingSpeed = MoveSpeed / 3f;
         Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
-        Debug.Log(Rigidbody.velocity);
     }
 
     protected virtual void OnDash()
@@ -161,7 +174,8 @@ public class Creature : BaseObject
         ? hit.point - MoveDir * 0.1f    // 충돌 지점에서 약간 떨어진 위치
         : Rigidbody.position + MoveDir * distance;  // 원래 목적지
 
-        Vector2 dir = destPos - Rigidbody.position; // 목적지로 가기 위한 방향과 거리
+        // 현재 위치와 목적지 간의 이동 방향과 남은 거리
+        Vector2 dir = destPos - Rigidbody.position; 
 
         // 대시
         while (dir.magnitude > 0.01f)
@@ -169,8 +183,8 @@ public class Creature : BaseObject
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             dir = destPos - Rigidbody.position;
 
-            // 벽 감지
-            if (CheckWall())
+            // 캐릭터가 공중에 있으면서 벽을 감지
+            if (CheckGround() == false && CheckWall())
             {
                 State = ECreatureState.WallCling;
                 yield break;
@@ -185,7 +199,15 @@ public class Creature : BaseObject
     protected bool CheckWall()
     {
         // 벽 감지
-        RaycastHit2D wall = Physics2D.Raycast(Rigidbody.position, MoveDir, 0.3f, LayerMask.GetMask("Wall"));
+        float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값(0.1f)을 추가
+        RaycastHit2D wall = Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));   // 캐릭터가 바라보고 있는 방향에 벽을 감지하는가
         return wall.collider != null;
+    }
+
+    protected bool CheckGround()
+    {
+        // 바닥 감지
+        return Mathf.Abs(Rigidbody.velocity.x) < 0.1f && Mathf.Abs(Rigidbody.velocity.y) < 0.1f;
+        //return Rigidbody.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }
 }
