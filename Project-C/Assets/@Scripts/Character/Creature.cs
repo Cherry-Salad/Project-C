@@ -109,16 +109,39 @@ public class Creature : BaseObject
 
     protected virtual void UpdateIdle()
     {
+        if (CheckAllGround())
+        {
+            // 평평한 바닥과 경사진 바닥 모두 감지
+            Rigidbody.gravityScale = 0f;    // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
+        }
+        else
+        {
+            // 공중에 있다면 원래대로 중력 적용
+            Rigidbody.gravityScale = DefaultGravityScale;
+        }
+
         Rigidbody.velocity = new Vector2(Vector2.zero.x, Rigidbody.velocity.y);
     }
-    
+
     protected virtual void UpdateRun()
     {
-        // 캐릭터가 공중에 있으면서 벽을 감지, TODO: 바닥에 있다면 점프를 사용해서 벽 타기
+        // 캐릭터가 공중에 있으면서 벽을 감지
+        // TODO: 바닥에 있다면 점프를 사용해서 벽 타기
         if (CheckGround() == false && CheckWall())
             State = ECreatureState.WallCling;
-        
-        Rigidbody.velocity = new Vector2(MoveDir.x * MoveSpeed, Rigidbody.velocity.y);
+
+        if (CheckAllGround())   
+        {
+            // 평평한 바닥과 경사진 바닥 모두 감지
+            Rigidbody.gravityScale = 0f;    // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
+            Rigidbody.velocity = MoveDir * MoveSpeed;   // Rigidbody.velocity.y를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
+        }
+        else
+        {
+            // 공중에 있다면 원래대로 중력 적용
+            Rigidbody.gravityScale = DefaultGravityScale;
+            Rigidbody.velocity = new Vector2(MoveDir.x * MoveSpeed, Rigidbody.velocity.y);
+        }
     }
 
     protected virtual void UpdateWallCling()
@@ -206,8 +229,26 @@ public class Creature : BaseObject
 
     protected bool CheckGround()
     {
-        // 바닥 감지
-        return Mathf.Abs(Rigidbody.velocity.x) < 0.1f && Mathf.Abs(Rigidbody.velocity.y) < 0.1f;
-        //return Rigidbody.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        // 벽에 매달린 상태에서 평평한 바닥 감지, 캐릭터 밑의 바닥만 감지해야 한다.
+        float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
+        RaycastHit2D ground = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, LayerMask.GetMask("Impassable"));
+        return ground.collider != null;
+        //return Mathf.Abs(Rigidbody.velocity.x) < 0.1f && Mathf.Abs(Rigidbody.velocity.y) < 0.1f;  // 이건 바닥 감지가 제대로 되지 않아 지웠다
+    }
+
+    protected bool CheckAllGround()
+    {
+        // 벽에 매달리지 않은 상태에서 평평한 바닥과 경사진 바닥을 감지한다.
+        // CheckGround로는 경사진 바닥 감지가 어려워서, Rigidbody에 닿은 레이어를 바탕으로 바닥을 감지한다.
+        // 바닥 레이어를 만들면 Wall 레이어와 완벽히 구분하기 어려워서, 따로 만들지 않았다.
+        return Rigidbody.IsTouchingLayers(LayerMask.GetMask("Impassable"));
+
+        //float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
+        //RaycastHit2D ground = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, LayerMask.GetMask("Impassable"));  // 이 방식으론 경사진 바닥은 감지가 안된다. 서럽다.
+
+        //var p = Vector2.Perpendicular(ground.normal);
+        //var angle = Vector2.Angle(ground.normal, Vector2.up);
+
+        //return angle != 0;
     }
 }
