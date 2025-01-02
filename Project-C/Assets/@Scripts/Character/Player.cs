@@ -30,7 +30,6 @@ public class Player : Creature
         // 대시키 입력
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Debug.Log("LeftShift");
             _moveDirKeyPressed = false;
             OnDash();
             return;
@@ -77,12 +76,12 @@ public class Player : Creature
 
     protected override void UpdateIdle()
     {
-        base.UpdateIdle();
-
         if (_moveDirKeyPressed)
         {
             State = ECreatureState.Run;
         }
+
+        base.UpdateIdle();
     }
 
     protected override void UpdateRun()
@@ -92,18 +91,18 @@ public class Player : Creature
             State = ECreatureState.Idle;
             return;
         }
-       
+
         base.UpdateRun();
     }
 
     protected override void UpdateWallCling()
     {
-        base.UpdateWallCling();
-
         if (_moveDirKeyPressed)
         {
             State = ECreatureState.WallClimbing;
         }
+
+        base.UpdateWallCling();
     }
 
     protected override void UpdateWallClimbing()

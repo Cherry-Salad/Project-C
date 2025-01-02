@@ -104,37 +104,35 @@ public class Creature : BaseObject
         }
     }
 
-    protected virtual void UpdateIdle() 
+    protected virtual void UpdateIdle()
     {
         Rigidbody.velocity = new Vector2(Vector2.zero.x, Rigidbody.velocity.y);
     }
     
-    protected virtual void UpdateRun() 
+    protected virtual void UpdateRun()
     {
         // 벽 감지
         if (CheckWall())
             State = ECreatureState.WallCling;
         
-        Rigidbody.velocity = MoveDir * MoveSpeed;
-        //Rigidbody.MovePosition(Rigidbody.position + MoveDir * MoveSpeed * Time.deltaTime);
+        Rigidbody.velocity = new Vector2(MoveDir.x * MoveSpeed, Rigidbody.velocity.y);
     }
 
     protected virtual void UpdateWallCling()
     {
-
     }
 
     protected virtual void UpdateWallClimbing()
     {
         if (CheckWall() == false)
         {
-            // TODO: 낙하로 변경
             State = ECreatureState.Idle;
             return;
         }
 
         float wallClimbingSpeed = MoveSpeed / 3f;
         Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
+        Debug.Log(Rigidbody.velocity);
     }
 
     protected virtual void OnDash()
@@ -169,7 +167,15 @@ public class Creature : BaseObject
         while (dir.magnitude > 0.01f)
         {
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
-            dir = destPos - Rigidbody.position; 
+            dir = destPos - Rigidbody.position;
+
+            // 벽 감지
+            if (CheckWall())
+            {
+                State = ECreatureState.WallCling;
+                yield break;
+            }
+
             yield return null;
         }
 
@@ -179,7 +185,7 @@ public class Creature : BaseObject
     protected bool CheckWall()
     {
         // 벽 감지
-        RaycastHit2D wall = Physics2D.Raycast(Rigidbody.position, MoveDir, 0.5f, LayerMask.GetMask("Wall"));
+        RaycastHit2D wall = Physics2D.Raycast(Rigidbody.position, MoveDir, 0.3f, LayerMask.GetMask("Wall"));
         return wall.collider != null;
     }
 }
