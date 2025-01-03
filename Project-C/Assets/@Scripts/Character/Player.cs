@@ -23,49 +23,54 @@ public class Player : Creature
 
     void GetInput() // 입력 감지, TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다.
     {
-        // TODO: 코드 리팩토링, 내가 봐도 이 코드 진짜 별로다. 일단 기능만 잘 구현하고 리팩토링할 계획이다.
+        // 대시, 피격, 스킬 사용 중일 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
         if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
-        
+
+        if (IsDashInput())
+            return;
+
+        _moveDirKeyPressed = IsMoveDirInput();
+        LookLeft = MoveDir.x < 0;
+    }
+
+    bool IsDashInput()
+    {
         // 대시키 입력
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             _moveDirKeyPressed = false;
             OnDash();
-            return;
+            return true;
         }
 
+        return false;
+    }
+
+    bool IsMoveDirInput()
+    {
         // 방향키 입력
         bool leftPressed = Input.GetKey(KeyCode.LeftArrow);
         bool rightPressed = Input.GetKey(KeyCode.RightArrow);
 
         int pressedCount = (leftPressed ? 1 : 0) + (rightPressed ? 1 : 0);
-        
+
         // 방향키 입력을 두 개 이상 눌렸다면 입력 취소
         if (pressedCount > 1)
-        {
-            _moveDirKeyPressed = false;
-            return;
-        }
+            return false;
 
         if (leftPressed)
         {
             MoveDir = Vector2.left;
-            _moveDirKeyPressed = true;
+            return true;
         }
         else if (rightPressed)
         {
             MoveDir = Vector2.right;
-            _moveDirKeyPressed = true;
-        }
-        else
-        {
-            // 입력이 없다면
-            _moveDirKeyPressed = false;
-            return;
+            return true;
         }
 
-        LookLeft = MoveDir.x < 0;
+        return false;
     }
 
     protected override void UpdateController()
@@ -121,10 +126,10 @@ public class Player : Creature
         if (_isDashCooldownComplete == false)
             return;
 
-        StartCoroutine(CoDashCooldown());
         base.OnDash();
+        StartCoroutine(CoDashCooldown());
     }
-    
+
     IEnumerator CoDashCooldown()
     {
         _isDashCooldownComplete = false;

@@ -241,8 +241,11 @@ public class Creature : BaseObject
         // 벽에 매달리지 않은 상태에서 평평한 바닥과 경사진 바닥을 감지한다.
         // CheckGround로는 경사진 바닥 감지가 어려워서, Rigidbody에 닿은 레이어를 바탕으로 바닥을 감지한다.
         // 바닥 레이어를 만들면 Wall 레이어와 완벽히 구분하기 어려워서, 따로 만들지 않았다.
-        return Rigidbody.IsTouchingLayers(LayerMask.GetMask("Impassable"));
+        // Wall 레이어의 타일은 무조건 평평한 타일이다.
+        if (Rigidbody.IsTouchingLayers(LayerMask.GetMask("Impassable")) && Rigidbody.IsTouchingLayers(LayerMask.GetMask("Wall")) == false)
+            return true;
 
+        return false;
         //float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
         //RaycastHit2D ground = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, LayerMask.GetMask("Impassable"));  // 이 방식으론 경사진 바닥은 감지가 안된다. 서럽다.
 
