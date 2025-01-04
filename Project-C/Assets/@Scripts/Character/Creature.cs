@@ -44,6 +44,7 @@ public class Creature : BaseObject
             return false;
 
         State = ECreatureState.Idle;
+        Managers.Resource.LoadAsync<Object>("Dust");
 
         return true;
     }
@@ -73,9 +74,11 @@ public class Creature : BaseObject
                 break;
             case ECreatureState.Dash:
                 Animator.Play("Dash");
+                ShowDustEffect();
                 break;
             case ECreatureState.WallCling:
                 Animator.Play("WallSlide");
+                ShowDustEffect();
                 break;
             case ECreatureState.WallClimbing:
                 Animator.Play("WallSlide");
@@ -217,6 +220,13 @@ public class Creature : BaseObject
         }
 
         State = ECreatureState.Idle;
+    }
+
+    protected void ShowDustEffect()
+    {
+        Dust dust = Managers.Resource.Instantiate("Dust").GetComponent<Dust>();
+        if (dust != null)
+            dust.PlayEffect(this);
     }
 
     protected bool CheckWall()
