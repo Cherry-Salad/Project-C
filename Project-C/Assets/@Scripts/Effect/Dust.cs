@@ -75,6 +75,7 @@ public class Dust : InitBase
 
         if (Owner.State == ECreatureState.WallClimbing)
         {
+            transform.parent = null;
             AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
 
             // 애니메이션 남은 시간 계산
@@ -83,10 +84,7 @@ public class Dust : InitBase
             float remainingTime = clipLength - elapsedTime;
 
             if (remainingTime > 0)
-            {
                 yield return new WaitForSeconds(remainingTime - 0.1f); // 남은 시간만큼 대기
-                Hide();
-            }
         }
 
         Hide();
