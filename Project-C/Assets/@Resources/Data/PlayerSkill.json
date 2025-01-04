@@ -1,0 +1,115 @@
+{
+    "PlayerSkill" : [
+        {
+            "SkillID" : 200001,
+            "CodeName" : "SelfHealing", 
+            "MPCost" : 2,
+            "Type" : "Heal",
+            "UsageCondition" : "OnGround",
+
+            "Effect" : {
+                "CastTime" : [2.0, 1.33],
+                "RecoveryTime" : 1,
+
+                "HealingHp" : [2, 4, 6]
+            },
+
+            "KeyBoundType" : {
+                "InputType" : "Hold",
+                "DefaultBoundKey" : ""
+            },
+
+            "Dynamics" : {
+                "Level" : 0,
+                "IsUnlock" : true,
+                "BoundingKey" : "",
+                "AdditionalHealing" : 0
+            },
+
+            "DisplayKR" : {
+                "Name" : "회복",
+                "Description" : "체력을 회복합니다."
+            },
+
+            "AssetLink" : {
+                
+            }
+        },
+        {
+            "SkillID" : 200002,
+            "CodeName" : "IceBall", 
+            "MPCost" : 2,
+            "Type" : "Projectile",
+            "UsageCondition" : "Always",
+
+            "Effect" : {
+                "CastTime" : 0.3,
+                "RecoveryTime" : 1,
+
+                "ProjectileName" : "PlayerIceBall",
+                "NumberOfShots" : 1,
+                "DelayBetweenShots" : 0,
+                "InitialAngle" : 0,
+                "DamageMultiplier" : 1.5
+            },
+
+            "KeyBoundType" : {
+                "InputType" : "PressDown",
+                "DefaultBoundKey" : ""
+            },
+
+            "Dynamics" : {
+                "Level" : 0,
+                "IsUnlock" : true,
+                "BoundingKey" : ""
+            },
+
+            "DisplayKR" : {
+                "Name" : "아이스 볼",
+                "Description" : "얼음 투사체를 발사 합니다."
+            },
+
+            "AssetLink" : {
+                
+            }
+
+        },
+        {
+            "SkillID" : 200003,
+            "CodeName" : "IceBreak", 
+            "MPCost" : 2,
+            "Type" : "Melee",
+            "UsageCondition" : "OnGround",
+
+            "Effect" : {
+                "CastTime" : 0.3,
+                "RecoveryTime" : 1,
+
+                "AttackRange" : 1.0,
+                "RetentionTime" : 0.1,
+                "DamageMultiplier" : 1.5
+            },
+
+            "KeyBoundType" : {
+                "InputType" : "PressDown",
+                "DefaultBoundKey" : ""
+            },
+
+            "Dynamics" : {
+                "Level" : 0,
+                "IsUnlock" : true,
+                "BoundingKey" : ""
+            },
+
+            "DisplayKR" : {
+                "Name" : "아이스 브레이크",
+                "Description" : "전방에 강한 얼음 공격을 합니다."
+            },
+
+            "AssetLink" : {
+                
+            }
+        }
+    ]
+}
+
