@@ -11,10 +11,10 @@ public class Managers : MonoBehaviour
     static Managers Instance { get { Init(); return s_instance; } }
 
     ResourceManager _resource = new ResourceManager();
-    //DataManager _data = new DataManager();
+    DataManager _data = new DataManager();
     
     public static ResourceManager Resource { get { return Instance._resource; } }
-    //public static DataManager Data { get { return Instance._data; } }
+    public static DataManager Data { get { return Instance._data; } }
 
     public static void Init()
     {
