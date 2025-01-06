@@ -1,36 +1,36 @@
 {
-  "MonsterType": {
-    "GoblinWarrior": {
-      "Base": {
-        "Role": "MeleeAttacker",
-        "MovementSpeed": 1.0,
-        "BelligerenceLevel": 2,
-        "DefaultGravity": 1
+  "MonsterType": {  
+    "GoblinWarrior": {              
+      "Base": {                           // 기본 데이터
+        "Role": "MeleeAttacker",          // 몬스터 역할
+        "MovementSpeed": 1.0,             // 기본 속도
+        "BelligerenceLevel": 2,           // 호전성 레벨
+        "DefaultGravity": 1               // 기본 중력
       },
 
-      "Scan": {
-        "Distance": 10.0,
-        "MovementMultiplier": 0.7
+      "Scan": {                           // 탐색 상태
+        "Distance": 10.0,                 // 탐색 범위
+        "MovementMultiplier": 0.7         // 속도 변환값
       },
 
-      "Behavior": {
-        "BattleEndTime": 15,
-        "MovementMultiplier": 1.0,
-        "Attack": [
+      "Behavior": {                       // 전투 상태
+        "BattleEndTime": 15,              // 타겟 이탈후 상태 유지 시간
+        "MovementMultiplier": 1.0,        // 속도 변환값
+        "Attack": [                       // 공격 패턴
           {
-            "Name": "SwordAttack",
-            "Type": "Melee",
-            "IsBodyHitBox": true,
-            "RecoveryTime": 0.5,
+            "Name": "SwordAttack",        // 공격 이름
+            "Type": "Melee",              // 공격 유형
+            "IsBodyHitBox": true,         // 몬스터에 히트 박스 생성 여부
+            "RecoveryTime": 0.5,          // 시전후 회복 시간
 
-            "AttackRange": 1.0,
-            "RetentionTime": 0.1,
-            "MovementMultiplier": 1.0,
-            "InitialAngle": 0,
+            "AttackRange": 1.0,           // 공격 범위
+            "RetentionTime": 0.1,         // 공격 유지 시간
+            "MovementMultiplier": 1.0,    // 속도 변환값
+            "InitialAngle": 0,            // 공격 각도
 
-            "ProjectileName": "",
-            "NumberOfShots": 0,
-            "DelayBetweenShots": 0
+            "ProjectileName": "",         // 투사체 이름
+            "NumberOfShots": 0,           // 투사체 발사 횟수
+            "DelayBetweenShots": 0        // 투사체 발사간 간격 시간
           }
         ]
       }

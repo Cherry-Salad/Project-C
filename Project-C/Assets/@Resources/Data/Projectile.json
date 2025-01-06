@@ -1,12 +1,12 @@
 {
   "Projectile" : [
     {
-      "DataID" : 390001,
-      "CodeName" : "PlayerIceBall",
-      "DefaultGravity" : 0,
-      "BaseSpeed" : 1.5,
-      "LifeTime" : 5,
-      "HitBoxSize" : 1.0
+      "DataID" : 390001,              // 투사체 ID
+      "CodeName" : "PlayerIceBall",   // 투사체 이름
+      "DefaultGravity" : 0,           // 기본 중력값
+      "BaseSpeed" : 1.5,              // 기본 속도
+      "LifeTime" : 5,                 // 투사체 유지 시간
+      "HitBoxSize" : 1.0              // 투사체 히트 박스 사이즈
     },
     {
       "DataID" : 390002,
