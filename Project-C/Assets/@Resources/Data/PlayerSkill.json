@@ -1,115 +1,91 @@
 {
-    "PlayerSkill" : [
-        {
-            "SkillID" : 200001,
-            "CodeName" : "SelfHealing", 
-            "MPCost" : 2,
-            "Type" : "Heal",
-            "UsageCondition" : "OnGround",
+  "PlayerSkill" : [
+    {
+      "SkillID": 200001,
+      "CodeName": "SelfHealing",
+      "MPCost": 2,
+      "Type": "Heal",
+      "UsageCondition": "OnGround",
+      "DefaultBoundKey": "",
+      "MAXLevel": 3,
 
-            "Effect" : {
-                "CastTime" : [2.0, 1.33],
-                "RecoveryTime" : 1,
+      "Effect": {
+        "CastTime": [ 2.0, 1.33 ],
+        "RecoveryTime": 1,
+        "Value": [ 2, 4, 6 ]
+      },
 
-                "HealingHp" : [2, 4, 6]
-            },
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "BoundingKey": "",
+        "AdditionalValue": 0 //추가 회복량
+      },
 
-            "KeyBoundType" : {
-                "InputType" : "Hold",
-                "DefaultBoundKey" : ""
-            },
+      "DisplayKR": {
+        "Name": "회복",
+        "Description": "체력을 회복합니다."
+      }
+    },
+    {
+      "SkillID": 200002,
+      "CodeName": "IceBall",
+      "MPCost": 2,
+      "Type": "Projectile",
+      "UsageCondition": "Always",
+      "DefaultBoundKey": "",
+      "MAXLevel": 3,
 
-            "Dynamics" : {
-                "Level" : 0,
-                "IsUnlock" : true,
-                "BoundingKey" : "",
-                "AdditionalHealing" : 0
-            },
+      "Effect": {
+        "CastTime": 0.3,
+        "RecoveryTime": 1,
 
-            "DisplayKR" : {
-                "Name" : "회복",
-                "Description" : "체력을 회복합니다."
-            },
+        "ProjectileName": "PlayerIceBall",
+        "NumberOfShots": 1,
+        "DelayBetweenShots": 0,
+        "InitialAngle": 0,
+        "DamageMultiplier": 1.5
+      },
 
-            "AssetLink" : {
-                
-            }
-        },
-        {
-            "SkillID" : 200002,
-            "CodeName" : "IceBall", 
-            "MPCost" : 2,
-            "Type" : "Projectile",
-            "UsageCondition" : "Always",
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "BoundingKey": ""
+      },
 
-            "Effect" : {
-                "CastTime" : 0.3,
-                "RecoveryTime" : 1,
+      "DisplayKR": {
+        "Name": "아이스 볼",
+        "Description": "얼음 투사체를 발사 합니다."
+      }
+    },
+    {
+      "SkillID": 200003,
+      "CodeName": "IceBreak",
+      "MPCost": 2,
+      "Type": "Melee",
+      "UsageCondition": "OnGround",
+      "DefaultBoundKey": "",
+      "MAXLevel": 3,
 
-                "ProjectileName" : "PlayerIceBall",
-                "NumberOfShots" : 1,
-                "DelayBetweenShots" : 0,
-                "InitialAngle" : 0,
-                "DamageMultiplier" : 1.5
-            },
+      "Effect": {
+        "CastTime": 0.3,
+        "RecoveryTime": 1,
+        "AttackRange": 1.0,
+        "RetentionTime": 0.1,
+        "DamageMultiplier": 1.5
+      },
 
-            "KeyBoundType" : {
-                "InputType" : "PressDown",
-                "DefaultBoundKey" : ""
-            },
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "BoundingKey": ""
+      },
 
-            "Dynamics" : {
-                "Level" : 0,
-                "IsUnlock" : true,
-                "BoundingKey" : ""
-            },
-
-            "DisplayKR" : {
-                "Name" : "아이스 볼",
-                "Description" : "얼음 투사체를 발사 합니다."
-            },
-
-            "AssetLink" : {
-                
-            }
-
-        },
-        {
-            "SkillID" : 200003,
-            "CodeName" : "IceBreak", 
-            "MPCost" : 2,
-            "Type" : "Melee",
-            "UsageCondition" : "OnGround",
-
-            "Effect" : {
-                "CastTime" : 0.3,
-                "RecoveryTime" : 1,
-
-                "AttackRange" : 1.0,
-                "RetentionTime" : 0.1,
-                "DamageMultiplier" : 1.5
-            },
-
-            "KeyBoundType" : {
-                "InputType" : "PressDown",
-                "DefaultBoundKey" : ""
-            },
-
-            "Dynamics" : {
-                "Level" : 0,
-                "IsUnlock" : true,
-                "BoundingKey" : ""
-            },
-
-            "DisplayKR" : {
-                "Name" : "아이스 브레이크",
-                "Description" : "전방에 강한 얼음 공격을 합니다."
-            },
-
-            "AssetLink" : {
-                
-            }
-        }
-    ]
+      "DisplayKR": {
+        "Name": "아이스 브레이크",
+        "Description": "전방에 강한 얼음 공격을 합니다."
+      }
+    }
+  ]
 }
 

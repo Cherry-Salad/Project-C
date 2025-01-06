@@ -1,402 +1,238 @@
 {
-    "MonsterType": {
-        "GoblinWarrior": {
-            "Base" : {
-                "Role" : "MeleeAttacker",
-                "MovementSpeed" : 1.0,
-                "BelligerenceLevel" : 2,
-                "DefaultGravity" : 1
-            },
+  "Monsters": [
+    {
+      "DataID": 300001,
+      "Type": "GoblinWarrior",
+      "CodeName": "GoblinWarrior1",
 
-            "Scan" : {
-                "Distance" : 10.0,
-                "MovementMultiplier" : 0.7
-            },
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 0, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
 
-            "Behavior" : {
-                "BattleEndTime" : 15,
-                "MovementMultiplier" : 1.0,
-                "Attack" : [
-                    {
-                        "Name" : "SwordAttack",
-                        "Type" : "Melee",
-                        "IsBodyHitBox" : true,
-                        "RecoveryTime" : 0.5,
+      "MaxHP": 30,
+      "AttackSuccessDropMp": 1,
 
-                        "AttackRange" : 1.0,
-                        "RetentionTime" : 0.1
-                    }
-                ]
-            },
+      "Dynamics": {
+        "HP": 15,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
 
-            "AssetLink" : {
+      "Drop": {
+        "MP": 1,
+        "Money": 30,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
 
-            }
-        },
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
 
-        "GoblinBoomerangThrower": {
-            "Base" : {
-                "Role" : "RangedAttacker",
-                "MovementSpeed" : 1.0,
-                "BelligerenceLevel" : 2,
-                "DefaultGravity" : 1
-            },
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
 
-            "Scan" : {
-                "Distance" : 13.0,
-                "MovementMultiplier" : 0.6
-            },
-
-            "Behavior" : {
-                "BattleEndTime" : 15,
-                "MovementMultiplier" : 1.0,
-                "Attack" : [
-                    {
-                        "Name" : "BoomerangAttack",
-                        "Type" : "Projectile",
-                        "IsBodyHitBox" : false,
-                        "RecoveryTime" : 0.5,
-
-                        "ProjectileName" : "GoblinBoomerang",
-                        "NumberOfShots" : 1,
-                        "DelayBetweenShots" : 0,
-                        "InitialAngle" : 0
-                    }
-                ]
-            },
-
-            "AssetLink" : {
-                
-            }
-        },
-
-        "GoblinWizard": {
-            "Base" : {
-                "Role" : "RangedAttacker",
-                "MovementSpeed" : 1.0,
-                "BelligerenceLevel" : 2,
-                "DefaultGravity" : 1
-            },
-
-            "Scan" : {
-                "Distance" : 13.0,
-                "MovementMultiplier" : 0.6
-            },
-
-            "Behavior" : {
-                "BattleEndTime" : 15,
-                "MovementMultiplier" : 0.8,
-                "Attack" : [
-                    {
-                        "Name" : "MagicAttack",
-                        "Type" : "Projectile",
-                        "IsBodyHitBox" : false,
-                        "RecoveryTime" : 0.5,
-
-                        "ProjectileName" : "GoblinMagic",
-                        "NumberOfShots" : 1,
-                        "DelayBetweenShots" : 0
-                    }
-                ]
-            },
-
-            "AssetLink" : {
-                
-            }
-        },
-        
-        "GoblinFly": {
-            "Base" : {
-                "Role" : "MeleeAttacker",
-                "MovementSpeed" : 1.0,
-                "BelligerenceLevel" : 2,
-                "DefaultGravity" : 0
-            },
-
-            "Scan" : {
-                "Distance" : 10.0,
-                "MovementMultiplier" : 1.0
-            },
-
-            "Behavior" : {
-                "BattleEndTime" : 15,
-                "MovementMultiplier" : 1.2,
-                "Attack" : [
-                    {
-                        "Name" : "BodySlam",
-                        "Type" : "BodySlam",
-                        "IsBodyHitBox" : true,
-                        "RecoveryTime" : 0.5,
-
-                        "MovementMultiplier" : 1.8,
-                        "RetentionTime" : 1,
-                        "InitialAngle" : 0
-                    }
-                ]
-            },
-
-            "AssetLink" : {
-                
-            }
-        },
-
-        "GoblinElite" : {
-            "Base" : {
-                "Role" : "HybridAttacker",
-                "MovementSpeed" : 1.0,
-                "BelligerenceLevel" : 3,
-                "DefaultGravity" : 1
-            },
-
-            "Scan" : {
-                "Distance" : 10.0,
-                "MovementMultiplier" : 0.8
-            },
-
-            "Behavior" : {
-                "BattleEndTime" : 15,
-                "MovementMultiplier" : 1.2,
-                "Attack" : [
-                    {
-                        "Name" : "GoblinTornado",
-                        "Type" : "BodySlam",
-                        "IsBodyHitBox" : true,
-                        "RecoveryTime" : 2
-                    },
-                    {
-                        "Name" : "ThrowingAxe",
-                        "Type" : "Projectile",
-                        "IsBodyHitBox" : false,
-                        "RecoveryTime" : 0.5,
-
-                        "ProjectileName" : "GoblinAxe",
-                        "NumberOfShots" : 3,
-                        "DelayBetweenShots" : 0.1,
-                        "InitialAngle" : 80,
-                        "AngleChange": -10
-                    },
-                    {
-                        "Name" : "EyeLaserAttack",
-                        "Type" : "Projectile",
-                        "IsBodyHitBox" : false,
-                        "RecoveryTime" : 0.5,
-
-                        "ProjectileName" : "GoblinEyeLaser",
-                        "NumberOfShots" : 1,
-                        "DelayBetweenShots" : 0,
-                        "InitialAngle" : 0
-                    }
-                ]
-            },
-
-            "AssetLink" : {
-                
-            }
-        }
+      "DisplayKR": {
+        "Name": "전사 고블린"
+      }
     },
 
-    "Monsters": [
-        {
-            "DataID" : 300001, 
-            "Type" : "GoblinWarrior",
-            "CodeName" : "GoblinWarrior1",
+    {
+      "DataID": 300002,
+      "Type": "GoblinBoomerangThrower",
+      "CodeName": "GoblinBoomerangThrower1",
 
-            "TypeLevel" : "Normal",
-            "AttackTarget" : "Player",
-            "SpawnPosition" : [0, 0],
-            "SpawnViewDirection" : "Left",
-            "Resurrection" : true,
-            
-            "MaxHP" : 30,
-            "AttackSuccessDropMp": 1,
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 5, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
 
-            "Dynamics" :{
-                "HP" : 15,
-                "State" : "IDLE",
-                "StatusEffects" : [],
-                "isActiveEvent" : []
-            },
+      "MaxHP": 20,
+      "AttackSuccessDropMp": 1,
 
-            "Drop" : {
-                "MP" : 1,
-                "Money" : 30,
-                "Item" : [],
-                "ItemDropProbability" : 0.3
-            },
-            
-            "Event" : {
-                "IsEventTrigger" : false,
-                "EventTriggerType" : [],
-                "TriggerEvent" : []
-            },
+      "Dynamics": {
+        "HP": 20,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
 
-            "Groggy" : {
-                "IsPossible" : false
-            }
-        },
+      "Drop": {
+        "MP": 1,
+        "Money": 25,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
 
-        {
-            "DataID" : 300002, 
-            "Type" : "GoblinBoomerangThrower",
-            "CodeName" : "GoblinBoomerangThrower1",
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
 
-            "TypeLevel" : "Normal",
-            "AttackTarget" : "Player",
-            "SpawnPosition" : [5, 0],
-            "SpawnViewDirection" : "Left",
-            "Resurrection" : true,
-            
-            "MaxHP" : 20,
-            "AttackSuccessDropMp": 1,
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
 
-            "Dynamics" :{
-                "HP" : 20,
-                "State" : "IDLE",
-                "StatusEffects" : [],
-                "isActiveEvent" : []
-            },
-            
-            "Drop" : {
-                "MP" : 1,
-                "Money" : 25,
-                "Item" : [],
-                "ItemDropProbability" : 0.3
-            },
-            
-            "Event" : {
-                "IsEventTrigger" : false,
-                "EventTriggerType" : [],
-                "TriggerEvent" : []
-            },
+      "DisplayKR": {
+        "Name": "부매랑 고블린"
+      }
+    },
 
-            "Groggy" : {
-                "IsPossible" : false
-            }
-        },
+    {
+      "DataID": 300003,
+      "Type": "GoblinWizard",
+      "CodeName": "GoblinWizard1",
 
-        {
-            "DataID" : 300003, 
-            "Type" : "GoblinWizard",
-            "CodeName" : "GoblinWizard1",
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 10, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
 
-            "TypeLevel" : "Normal",
-            "AttackTarget" : "Player",
-            "SpawnPosition" : [10, 0],
-            "SpawnViewDirection" : "Left",
-            "Resurrection" : true,
-            
-            "MaxHP" : 18,
-            "AttackSuccessDropMp": 1,
+      "MaxHP": 18,
+      "AttackSuccessDropMp": 1,
 
-            "Dynamics" :{
-                "HP" : 18,
-                "State" : "IDLE",
-                "StatusEffects" : [],
-                "isActiveEvent" : []
-            },
+      "Dynamics": {
+        "HP": 18,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
 
-            "Drop" : {
-                "MP" : 1,
-                "Money" : 25,
-                "Item" : [],
-                "ItemDropProbability" : 0.3
-            },
-            
-            "Event" : {
-                "IsEventTrigger" : false,
-                "EventTriggerType" : [],
-                "TriggerEvent" : []
-            },
+      "Drop": {
+        "MP": 1,
+        "Money": 25,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
 
-            "Groggy" : {
-                "IsPossible" : false
-            }
-        },
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
 
-        {
-            "DataID" : 300004, 
-            "Type" : "GoblinFly",
-            "CodeName" : "GoblinFly1",
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
 
-            "TypeLevel" : "Normal",
-            "AttackTarget" : "Player",
-            "SpawnPosition" : [15, 5],
-            "SpawnViewDirection" : "Left",
-            "Resurrection" : true,
+      "DisplayKR": {
+        "Name": "마법사 고블린"
+      }
+    },
 
-            "MaxHP" : 15,
-            "AttackSuccessDropMp": 1,
+    {
+      "DataID": 300004,
+      "Type": "GoblinFly",
+      "CodeName": "GoblinFly1",
 
-            "Dynamics" :{
-                "HP" : 15,
-                "State" : "IDLE",
-                "StatusEffects" : [],
-                "isActiveEvent" : []
-            },
-            
-            "Drop" : {
-                "MP" : 1,
-                "Money" : 10,
-                "Item" : [],
-                "ItemDropProbability" : 0.3
-            },
-            
-            "Event" : {
-                "IsEventTrigger" : false,
-                "EventTriggerType" : [],
-                "TriggerEvent" : []
-            },
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 15, 5 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
 
-            "Groggy" : {
-                "IsPossible" : false
-            }
-        },
+      "MaxHP": 15,
+      "AttackSuccessDropMp": 1,
 
-        {
-            "DataID" : 310001, 
-            "Type" : "GoblinElite",
-            "CodeName" : "EliteGoblin",
+      "Dynamics": {
+        "HP": 15,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
 
-            "TypeLevel" : "Boss",
-            "AttackTarget" : "Player",
-            "SpawnPosition" : [20, 0],
-            "SpawnViewDirection" : "Left",
-            "Resurrection" : false,
-            
-            "MaxHP" : 300,
-            "AttackSuccessDropMp": 1,
+      "Drop": {
+        "MP": 1,
+        "Money": 10,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
 
-            "Dynamics" :{
-                "HP" : 300,
-                "State" : "IDLE",
-                "StatusEffects" : [],
-                "GroggyGauge" : 0,
-                "isActiveEvent" : []
-            },
-            
-            "Drop" : {
-                "MP" : 5,
-                "Money" : 500,
-                "Item" : [],
-                "ItemDropProbability" : 0.3
-            },
-            
-            "Event" : {
-                "IsEventTrigger" : true,
-                "EventTriggerType" : [],
-                "TriggerEvent" : []
-            },
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
 
-            "Groggy" : {
-                "IsPossible" : true,
-                "MAXGauge" : 20,
-                "DurationTime" : 3,
-                "DropMP" : 1
-            },
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
 
-            "DisplayKR" : {
-                "Name" : "앨리트 고블린"
-            }
-        }
-    ]
+      "DisplayKR": {
+        "Name": "비행 고블린"
+      }
+    },
+
+    {
+      "DataID": 310001,
+      "Type": "GoblinElite",
+      "CodeName": "EliteGoblin",
+
+      "TypeLevel": "Boss",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 20, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": false,
+
+      "MaxHP": 300,
+      "AttackSuccessDropMp": 1,
+
+      "Dynamics": {
+        "HP": 300,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
+
+      "Drop": {
+        "MP": 5,
+        "Money": 500,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
+
+      "Event": {
+        "IsEventTrigger": true,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
+
+      "Groggy": {
+        "IsPossible": true,
+        "MAXGauge": 20,
+        "DurationTime": 3,
+        "DropMP": 1
+      },
+
+      "DisplayKR": {
+        "Name": "앨리트 고블린"
+      }
+    }
+  ]
 }
