@@ -112,18 +112,18 @@ public class Creature : BaseObject
 
     protected virtual void UpdateIdle()
     {
-        if (CheckAllGround())
+        if (CheckGround())
         {
-            // 평평한 바닥과 경사진 바닥 모두 감지
+            // 바닥 감지
             Rigidbody.gravityScale = 0f;    // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
+            Rigidbody.velocity = new Vector2(0f, 0f);
         }
         else
         {
             // 공중에 있다면 원래대로 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
+            Rigidbody.velocity = new Vector2(0f, Rigidbody.velocity.y);
         }
-
-        Rigidbody.velocity = new Vector2(Vector2.zero.x, Rigidbody.velocity.y);
     }
 
     protected virtual void UpdateRun()
@@ -133,18 +133,28 @@ public class Creature : BaseObject
         if (CheckGround() == false && CheckWall())
             State = ECreatureState.WallCling;
 
-        if (CheckAllGround())   
+        if (CheckGround())
         {
-            // 평평한 바닥과 경사진 바닥 모두 감지
+            // 바닥 감지
             Rigidbody.gravityScale = 0f;    // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
             Rigidbody.velocity = MoveDir * MoveSpeed;   // Rigidbody.velocity.y를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
         }
         else
         {
+            // 공중에서 Run 상태로 낙하 중 이동 방향에 장애물이 있으면 제자리에서 걷는 버그 방지
+            // 수평 속도를 0으로 설정하고 즉시 낙하
+            float distance = Collider.bounds.extents.x + 0.1f;
+            float velocityX = (CheckObstacle(MoveDir, distance) == false) ? MoveDir.x * MoveSpeed : 0f;
+
             // 공중에 있다면 원래대로 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
-            Rigidbody.velocity = new Vector2(MoveDir.x * MoveSpeed, Rigidbody.velocity.y);
+            Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
         }
+    }
+
+    protected virtual void UpdateJump()
+    {
+
     }
 
     protected virtual void UpdateWallCling()
@@ -192,8 +202,8 @@ public class Creature : BaseObject
         float distance = 3f;    // 대시 거리
         float dashSpeed = MoveSpeed * 3f;
 
-        // 해당 방향으로 distance만큼 대시로 지나갈 수 있는 지
-        RaycastHit2D hit = Physics2D.Raycast(Rigidbody.position, MoveDir, distance, LayerMask.GetMask("Impassable"));
+        // 벽이나 다른 물체에 의해 막힐 수 있으므로 해당 방향으로 최대한 갈 수 있는 거리를 구한다
+        RaycastHit2D hit = CheckObstacle(MoveDir, distance);
 
         // 목적지 설정
         Vector2 destPos = hit.collider != null
@@ -201,7 +211,7 @@ public class Creature : BaseObject
         : Rigidbody.position + MoveDir * distance;  // 원래 목적지
 
         // 현재 위치와 목적지 간의 이동 방향과 남은 거리
-        Vector2 dir = destPos - Rigidbody.position; 
+        Vector2 dir = destPos - Rigidbody.position;
 
         // 대시
         while (dir.magnitude > 0.01f)
@@ -229,39 +239,37 @@ public class Creature : BaseObject
             dust.PlayEffect(this);
     }
 
+    protected RaycastHit2D CheckObstacle(Vector2 dir, float distance)
+    {
+        // 벽이나 다른 물체같은 통행에 방해되는 장애물
+        return Physics2D.Raycast(Rigidbody.position, dir, distance, LayerMask.GetMask("Wall", "Ground"));
+    }
+
     protected bool CheckWall()
     {
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값(0.1f)을 추가
-        RaycastHit2D wall = Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));   // 캐릭터가 바라보고 있는 방향에 벽을 감지하는가
-        return wall.collider != null;
+        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));    // 캐릭터가 바라보고 있는 방향에 벽을 감지하는가
     }
 
     protected bool CheckGround()
     {
-        // 벽에 매달린 상태에서 평평한 바닥 감지, 캐릭터 밑의 바닥만 감지해야 한다.
         float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
-        RaycastHit2D ground = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, LayerMask.GetMask("Impassable"));
-        return ground.collider != null;
-        //return Mathf.Abs(Rigidbody.velocity.x) < 0.1f && Mathf.Abs(Rigidbody.velocity.y) < 0.1f;  // 이건 바닥 감지가 제대로 되지 않아 지웠다
-    }
+        
+        // 캐릭터 밑의 평평한 바닥 감지
+        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, LayerMask.GetMask("Ground")))
+            return true;
 
-    protected bool CheckAllGround()
-    {
-        // 벽에 매달리지 않은 상태에서 평평한 바닥과 경사진 바닥을 감지한다.
-        // CheckGround로는 경사진 바닥 감지가 어려워서, Rigidbody에 닿은 레이어를 바탕으로 바닥을 감지한다.
-        // 바닥 레이어를 만들면 Wall 레이어와 완벽히 구분하기 어려워서, 따로 만들지 않았다.
-        // Wall 레이어의 타일은 무조건 평평한 타일이다.
-        if (Rigidbody.IsTouchingLayers(LayerMask.GetMask("Impassable")) && Rigidbody.IsTouchingLayers(LayerMask.GetMask("Wall")) == false)
+        // 캐릭터 밑의 경사진 바닥 감지
+        Vector2 leftDown = new Vector2(-0.5f, -1f);
+        Vector2 rightDown = new Vector2(0.5f, -1f);
+
+        if (Physics2D.Raycast(Rigidbody.position, leftDown, groundCheckDistance, LayerMask.GetMask("Ground")))
+            return true;
+
+        if (Physics2D.Raycast(Rigidbody.position, rightDown, groundCheckDistance, LayerMask.GetMask("Ground")))
             return true;
 
         return false;
-        //float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
-        //RaycastHit2D ground = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, LayerMask.GetMask("Impassable"));  // 이 방식으론 경사진 바닥은 감지가 안된다. 서럽다.
-
-        //var p = Vector2.Perpendicular(ground.normal);
-        //var angle = Vector2.Angle(ground.normal, Vector2.up);
-
-        //return angle != 0;
     }
 }

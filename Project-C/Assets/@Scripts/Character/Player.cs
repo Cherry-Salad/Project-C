@@ -27,7 +27,7 @@ public class Player : Creature
         if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
 
-        if (IsDashInput())
+        if (IsDashInput() || IsJumpInput())
             return;
 
         _moveDirKeyPressed = IsMoveDirInput();
@@ -41,6 +41,18 @@ public class Player : Creature
         {
             _moveDirKeyPressed = false;
             OnDash();
+            return true;
+        }
+
+        return false;
+    }
+
+    bool IsJumpInput()
+    {
+        // 점프키 입력
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            _moveDirKeyPressed = false;
             return true;
         }
 
