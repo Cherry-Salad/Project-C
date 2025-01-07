@@ -29,7 +29,7 @@ public class Player : Creature
 
         if (IsDashInput() || IsJumpInput())
             return;
-
+        
         _moveDirKeyPressed = IsMoveDirInput();
         LookLeft = MoveDir.x < 0;
     }
@@ -39,7 +39,6 @@ public class Player : Creature
         // 대시키 입력
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            _moveDirKeyPressed = false;
             OnDash();
             return true;
         }
@@ -49,11 +48,16 @@ public class Player : Creature
 
     bool IsJumpInput()
     {
-        // 점프키 입력
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (State != ECreatureState.DoubleJump && Input.GetKey(KeyCode.LeftControl) && CheckGround())
         {
-            _moveDirKeyPressed = false;
+            // 점프키를 입력하고 캐릭터가 바닥에 닿아있으면 점프 가능
+            // 이단 점프 중에는 점프 불가능
+            State = ECreatureState.Jump;
             return true;
+        }
+        else if (State == ECreatureState.Jump && Input.GetKey(KeyCode.LeftControl) && CheckGround() == false)
+        {
+            // TODO: 이단 점프
         }
 
         return false;
@@ -110,6 +114,11 @@ public class Player : Creature
         }
 
         base.UpdateRun();
+    }
+
+    protected override void UpdateJump()
+    {
+        base.UpdateJump();
     }
 
     protected override void UpdateWallCling()
