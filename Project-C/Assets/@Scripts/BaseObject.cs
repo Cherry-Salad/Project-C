@@ -19,7 +19,7 @@ public class BaseObject : InitBase
         {
             _gravityScale = value;
             Rigidbody.gravityScale = DefaultGravityScale;
-        } 
+        }
     }
 
     public override bool Init()

@@ -49,7 +49,7 @@ public class Creature : BaseObject
         return true;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         //Debug.Log(Rigidbody.velocity);
         UpdateController();
@@ -134,8 +134,8 @@ public class Creature : BaseObject
         if (CheckGround())
         {
             // 바닥 감지
-            Rigidbody.gravityScale = 0f;    // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
-            Rigidbody.velocity = MoveDir * MoveSpeed;   // Rigidbody.velocity.y를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
+            // Rigidbody.velocity.y를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
+            Rigidbody.velocity = MoveDir * MoveSpeed;
         }
         else
         {
@@ -149,14 +149,15 @@ public class Creature : BaseObject
         bool OnGround = CheckGround();
 
         // TODO: 바닥에 있다면 점프를 사용해서 벽 타기
-        // 캐릭터가 공중에 있으면서 벽을 감지
         if (OnGround == false && CheckWall())
         {
+            // 캐릭터가 공중에 있으면서 벽을 감지
             State = ECreatureState.WallCling;
             return;
         }
         else if (OnGround)
         {
+            // 캐릭터가 바닥에 닿을 때
             State = ECreatureState.Idle;
             return;
         }
@@ -174,6 +175,10 @@ public class Creature : BaseObject
 
     protected virtual void UpdateWallCling()
     {
+        // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
+        if (MoveDir.normalized.x == 0)
+            MoveDir = LookLeft ? Vector2.left : Vector2.right;
+
         // 캐릭터가 바닥에 닿거나 벽을 감지하지 못한 경우
         if (CheckGround() || CheckWall() == false)
         {
@@ -199,6 +204,21 @@ public class Creature : BaseObject
         Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
     }
 
+    protected virtual void OnJump()
+    {
+        // 캐릭터가 바닥에 닿아있으면 점프 가능
+        // 이단 점프 중에는 점프 불가능
+        if (State != ECreatureState.DoubleJump && CheckGround())
+        {
+            Rigidbody.AddForce(Vector2.up * 5f, ForceMode2D.Impulse);
+            State = ECreatureState.Jump;
+        }
+        else if (State == ECreatureState.Jump)
+        {
+            // TODO: 이단 점프
+        }
+    }
+
     protected virtual void OnDash()
     {
         // 벽에 매달린 상태에서 방향키를 누르지 않고 대시하면 반대 방향으로 대시한다
@@ -212,7 +232,7 @@ public class Creature : BaseObject
         Rigidbody.gravityScale = 0f;    
         Rigidbody.velocity = Vector2.zero;
 
-        // 움직이는 방향이 없다면 LookLeft을 기준으로 설정
+        // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
         if (MoveDir.normalized.x == 0)
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
 
@@ -269,20 +289,61 @@ public class Creature : BaseObject
 
     protected RaycastHit2D CheckObstacle(Vector2 dir, float distance)
     {
+        if (dir == Vector2.zero)
+            return default;
+
         // 벽이나 다른 물체같은 통행에 방해되는 장애물
-        return Physics2D.Raycast(Rigidbody.position, dir, distance, LayerMask.GetMask("Wall", "Ground"));
+        LayerMask obstacleLayer = LayerMask.GetMask("Wall", "Ground");
+
+        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
+        Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);
+
+        if (obstacle.collider != null)
+            return obstacle;
+
+        int rayCount = 2;   // Raycast 발사 횟수
+        Vector2 dirUp = new Vector2(dir.x, 0.3f);
+        Vector2 dirDown = new Vector2(dir.x, -0.3f);
+
+        // Vector2.down부터 leftDown
+        for (int i = 1; i <= rayCount; i++)
+        {
+            float interpolationRatio = i / (float)rayCount; // 보간 비율 (0 ~ 1)
+            Vector2 rayDir = Vector2.Lerp(dir, dirUp, interpolationRatio).normalized;
+            Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.green);
+
+            obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
+            if (obstacle.collider != null)
+                return obstacle;
+        }
+
+        // Vector2.down부터 rightDown
+        for (int i = 1; i <= rayCount; i++)
+        {
+            float interpolationRatio = i / (float)rayCount; // 보간 비율 (0 ~ 1)
+            Vector2 rayDir = Vector2.Lerp(dir, dirDown, interpolationRatio).normalized;
+            Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.magenta);
+
+            obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
+            if (obstacle.collider != null)
+                return obstacle;
+        }
+
+        return default;
     }
 
     protected bool CheckWall()
     {
         // 벽 감지
-        float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값(0.1f)을 추가
-        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));    // 캐릭터가 바라보고 있는 방향에 벽을 감지하는가
+        float wallCheckDistance = Collider.bounds.extents.x + 0.05f;    // 벽 감지 거리, Collider 크기 절반에 여유값 추가
+
+        // 캐릭터가 바라보고 있는 방향에 벽을 감지하는가
+        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));
     }
 
     protected bool CheckGround()
     {
-        float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
+        float groundCheckDistance = Collider.bounds.extents.y + 0.05f;  // 바닥 감지 거리
         LayerMask groundLayer = LayerMask.GetMask("Ground");
         Debug.DrawRay(Rigidbody.position, Vector2.down * groundCheckDistance, Color.red);
 
@@ -300,7 +361,7 @@ public class Creature : BaseObject
         {
             float interpolationRatio = i / (float)rayCount; // 보간 비율 (0 ~ 1)
             Vector2 dir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
-            Debug.DrawRay(Rigidbody.position, dir * groundCheckDistance, Color.blue);
+            Debug.DrawRay(Rigidbody.position, dir * groundCheckDistance, Color.red);
 
             if (Physics2D.Raycast(Rigidbody.position, dir, groundCheckDistance, groundLayer))
                 return true;
@@ -311,7 +372,7 @@ public class Creature : BaseObject
         {
             float interpolationRatio = i / (float)rayCount; // 보간 비율 (0 ~ 1)
             Vector2 dir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
-            Debug.DrawRay(Rigidbody.position, dir * groundCheckDistance, Color.red);
+            Debug.DrawRay(Rigidbody.position, dir * groundCheckDistance, Color.blue);
 
             if (Physics2D.Raycast(Rigidbody.position, dir, groundCheckDistance, groundLayer))
                 return true;

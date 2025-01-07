@@ -6,7 +6,9 @@ using static Define;
 public class Player : Creature
 {
     bool _moveDirKeyPressed = false;
-    
+
+    float _jumpStartTime = 0f;  // 점프 시작 시간
+
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
 
@@ -27,11 +29,14 @@ public class Player : Creature
         if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
 
-        if (IsDashInput() || IsJumpInput())
+        if (IsDashInput())
             return;
-        
+
+        IsJumpInput();
         _moveDirKeyPressed = IsMoveDirInput();
-        LookLeft = MoveDir.x < 0;
+
+        if (_moveDirKeyPressed)
+            LookLeft = MoveDir.x < 0;
     }
 
     bool IsDashInput()
@@ -48,16 +53,12 @@ public class Player : Creature
 
     bool IsJumpInput()
     {
-        if (State != ECreatureState.DoubleJump && Input.GetKey(KeyCode.LeftControl) && CheckGround())
+        // 점프키 입력
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            // 점프키를 입력하고 캐릭터가 바닥에 닿아있으면 점프 가능
-            // 이단 점프 중에는 점프 불가능
-            State = ECreatureState.Jump;
+            // TODO: 입력에 따라 점프 높이 조절
+            OnJump();
             return true;
-        }
-        else if (State == ECreatureState.Jump && Input.GetKey(KeyCode.LeftControl) && CheckGround() == false)
-        {
-            // TODO: 이단 점프
         }
 
         return false;
@@ -86,13 +87,16 @@ public class Player : Creature
             return true;
         }
 
+        // 방향키 입력이 없다면 캐릭터는 정지 상태 
+        MoveDir = Vector2.zero;
         return false;
     }
 
     protected override void UpdateController()
     {
-        GetInput();
+        // 물리 상태를 업데이트 한 뒤에 입력 처리
         base.UpdateController();
+        GetInput();
     }
 
     protected override void UpdateIdle()
