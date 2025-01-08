@@ -69,23 +69,19 @@ public class Dust : InitBase
 
         while (Owner.State == ECreatureState.WallCling)
         {
-            SpriteRenderer.flipX = Owner.LookLeft;
             yield return null;
         }
 
-        if (Owner.State == ECreatureState.WallClimbing)
-        {
-            transform.parent = null;
-            AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+        transform.parent = null;
+        AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
 
-            // 애니메이션 남은 시간 계산
-            float clipLength = stateInfo.length;
-            float elapsedTime = clipLength * (stateInfo.normalizedTime % 1);
-            float remainingTime = clipLength - elapsedTime;
+        // 애니메이션 남은 시간 계산
+        float clipLength = stateInfo.length;
+        float elapsedTime = clipLength * (stateInfo.normalizedTime % 1);
+        float remainingTime = clipLength - elapsedTime;
 
-            if (remainingTime > 0)
-                yield return new WaitForSeconds(remainingTime - 0.1f); // 남은 시간만큼 대기
-        }
+        if (remainingTime > 0)
+            yield return new WaitForSeconds(remainingTime - 0.1f); // 남은 시간만큼 대기
 
         Hide();
     }
