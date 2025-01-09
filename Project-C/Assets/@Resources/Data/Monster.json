@@ -1,0 +1,238 @@
+{
+  "Monsters": [
+    {
+      "DataID": 300001,                 // 몬스터 ID
+      "Type": "GoblinWarrior",          // 몬스터 타입
+      "CodeName": "GoblinWarrior1",     // 코드상 이름
+
+      "TypeLevel": "Normal",            // 몬스터 등급
+      "AttackTarget": "Player",         // 공격 타겟
+      "SpawnPosition": [ 0, 0 ],        // 리스폰 위치
+      "SpawnViewDirection": "Left",     // 리스본시 바라보는 방향
+      "Resurrection": true,             // 부활 가능 여부
+
+      "MaxHP": 30,                      // 최대 체력
+      "AttackSuccessDropMp": 1,         // 연속 공격 성공시 MP회복량
+
+      "Dynamics": {                     // 변화 데이터
+        "HP": 15,                       // HP
+        "GroggyGauge": 0,               // 그로기 게이지
+        "State": "IDLE",                // 상태
+        "StatusEffects": [],            // 상태 효과
+        "isActiveEvent": []             // 현재 활성화된 이벤트 목록
+      },
+
+      "Drop": {                         // 드롭 관련 데이터
+        "MP": 1,                        // 드롭 MP
+        "Money": 30,                    // 드롭 돈
+        "Item": [],                     // 드롭 아이템
+        "ItemDropProbability": 0.3      // 아이템 드롭 확률
+      },
+
+      "Event": {                        // 이벤트 관련 데이터
+        "IsEventTrigger": false,        // 이벤트 트리거 여부
+        "EventTriggerType": [],         // 이벤트 트리거 타입
+        "TriggerEvent": []              // 트리거 충족시 발생될 이벤트 
+      },
+
+      "Groggy": {                       // 그로기 관련
+        "IsPossible": false,            // 그로기 여부
+        "MAXGauge": 1,                  // 최대 그로기 게이지
+        "DurationTime": 0,              // 그로기 시간
+        "DropMP": 0                     // 그로기시 드롭되는 MP
+      },
+
+      "DisplayKR": {                    // UI 출력 관련 (한글)
+        "Name": "전사 고블린"           // 출력 이름
+      }
+    },
+
+    {
+      "DataID": 300002,
+      "Type": "GoblinBoomerangThrower",
+      "CodeName": "GoblinBoomerangThrower1",
+
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 5, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
+
+      "MaxHP": 20,
+      "AttackSuccessDropMp": 1,
+
+      "Dynamics": {
+        "HP": 20,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
+
+      "Drop": {
+        "MP": 1,
+        "Money": 25,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
+
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
+
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
+
+      "DisplayKR": {
+        "Name": "부매랑 고블린"
+      }
+    },
+
+    {
+      "DataID": 300003,
+      "Type": "GoblinWizard",
+      "CodeName": "GoblinWizard1",
+
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 10, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
+
+      "MaxHP": 18,
+      "AttackSuccessDropMp": 1,
+
+      "Dynamics": {
+        "HP": 18,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
+
+      "Drop": {
+        "MP": 1,
+        "Money": 25,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
+
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
+
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
+
+      "DisplayKR": {
+        "Name": "마법사 고블린"
+      }
+    },
+
+    {
+      "DataID": 300004,
+      "Type": "GoblinFly",
+      "CodeName": "GoblinFly1",
+
+      "TypeLevel": "Normal",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 15, 5 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": true,
+
+      "MaxHP": 15,
+      "AttackSuccessDropMp": 1,
+
+      "Dynamics": {
+        "HP": 15,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
+
+      "Drop": {
+        "MP": 1,
+        "Money": 10,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
+
+      "Event": {
+        "IsEventTrigger": false,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
+
+      "Groggy": {
+        "IsPossible": false,
+        "MAXGauge": 1,
+        "DurationTime": 0,
+        "DropMP": 0
+      },
+
+      "DisplayKR": {
+        "Name": "비행 고블린"
+      }
+    },
+
+    {
+      "DataID": 310001,
+      "Type": "GoblinElite",
+      "CodeName": "EliteGoblin",
+
+      "TypeLevel": "Boss",
+      "AttackTarget": "Player",
+      "SpawnPosition": [ 20, 0 ],
+      "SpawnViewDirection": "Left",
+      "Resurrection": false,
+
+      "MaxHP": 300,
+      "AttackSuccessDropMp": 1,
+
+      "Dynamics": {
+        "HP": 300,
+        "GroggyGauge": 0,
+        "State": "IDLE",
+        "StatusEffects": [],
+        "isActiveEvent": []
+      },
+
+      "Drop": {
+        "MP": 5,
+        "Money": 500,
+        "Item": [],
+        "ItemDropProbability": 0.3
+      },
+
+      "Event": {
+        "IsEventTrigger": true,
+        "EventTriggerType": [],
+        "TriggerEvent": []
+      },
+
+      "Groggy": {
+        "IsPossible": true,
+        "MAXGauge": 20,
+        "DurationTime": 3,
+        "DropMP": 1
+      },
+
+      "DisplayKR": {
+        "Name": "앨리트 고블린"
+      }
+    }
+  ]
+}

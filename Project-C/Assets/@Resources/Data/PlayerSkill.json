@@ -1,0 +1,114 @@
+{
+  "PlayerSkill" : [
+    {
+      "SkillID": 200001,                    // 스킬 ID
+      "CodeName": "SelfHealing",            // 코드상 이름
+      "MPCost": 2,                          // 소모 MP
+      "Type": "Heal",                       // 스킬 유형
+      "UsageCondition": "OnGround",         // 사용 조건 
+      "DefaultBoundKey": "",                // 기본 할당 키
+      "MAXLevel": 3,                        // 최대 레벨
+
+      "Effect": {                           // 효과 관련
+        "CastTime": [ 2.0, 1.33 ],          // 시전 시간
+        "RecoveryTime": 1,                  // 시전후 회복 시간
+
+        "HealingValue": [ 2, 4, 6 ],        // 회복량
+
+        "ProjectileName": "",               // 투사체 이름
+        "NumberOfShots": 0,                 // 투사체 발사 횟수
+        "DelayBetweenShots": 0,             // 투사체 발사간 시간 간격
+        "InitialAngle": 0,                  // 투사체 발사 각도
+        "DamageMultiplier": 0,              // 스킬 데미지곱
+
+        "AttackRange": 0,                   // 공격 범위
+        "RetentionTime": 0                  // 공격 유지 시간
+      },
+
+      "Dynamics": {                         // 변화 데이터
+        "Level": 0,                         // 스킬 레벨
+        "IsUnlock": true,                   // 해금 여부
+        "BoundingKey": "",                  // 현재 할당 키
+        "AdditionalValue": 0                // 추가 연산 값
+      },
+
+      "DisplayKR": {                        // 게임 UI 출력 관련 (한글)
+        "Name": "회복",                     // 출력 이름
+        "Description": "체력을 회복합니다." // 스킬 설명
+      }
+    },
+    {
+      "SkillID": 200002,
+      "CodeName": "IceBall",
+      "MPCost": 2,
+      "Type": "Projectile",
+      "UsageCondition": "Always",
+      "DefaultBoundKey": "",
+      "MAXLevel": 3,
+
+      "Effect": {
+        "CastTime": 0.3,
+        "RecoveryTime": 1,
+
+        "HealingValue": [ 2, 4, 6 ],
+
+        "ProjectileName": "PlayerIceBall",
+        "NumberOfShots": 1,
+        "DelayBetweenShots": 0,
+        "InitialAngle": 0,
+        "DamageMultiplier": 1.5,
+
+        "AttackRange": 1.0,
+        "RetentionTime": 0.1
+      },
+
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "BoundingKey": "",
+        "AdditionalValue": 0
+      },
+
+      "DisplayKR": {
+        "Name": "아이스 볼",
+        "Description": "얼음 투사체를 발사 합니다."
+      }
+    },
+    {
+      "SkillID": 200003,
+      "CodeName": "IceBreak",
+      "MPCost": 2,
+      "Type": "Melee",
+      "UsageCondition": "OnGround",
+      "DefaultBoundKey": "",
+      "MAXLevel": 3,
+
+      "Effect": {
+        "CastTime": 0.3,
+        "RecoveryTime": 1,
+
+        "ProjectileName": "0",
+        "NumberOfShots": 0,
+        "DelayBetweenShots": 0,
+        "InitialAngle": 0,
+        "DamageMultiplier": 2,
+
+        "AttackRange": 1.0,
+        "RetentionTime": 0.1
+      },
+
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "BoundingKey": "",
+        "AdditionalValue": 0
+      },
+
+      "DisplayKR": {
+        "Name": "아이스 브레이크",
+        "Description": "전방에 강한 얼음 공격을 합니다."
+      }
+    }
+  ]
+}
+
