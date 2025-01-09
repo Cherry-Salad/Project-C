@@ -38,6 +38,7 @@ public class Creature : BaseObject
 
     public float MoveSpeed { get; protected set; }
     public float JumpForce { get; protected set; }
+    public float DoubleJumpForce { get; protected set; }    // 이단 점프할 때 추가적인 점프 힘
 
     public override bool Init()
     {
@@ -70,6 +71,7 @@ public class Creature : BaseObject
                 Animator.Play("Jump");
                 break;
             case ECreatureState.DoubleJump:
+                Animator.Play("DoubleJump");
                 break;
             case ECreatureState.Skill:
                 break;
@@ -102,6 +104,9 @@ public class Creature : BaseObject
                 UpdateRun();
                 break;
             case ECreatureState.Jump:
+                UpdateJump();
+                break;
+            case ECreatureState.DoubleJump:
                 UpdateJump();
                 break;
             case ECreatureState.WallCling:
@@ -166,7 +171,7 @@ public class Creature : BaseObject
         bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null;
         float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;
         
-        // 공중에 있다면 원래대로 중력 적용
+        // 낙하 중이라면 기본 중력 적용
         Rigidbody.gravityScale = DefaultGravityScale;
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
     }
@@ -206,7 +211,7 @@ public class Creature : BaseObject
         // 이단 점프 중에는 점프 불가능
         if (State != ECreatureState.DoubleJump && CheckGround())
         {
-            // 공중이므로 원래대로 중력 적용
+            // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
 
             // 경사진 바닥에서도 점프를 할 수 있도록 velocity.x를 0으로 설정
@@ -217,7 +222,11 @@ public class Creature : BaseObject
         }
         else if (State == ECreatureState.Jump)
         {
-            // TODO: 이단 점프
+            // 이단 점프
+            // 공중이므로 기본 중력 적용
+            Rigidbody.gravityScale = DefaultGravityScale;
+            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + DoubleJumpForce);
+            State = ECreatureState.DoubleJump;
         }
     }
 
@@ -231,7 +240,7 @@ public class Creature : BaseObject
         }
 
         // 대시하는 동안 물리적인 현상은 무시한다
-        Rigidbody.gravityScale = 0f;    
+        Rigidbody.gravityScale = 0f;
         Rigidbody.velocity = Vector2.zero;
 
         // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
@@ -302,6 +311,7 @@ public class Creature : BaseObject
     /// <returns></returns>
     protected RaycastHit2D CheckObstacle(Vector2 dir, float distance, bool isDetailedCheck = false)
     {
+        // 캐릭터가 정지 상태인지 확인
         if (dir == Vector2.zero)
             return default;
 

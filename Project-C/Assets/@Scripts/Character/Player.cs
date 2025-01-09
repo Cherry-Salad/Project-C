@@ -9,7 +9,7 @@ public class Player : Creature
 
     bool _jumpKeyPressed = false;
     float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
-    float _jumpDuration = 0.5f; // 점프 유지 시간
+    float _jumpDuration = 0.3f; // 점프 유지 시간, 원래는 0.5초로 했는데 이게 체감상 손가락에 좀 무리가 가더라구..
     float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
 
     float _dashCoolTime = 1.0f; // 대시 쿨타임
@@ -24,13 +24,14 @@ public class Player : Creature
         
         MoveSpeed = 5f;    // TODO: 데이터를 파싱하여 MoveSpeed 불러오기
         JumpForce = 6f;
-
+        DoubleJumpForce = 1f;
+        
         return true;
     }
 
     /// <summary>
     /// 입력 키를 감지한다.
-    /// 대시, 피격, 스킬 사용 중일 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
+    /// 대시, 피격, 스킬을 사용할 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
     /// </summary>
     void GetInput()
     {
@@ -63,6 +64,7 @@ public class Player : Creature
 
     bool IsJumpInput()
     {
+        // TODO: 나중에 기본 키를 바꾸는게 좋겠다.. 점프 키를 컨트롤로 하니까 왼손 새끼 손가락에 무리가 간다.. 아니면 내 손이 문제인가..?
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             _jumpKeyPressed = false;
@@ -185,11 +187,11 @@ public class Player : Creature
         // 추가 점프 힘 적용
         if (State == ECreatureState.Jump)
         {
-            // 공중에 있다면 원래대로 중력 적용
+            // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
 
-            // 점프 키를 누르고 있을 때 더 높이 점프한다
-            Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse);
+            //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
+            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
             State = ECreatureState.Jump;
             return;
         }
