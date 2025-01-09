@@ -6,8 +6,8 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: climb
-  serializedVersion: 6
+  m_Name: Climb
+  serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
   m_UseHighQualityCurve: 1
@@ -18,11 +18,12 @@ AnimationClip:
   m_ScaleCurves: []
   m_FloatCurves: []
   m_PPtrCurves:
-  - curve:
+  - serializedVersion: 2
+    curve:
     - time: 0
       value: {fileID: 21300000, guid: f37cff2008c16c04b9a961a048cccaaa, type: 3}
     - time: 0.1
-      value: {fileID: 21300000, guid: 0480b96869af9694f9c4601ed25d2273, type: 3}
+      value: {fileID: 21300000, guid: f37cff2008c16c04b9a961a048cccaaa, type: 3}
     - time: 0.2
       value: {fileID: 21300000, guid: 29f93dc0a32f39f46b1a3447712f2038, type: 3}
     - time: 0.3
@@ -39,6 +40,7 @@ AnimationClip:
     path: 
     classID: 212
     script: {fileID: 0}
+    flags: 2
   m_SampleRate: 10
   m_WrapMode: 0
   m_Bounds:
@@ -53,9 +55,11 @@ AnimationClip:
       typeID: 212
       customType: 23
       isPPtrCurve: 1
+      isIntCurve: 0
+      isSerializeReferenceCurve: 0
     pptrCurveMapping:
     - {fileID: 21300000, guid: f37cff2008c16c04b9a961a048cccaaa, type: 3}
-    - {fileID: 21300000, guid: 0480b96869af9694f9c4601ed25d2273, type: 3}
+    - {fileID: 21300000, guid: f37cff2008c16c04b9a961a048cccaaa, type: 3}
     - {fileID: 21300000, guid: 29f93dc0a32f39f46b1a3447712f2038, type: 3}
     - {fileID: 21300000, guid: 2d5ae046784351e4ba7315d56065aab9, type: 3}
     - {fileID: 21300000, guid: 2048127fdacbe8f4a9fdb990ef0d040b, type: 3}

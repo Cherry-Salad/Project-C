@@ -21,7 +21,7 @@ namespace Assets.PixelFantasy.Common.Scripts
             Instance = Resources.Load<EffectManager>("EffectManager");
         }
 
-        public void Blink(Creature creature)
+        public void Blink(ExCreature creature)
         {
             if (_baseMaterial == null) _baseMaterial = creature.Body.sharedMaterial;
             if (_blinkMaterial == null) _blinkMaterial = new Material(Shader.Find("GUI/Text Shader"));
@@ -29,7 +29,7 @@ namespace Assets.PixelFantasy.Common.Scripts
             creature.StartCoroutine(BlinkCoroutine(creature));
         }
 
-        private IEnumerator BlinkCoroutine(Creature creature)
+        private IEnumerator BlinkCoroutine(ExCreature creature)
         {
             creature.Body.material = _blinkMaterial;
 
@@ -38,7 +38,7 @@ namespace Assets.PixelFantasy.Common.Scripts
             creature.Body.material = _baseMaterial;
         }
 
-        public SpriteEffect CreateSpriteEffect(Creature creature, string clipName, int direction = 0, Transform parent = null)
+        public SpriteEffect CreateSpriteEffect(ExCreature creature, string clipName, int direction = 0, Transform parent = null)
         {
             var instance = Instantiate(SpriteEffectPrefab, creature.transform.position, Quaternion.identity, parent);
 
