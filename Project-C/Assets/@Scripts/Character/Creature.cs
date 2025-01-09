@@ -37,6 +37,7 @@ public class Creature : BaseObject
     }
 
     public float MoveSpeed { get; protected set; }
+    public float JumpForce { get; protected set; }
 
     public override bool Init()
     {
@@ -51,14 +52,13 @@ public class Creature : BaseObject
 
     void Update()
     {
-        //Debug.Log(Rigidbody.velocity);
+        Debug.Log(Rigidbody.velocity);
         UpdateController();
     }
 
     protected virtual void UpdateAnimation()
     {
-        // State pattern
-        switch (State)  // TODO: 애니메이션 연결
+        switch (State)  // State pattern
         {
             case ECreatureState.Idle:
                 Animator.Play("Idle");
@@ -93,8 +93,7 @@ public class Creature : BaseObject
 
     protected virtual void UpdateController()
     {
-        // State pattern
-        switch (State)
+        switch (State)  // State pattern
         {
             case ECreatureState.Idle:
                 UpdateIdle();
@@ -118,8 +117,8 @@ public class Creature : BaseObject
     {
         if (CheckGround())
         {
-            // 바닥 감지
-            Rigidbody.gravityScale = 0f;    // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
+            // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
+            Rigidbody.gravityScale = 0f;
             Rigidbody.velocity = Vector2.zero;
         }
         else
@@ -133,7 +132,6 @@ public class Creature : BaseObject
     {
         if (CheckGround())
         {
-            // 바닥 감지
             // Rigidbody.velocity.y를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
             Rigidbody.velocity = MoveDir * MoveSpeed;
         }
@@ -163,8 +161,7 @@ public class Creature : BaseObject
         }
         // TODO: 이단 점프 가능
 
-        // 공중에서 낙하 중 이동 방향에 장애물이 있으면 제자리에서 걷는 버그 방지
-        // 수평 속도를 0으로 설정하고 즉시 낙하
+        // 낙하 중일 때 이동 방향에 장애물이 있으면 제자리에서 걷는 버그 방지: 수평 속도를 0으로 설정하고 즉시 낙하
         float distance = Collider.bounds.extents.x + 0.1f;
         bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null;
         float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;
@@ -194,7 +191,6 @@ public class Creature : BaseObject
 
     protected virtual void UpdateWallClimbing()
     {
-        // 벽을 감지하지 못한 경우
         if (CheckWall() == false)
         {
             State = ECreatureState.Idle;
@@ -207,13 +203,16 @@ public class Creature : BaseObject
 
     protected virtual void OnJump()
     {
-        // 캐릭터가 바닥에 닿아있으면 점프 가능
         // 이단 점프 중에는 점프 불가능
         if (State != ECreatureState.DoubleJump && CheckGround())
         {
+            // 공중이므로 원래대로 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
-            Rigidbody.velocity = new Vector2(0f, Rigidbody.velocity.y); // 경사진 바닥에서도 점프를 할 수 있도록 velocity.x를 0으로 설정
-            Rigidbody.AddForce(Vector2.up * 7f, ForceMode2D.Impulse);
+
+            // 경사진 바닥에서도 점프를 할 수 있도록 velocity.x를 0으로 설정
+            Rigidbody.velocity = new Vector2(0f, Rigidbody.velocity.y);
+            Rigidbody.AddForce(Vector2.up * JumpForce, ForceMode2D.Impulse);
+            
             State = ECreatureState.Jump;
         }
         else if (State == ECreatureState.Jump)
@@ -283,6 +282,9 @@ public class Creature : BaseObject
         State = OnGround ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
+    /// <summary>
+    /// Dash, WallCling 등의 상태에 따라 다양한 먼지 효과를 연출한다
+    /// </summary>
     protected void ShowDustEffect()
     {
         Dust dust = Managers.Resource.Instantiate("Dust").GetComponent<Dust>();
@@ -290,24 +292,27 @@ public class Creature : BaseObject
             dust.PlayEffect(this);
     }
 
-    protected RaycastHit2D CheckObstacle(Vector2 dir, float distance, bool IsDetailedCheck = false)
+    #region 벽, 바닥, 장애물 감지
+    /// <summary>
+    /// 벽이나 벽처럼 통행에 방해되는 장애물을 감지한다
+    /// </summary>
+    /// <param name="dir">방향</param>
+    /// <param name="distance">감지 거리</param>
+    /// <param name="isDetailedCheck">더 섬세하게 감지할 것인지</param>
+    /// <returns></returns>
+    protected RaycastHit2D CheckObstacle(Vector2 dir, float distance, bool isDetailedCheck = false)
     {
         if (dir == Vector2.zero)
             return default;
 
-        // 벽이나 벽처럼 통행에 방해되는 장애물 감지
         LayerMask obstacleLayer = LayerMask.GetMask("Ground", "Wall");
         RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);
 
-        if (obstacle.collider != null || IsDetailedCheck == false)
-        {
-            if (obstacle.collider == null)
-                obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
+        if (obstacle.collider != null || isDetailedCheck == false)
             return obstacle;
-        }
 
-        int rayCount = 10;   // Raycast 발사 횟수
+        int rayCount = 5;   // Raycast 발사 횟수
         Vector2 dirUp = new Vector2(dir.x, 1f);
         Vector2 dirDown = new Vector2(dir.x, -1f);
 
@@ -338,16 +343,22 @@ public class Creature : BaseObject
         return default;
     }
 
+    /// <summary>
+    /// 캐릭터 앞에 벽이 있는가
+    /// </summary>
+    /// <returns></returns>
     protected bool CheckWall()
     {
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값 추가
         Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
-
-        // 캐릭터가 바라보고 있는 방향에 벽을 감지하는가
         return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));
     }
 
+    /// <summary>
+    /// 캐릭터가 바닥에 있는가
+    /// </summary>
+    /// <returns></returns>
     protected bool CheckGround()
     {
         float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
@@ -367,10 +378,10 @@ public class Creature : BaseObject
         for (int i = 1; i <= rayCount; i++)
         {
             float interpolationRatio = i / (float)rayCount; // 보간 비율 (0 ~ 1)
-            Vector2 dir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
-            Debug.DrawRay(Rigidbody.position, dir * groundCheckDistance, Color.red);
+            Vector2 rayDir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
+            Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.red);
 
-            if (Physics2D.Raycast(Rigidbody.position, dir, groundCheckDistance, groundLayer))
+            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, groundLayer))
                 return true;
         }
 
@@ -378,13 +389,14 @@ public class Creature : BaseObject
         for (int i = 1; i <= rayCount; i++)
         {
             float interpolationRatio = i / (float)rayCount; // 보간 비율 (0 ~ 1)
-            Vector2 dir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
-            Debug.DrawRay(Rigidbody.position, dir * groundCheckDistance, Color.blue);
+            Vector2 rayDir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
+            Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.blue);
 
-            if (Physics2D.Raycast(Rigidbody.position, dir, groundCheckDistance, groundLayer))
+            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, groundLayer))
                 return true;
         }
 
         return false;
     }
+    #endregion
 }

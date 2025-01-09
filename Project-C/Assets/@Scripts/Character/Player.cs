@@ -7,7 +7,10 @@ public class Player : Creature
 {
     bool _moveDirKeyPressed = false;
 
-    float _jumpStartTime = 0f;  // 점프 시작 시간
+    bool _jumpKeyPressed = false;
+    float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
+    float _jumpDuration = 0.5f; // 점프 유지 시간
+    float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
 
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
@@ -18,16 +21,23 @@ public class Player : Creature
             return false;
 
         ObjectType = EObjectType.Player;
+        
         MoveSpeed = 5f;    // TODO: 데이터를 파싱하여 MoveSpeed 불러오기
+        JumpForce = 6f;
 
         return true;
     }
 
-    void GetInput() // 입력 감지, TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다.
+    /// <summary>
+    /// 입력 키를 감지한다.
+    /// 대시, 피격, 스킬 사용 중일 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
+    /// </summary>
+    void GetInput()
     {
-        // 대시, 피격, 스킬 사용 중일 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
         if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
+
+        // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
         if (IsDashInput())
             return;
@@ -53,10 +63,31 @@ public class Player : Creature
 
     bool IsJumpInput()
     {
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            _jumpKeyPressed = false;
+            _jumpKeyPressedTime = 0f;
+            return false;
+        }
+
+        // 키를 꾹 누르고 있을 때
+        if (_jumpKeyPressed)    
+        {
+            float pressedTime = Time.time - _jumpKeyPressedTime;
+            if (pressedTime < _jumpDuration)
+            {
+                OnJumpHold();
+                return true;
+            }
+
+            return false;
+        }
+
         // 점프키 입력
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            // TODO: 입력에 따라 점프 높이 조절
+            _jumpKeyPressed = true;
+            _jumpKeyPressedTime = Time.time;
             OnJump();
             return true;
         }
@@ -144,6 +175,24 @@ public class Player : Creature
         }
 
         base.UpdateWallClimbing();
+    }
+
+    /// <summary>
+    /// 점프 키를 누르고 있을 때 더 높이 점프한다
+    /// </summary>
+    void OnJumpHold()
+    {
+        // 추가 점프 힘 적용
+        if (State == ECreatureState.Jump)
+        {
+            // 공중에 있다면 원래대로 중력 적용
+            Rigidbody.gravityScale = DefaultGravityScale;
+
+            // 점프 키를 누르고 있을 때 더 높이 점프한다
+            Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse);
+            State = ECreatureState.Jump;
+            return;
+        }
     }
 
     protected override void OnDash()
