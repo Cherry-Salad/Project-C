@@ -13,7 +13,13 @@ public class ResourceManager
     // Addressable 로드 핸들을 저장하는 Dictionary
     Dictionary<string, AsyncOperationHandle> _handles = new Dictionary<string, AsyncOperationHandle>();
 
-    public T Load<T>(string key) where T : Object   // 이미 로드된 리소스를 반환
+    /// <summary>
+    /// 로드된 리소스를 반환
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="key"></param>
+    /// <returns></returns>
+    public T Load<T>(string key) where T : Object
     {
         if (_resources.TryGetValue(key, out Object resource))
             return resource as T;
@@ -25,10 +31,17 @@ public class ResourceManager
                 return resource as T;
         }
 
-        return null;    // 리소스를 찾지 못했다
+        // 리소스를 찾지 못했다
+        return null;
     }
 
-    public GameObject Instantiate(string key, Transform parent = null)  // 로드된 프리팹을 인스턴스화
+    /// <summary>
+    /// 로드된 프리팹을 인스턴스화
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="parent"></param>
+    /// <returns></returns>
+    public GameObject Instantiate(string key, Transform parent = null)
     {
         GameObject prefab = Load<GameObject>($"{key}");
         if (prefab == null)
@@ -53,7 +66,13 @@ public class ResourceManager
     }
 
     #region Addressable
-    public void LoadAsync<T>(string key, Action<T> callback = null) where T : Object    // Addressable 리소스를 비동기로 로드
+    /// <summary>
+    /// Addressable 리소스 비동기 로드
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="key"></param>
+    /// <param name="callback"></param>
+    public void LoadAsync<T>(string key, Action<T> callback = null) where T : Object
     {
         // 이미 캐싱된 리소스가 있으면 바로 반환
         if (_resources.TryGetValue(key, out Object resource))
@@ -78,7 +97,13 @@ public class ResourceManager
         };
     }
 
-    public void LoadAllAsync<T>(string label, Action<string, int, int> callback = null) where T : Object    // 특정 라벨의 모든 Addressable 리소스를 비동기로 로드
+    /// <summary>
+    /// 특정 라벨의 모든 Addressable 리소스를 비동기 로드
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="label"></param>
+    /// <param name="callback"></param>
+    public void LoadAllAsync<T>(string label, Action<string, int, int> callback = null) where T : Object
     {
         var opHandle = Addressables.LoadResourceLocationsAsync(label, typeof(T));
         opHandle.Completed += (op) =>
@@ -88,6 +113,7 @@ public class ResourceManager
 
             foreach (var result in op.Result)
             {
+                // 만약 ".sprite"가 없다면 Sprite로 인식하지 않는다. 진짜 왜?
                 if (result.PrimaryKey.Contains(".sprite"))
                 {
                     LoadAsync<Sprite>(result.PrimaryKey, (obj) =>
@@ -108,7 +134,10 @@ public class ResourceManager
         };
     }
 
-    public void Clear() // 로드된 리소스와 핸들 해제
+    /// <summary>
+    /// 로드된 리소스와 핸들 해제
+    /// </summary>
+    public void Clear()
     {
         _resources.Clear(); // 리소스 캐시 초기화
 

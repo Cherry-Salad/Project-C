@@ -23,8 +23,14 @@ public class Define
         DoubleJump,
         Skill,
         Dash,
-        WallClimbing,   // 벽 타기
-        WallCling,  // 벽 매달림
+        /// <summary>
+        /// 벽 타기
+        /// </summary>
+        WallClimbing,
+        /// <summary>
+        /// 벽 매달림
+        /// </summary>
+        WallCling,
         Hurt,
         Dead,
     }

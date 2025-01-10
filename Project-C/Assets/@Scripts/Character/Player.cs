@@ -40,12 +40,10 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
-        if (IsDashInput())
+        if (IsDashInput() || IsJumpInput())
             return;
-
-        IsJumpInput();
+        
         _moveDirKeyPressed = IsMoveDirInput();
-
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
     }
