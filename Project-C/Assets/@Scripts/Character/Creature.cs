@@ -46,7 +46,7 @@ public class Creature : BaseObject
             return false;
 
         State = ECreatureState.Idle;
-        Managers.Resource.LoadAsync<Object>("Dust");    // Test
+        //Managers.Resource.LoadAsync<Object>("Dust");    // Test
 
         return true;
     }

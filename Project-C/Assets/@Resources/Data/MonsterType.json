@@ -13,7 +13,7 @@
         "MovementMultiplier": 0.7         // 속도 변환값
       },
 
-      "Behavior": {                       // 전투 상태
+      "Battle": {                       // 전투 상태
         "BattleEndTime": 15,              // 타겟 이탈후 상태 유지 시간
         "MovementMultiplier": 1.0,        // 속도 변환값
         "Attack": [                       // 공격 패턴
@@ -49,7 +49,7 @@
         "MovementMultiplier": 0.6
       },
 
-      "Behavior": {
+      "Battle": {
         "BattleEndTime": 15,
         "MovementMultiplier": 1.0,
         "Attack": [
@@ -85,7 +85,7 @@
         "MovementMultiplier": 0.6
       },
 
-      "Behavior": {
+      "Battle": {
         "BattleEndTime": 15,
         "MovementMultiplier": 0.8,
         "Attack": [
@@ -121,7 +121,7 @@
         "MovementMultiplier": 1.0
       },
 
-      "Behavior": {
+      "Battle": {
         "BattleEndTime": 15,
         "MovementMultiplier": 1.2,
         "Attack": [
@@ -157,7 +157,7 @@
         "MovementMultiplier": 0.8
       },
 
-      "Behavior": {
+      "Battle": {
         "BattleEndTime": 15,
         "MovementMultiplier": 1.2,
         "Attack": [
