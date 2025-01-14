@@ -7,6 +7,7 @@ public class Player : Creature
 {
     bool _moveDirKeyPressed = false;
 
+    bool _isWallJump = false;
     bool _jumpKeyPressed = false;
     float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
     float _jumpDuration = 0.3f; // 점프 유지 시간, 원래는 0.5초로 했는데 이게 체감상 손가락에 좀 무리가 가더라구..
@@ -25,7 +26,8 @@ public class Player : Creature
         MoveSpeed = 5f;    // TODO: 데이터를 파싱하여 MoveSpeed 불러오기
         JumpForce = 6f;
         DoubleJumpForce = 1f;
-        
+
+        Managers.Resource.LoadAsync<Object>("Dust");    // Test
         return true;
     }
 
@@ -40,9 +42,10 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
-        if (IsDashInput() || IsJumpInput())
+        if (IsDashInput())
             return;
-        
+
+        IsJumpInput();
         _moveDirKeyPressed = IsMoveDirInput();
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
@@ -74,7 +77,7 @@ public class Player : Creature
         if (_jumpKeyPressed)    
         {
             float pressedTime = Time.time - _jumpKeyPressedTime;
-            if (pressedTime < _jumpDuration)
+            if (pressedTime >= 0.1f && pressedTime < _jumpDuration)
             {
                 OnJumpHold();
                 return true;
@@ -123,6 +126,22 @@ public class Player : Creature
         return false;
     }
 
+    protected override void UpdateAnimation()
+    {
+        base.UpdateAnimation();
+        
+        // 임시로 플레이어만 먼지 효과를 연출한다
+        switch (State)
+        {
+            case ECreatureState.Dash:
+                ShowDustEffect();
+                break;
+            case ECreatureState.WallCling:
+                ShowDustEffect();
+                break;
+        }
+    }
+
     protected override void UpdateController()
     {
         // 물리 상태를 업데이트 한 뒤에 입력 처리
@@ -133,9 +152,7 @@ public class Player : Creature
     protected override void UpdateIdle()
     {
         if (_moveDirKeyPressed)
-        {
             State = ECreatureState.Run;
-        }
 
         base.UpdateIdle();
     }
@@ -154,14 +171,15 @@ public class Player : Creature
     protected override void UpdateJump()
     {
         base.UpdateJump();
+
+        if (State == ECreatureState.Idle || State == ECreatureState.WallCling)
+            _isWallJump = false;
     }
 
     protected override void UpdateWallCling()
     {
         if (_moveDirKeyPressed)
-        {
             State = ECreatureState.WallClimbing;
-        }
 
         base.UpdateWallCling();
     }
@@ -177,13 +195,20 @@ public class Player : Creature
         base.UpdateWallClimbing();
     }
 
+    protected override void OnWallJump()
+    {
+        base.OnWallJump();
+        _isWallJump = true;
+    }
+
     /// <summary>
     /// 점프 키를 누르고 있을 때 더 높이 점프한다
     /// </summary>
     void OnJumpHold()
     {
         // 추가 점프 힘 적용
-        if (State == ECreatureState.Jump)
+        // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
+        if (State == ECreatureState.Jump && _isWallJump == false)
         {
             // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;

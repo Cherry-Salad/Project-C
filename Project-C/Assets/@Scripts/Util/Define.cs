@@ -21,6 +21,7 @@ public class Define
         Run,
         Jump,
         DoubleJump,
+        WallJump,
         Skill,
         Dash,
         /// <summary>
