@@ -5,6 +5,13 @@ using static Define;
 
 public class Player : Creature
 {
+    public Data.PlayerData Data;
+
+    public int Mp { get; protected set; }
+    public int MaxMp { get; protected set; }
+    public int HpLevel { get; protected set; }
+    public int MpLevel { get; protected set; }
+
     bool _moveDirKeyPressed = false;
 
     bool _isWallJump = false;
@@ -23,11 +30,32 @@ public class Player : Creature
 
         ObjectType = EObjectType.Player;
         
-        MoveSpeed = 5f;    // TODO: 데이터를 파싱하여 MoveSpeed 불러오기
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        Managers.Resource.LoadAsync<Object>("Dust");    // Test
+        // Test
+        Managers.Resource.LoadAsync<Object>("Dust");
+
+        // Test, 플레이어 데이터 파싱
+        Managers.Resource.LoadAsync<Object>("PlayerData", (obj) => {
+            Managers.Data.Init();   // TODO: 메인 화면에서 모든 데이터 초기화
+
+            // 플레이어 데이터
+            Data = Managers.Data.PlayerDataDic[PLAYER_ID];
+            Hp = Data.Hp;
+            MaxHp = Data.MaxHp;
+            HpLevel = Data.HpLevel;
+            Mp = Data.Mp;
+            MaxMp = Data.MaxMp;
+            MpLevel = Data.MpLevel;
+            MoveSpeed = Data.Speed;
+
+            // 확인용
+            Debug.Log($"Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
+            Debug.Log($"Mp: {Mp}, MaxMp: {MaxMp}, MpLevel: {MpLevel}");
+            Debug.Log($"MoveSpeed: {MoveSpeed}, Data parsing successful!");
+        });
+        
         return true;
     }
 

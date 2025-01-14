@@ -36,6 +36,9 @@ public class Creature : BaseObject
         }
     }
 
+    public int Hp { get; protected set; }
+    public int MaxHp { get; protected set; }
+    public int Atk { get; protected set; }
     public float MoveSpeed { get; protected set; }
     public float JumpForce { get; protected set; }
     public float DoubleJumpForce { get; protected set; }    // 이단 점프할 때 추가적인 점프 힘

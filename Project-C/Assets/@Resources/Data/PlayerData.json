@@ -1,7 +1,7 @@
 {
     "player": [
       {
-        "DataID": 10001,
+        "DataID": 100001,
         "Name": "Adventurer",
         "Hp": 3,
         "MaxHp": 3,
