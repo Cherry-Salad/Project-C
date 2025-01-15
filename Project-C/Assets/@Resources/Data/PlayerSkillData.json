@@ -47,7 +47,7 @@
       "MAXLevel": 3,
 
       "Effect": {
-        "CastTime": 0.3,
+        "CastTime": [ 0.3 ],
         "RecoveryTime": 1,
 
         "HealingValue": [ 2, 4, 6 ],
@@ -84,7 +84,7 @@
       "MAXLevel": 3,
 
       "Effect": {
-        "CastTime": 0.3,
+        "CastTime": [ 0.3 ],
         "RecoveryTime": 1,
 
         "ProjectileName": "0",

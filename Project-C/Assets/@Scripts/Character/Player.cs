@@ -1,16 +1,24 @@
+using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
+using Object = UnityEngine.Object;
 
 public class Player : Creature
 {
-    public Data.PlayerData Data;
+    public PlayerData Data;
+    public List<PlayerSkillData> SkillData = new List<PlayerSkillData>(); // Test, 확인 후 지울 예정
 
+    #region Stat
     public int Mp { get; protected set; }
     public int MaxMp { get; protected set; }
     public int HpLevel { get; protected set; }
     public int MpLevel { get; protected set; }
+    public int AtkLevel { get; protected set; }
+    public int AccessorySlot { get; protected set; }
+    #endregion
 
     bool _moveDirKeyPressed = false;
 
@@ -33,29 +41,54 @@ public class Player : Creature
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        // Test
-        Managers.Resource.LoadAsync<Object>("Dust");
+        // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
+        #region PreLoad 어드레서블 모두 로드
+        Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
+        {
+            // 모두 로드
+            if (loadCount == totalCount)
+            {
+                Managers.Data.Init();
 
-        // Test, 플레이어 데이터 파싱
-        Managers.Resource.LoadAsync<Object>("PlayerData", (obj) => {
-            Managers.Data.Init();   // TODO: 메인 화면에서 모든 데이터 초기화
+                // 플레이어 스탯
+                Data = Managers.Data.PlayerDataDic[PLAYER_ID];
+                Hp = Data.Hp;
+                MaxHp = Data.MaxHp;
+                HpLevel = Data.HpLevel;
+                Mp = Data.Mp;
+                MaxMp = Data.MaxMp;
+                MpLevel = Data.MpLevel;
+                Atk = Data.Atk;
+                AtkLevel = Data.AtkLevel;
+                MoveSpeed = Data.Speed;
+                AccessorySlot = Data.AccessorySlot;
 
-            // 플레이어 데이터
-            Data = Managers.Data.PlayerDataDic[PLAYER_ID];
-            Hp = Data.Hp;
-            MaxHp = Data.MaxHp;
-            HpLevel = Data.HpLevel;
-            Mp = Data.Mp;
-            MaxMp = Data.MaxMp;
-            MpLevel = Data.MpLevel;
-            MoveSpeed = Data.Speed;
+                // 확인용
+                Debug.Log($"Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
+                Debug.Log($"Mp: {Mp}, MaxMp: {MaxMp}, MpLevel: {MpLevel}");
+                Debug.Log($"Atk: {Atk}, AtkLevel: {AtkLevel}");
+                Debug.Log($"MoveSpeed: {MoveSpeed}, AccessorySlot: {AccessorySlot}, Data parsing successful!");
 
-            // 확인용
-            Debug.Log($"Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
-            Debug.Log($"Mp: {Mp}, MaxMp: {MaxMp}, MpLevel: {MpLevel}");
-            Debug.Log($"MoveSpeed: {MoveSpeed}, Data parsing successful!");
+                // 플레이어 스킬
+                foreach (int skillId in Data.SkillIdList)
+                {
+                    if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
+                        return;
+
+                    SkillData.Add(data);    // Test, 지울 예정
+                    Debug.Log($"{data.CodeName}: {skillId}");
+
+                    //SkillBase skill = gameObject.AddComponent(Type.GetType(data.CodeName)) as SkillBase;
+                    //if (skill == null)
+                    //    return;
+
+                    //skill.SetInfo(this, data);
+                    //Skills.Add(skill);
+                }
+            }
         });
-        
+        #endregion
+
         return true;
     }
 

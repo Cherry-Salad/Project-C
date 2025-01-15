@@ -12,9 +12,8 @@
         "Atk": 10.0,
         "AtkLevel": 0,
         "Speed": 5.0,
-        "MaxAccessorySlot": 3,
-        "SkillIdList": [
-        ]
+        "AccessorySlot": 3,
+        "SkillIdList": [200001, 200002, 200003]
       }
     ]
   }
