@@ -9,16 +9,15 @@ using Object = UnityEngine.Object;
 public class Player : Creature
 {
     public PlayerData Data;
-    public List<PlayerSkillData> SkillData = new List<PlayerSkillData>(); // Test, 확인 후 지울 예정
 
     #region Stat
-    public int Mp { get; protected set; }
-    public int MaxMp { get; protected set; }
-    public int HpLevel { get; protected set; }
-    public int MpLevel { get; protected set; }
-    public int AtkLevel { get; protected set; }
-    public int AccessorySlot { get; protected set; }
+    public int HpLevel { get; set; }
+    public int MpLevel { get; set; }
+    public int AtkLevel { get; set; }
+    public int AccessorySlot { get; set; }
     #endregion
+
+    public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
 
     bool _moveDirKeyPressed = false;
 
@@ -31,6 +30,7 @@ public class Player : Creature
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
 
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -40,6 +40,10 @@ public class Player : Creature
         
         JumpForce = 6f;
         DoubleJumpForce = 1f;
+
+        BasicAttack basicAttack = gameObject.AddComponent<BasicAttack>();   // 기본 공격
+        basicAttack.SetInfo(this, null);
+        Skills.Add(basicAttack.Key, basicAttack);
 
         // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
         #region PreLoad 어드레서블 모두 로드
@@ -75,7 +79,6 @@ public class Player : Creature
                     if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
                         return;
 
-                    SkillData.Add(data);    // Test, 지울 예정
                     Debug.Log($"{data.CodeName}: {skillId}");
 
                     //SkillBase skill = gameObject.AddComponent(Type.GetType(data.CodeName)) as SkillBase;
@@ -106,10 +109,12 @@ public class Player : Creature
         if (IsDashInput())
             return;
 
-        IsJumpInput();
         _moveDirKeyPressed = IsMoveDirInput();
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
+
+        IsJumpInput();
+        IsSkillInput();
     }
 
     bool IsDashInput()
@@ -184,6 +189,21 @@ public class Player : Creature
 
         // 방향키 입력이 없다면 캐릭터는 정지 상태 
         MoveDir = Vector2.zero;
+        return false;
+    }
+
+    bool IsSkillInput()
+    {
+        foreach (KeyCode keyCode in Skills.Keys)
+        {
+            if (Input.GetKeyDown(keyCode))
+            {
+                Debug.Log($"입력된 키: {keyCode}");
+                Skills[keyCode].DoSkill();
+                return true;
+            }
+        }
+
         return false;
     }
 

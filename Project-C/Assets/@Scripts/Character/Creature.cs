@@ -37,15 +37,15 @@ public class Creature : BaseObject
     }
 
     #region Stat
-    public int Hp { get; protected set; }
-    public int MaxHp { get; protected set; }
-    public float Atk { get; protected set; }
-    public float MoveSpeed { get; protected set; }
-    public float JumpForce { get; protected set; }
-    public float DoubleJumpForce { get; protected set; }    // 이단 점프할 때 추가적인 점프 힘
+    public int Hp { get; set; }
+    public int MaxHp { get; set; }
+    public int Mp { get; set; }
+    public int MaxMp { get; set; }
+    public float Atk { get; set; }
+    public float MoveSpeed { get; set; }
+    public float JumpForce { get; set; }
+    public float DoubleJumpForce { get; set; }  // 이단 점프할 때 추가적인 점프 힘
     #endregion
-
-    //public List<SkillBase> Skills { get; protected set; }   // TODO
 
     public override bool Init()
     {
