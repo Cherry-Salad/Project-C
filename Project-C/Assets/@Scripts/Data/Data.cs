@@ -39,15 +39,15 @@ namespace Data
     #endregion
 
     #region SkillData
-    /// <summary>
-    /// 스킬 효과 관련
-    /// </summary>
     [Serializable]
-    public class Effect
+    public class SkillData  // 몬스터 스킬과 플레이어 스킬의 베이스
     {
-        public List<float> CastTime;    // 시전 시간
+        public int DataId;
+        public string CodeName; // 코드상 이름
+        public string AnimationName;    // 스킬 애니메이션 이름
+        public float CastingTime;   // 시전 시간
         public int RecoveryTime;    // 시전후 회복 시간
-        public List<int> HealingValue;  // 회복량
+        public int HealingValue;    // 회복량
         public string ProjectileName;   // 투사체 이름
         public int NumberOfShots;   // 투사체 발사 횟수
         public int DelayBetweenShots;   // 투사체 발사간 시간 간격
@@ -58,17 +58,6 @@ namespace Data
     }
 
     [Serializable]
-    public class SkillData  // 몬스터 스킬과 플레이어 스킬의 베이스
-    {
-        //public int DataId;
-        public int SkillID;
-        public string CodeName; // 코드상 이름
-        public string Type; // 스킬 유형, Enum도 나쁘지 않을듯..?
-        public string UsageCondition;   // 사용 조건, Enum도 나쁘지 않을듯..?
-        public Effect Effect;   // 효과 관련
-    }
-
-    [Serializable]
     public class SkillDataLoader : ILoader<int, SkillData>
     {
         public List<SkillData> skills = new List<SkillData>();
@@ -76,7 +65,7 @@ namespace Data
         {
             Dictionary<int, SkillData> dict = new Dictionary<int, SkillData>();
             foreach (SkillData skillData in skills)
-                dict.Add(skillData.SkillID, skillData);
+                dict.Add(skillData.DataId, skillData);
             return dict;
         }
     }
@@ -91,9 +80,7 @@ namespace Data
     {
         public int Level;   // 스킬 레벨
         public bool IsUnlock;   // 해금 여부
-        //public KeyCode BoundingKey; // 현재 할당 키
-        public string BoundingKey;
-        public int AdditionalValue; // 추가 연산 값
+        public KeyCode Key; // 현재 할당 키
     }
 
     /// <summary>
@@ -110,8 +97,6 @@ namespace Data
     public class PlayerSkillData : SkillData
     {
         public int MPCost;  // 소모 MP
-        //public KeyCode DefaultBoundKey; // 기본 할당 키, KeyCode(Enum) 타입도 좋을 듯?
-        public string DefaultBoundKey;
         public int MAXLevel;    // 최대 레벨
         public Dynamics Dynamics;
         public DisplayKR DisplayKR;
@@ -125,7 +110,7 @@ namespace Data
         {
             Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
             foreach (PlayerSkillData skillData in PlayerSkill)
-                dict.Add(skillData.SkillID, skillData);
+                dict.Add(skillData.DataId, skillData);
             return dict;
         }
     }

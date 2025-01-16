@@ -41,7 +41,8 @@ public class Player : Creature
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        BasicAttack basicAttack = gameObject.AddComponent<BasicAttack>();   // 기본 공격
+        // 기본 공격
+        BasicAttack basicAttack = gameObject.AddComponent<BasicAttack>();
         basicAttack.SetInfo(this, null);
         Skills.Add(basicAttack.Key, basicAttack);
 
@@ -194,6 +195,7 @@ public class Player : Creature
 
     bool IsSkillInput()
     {
+        // 스킬키 입력
         foreach (KeyCode keyCode in Skills.Keys)
         {
             if (Input.GetKeyDown(keyCode))

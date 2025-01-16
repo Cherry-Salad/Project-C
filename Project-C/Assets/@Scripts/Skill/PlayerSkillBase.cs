@@ -11,9 +11,8 @@ public class PlayerSkillBase : SkillBase
     public bool IsUnlock { get; set; }
     public int Level { get; set; }
     public KeyCode Key { get; set; }
-
-    protected int _mpCost = 0;
-    protected int _maxLevel = 0;
+    public int MpCost = 0;
+    public int MaxLevel = 0;
 
     public override bool Init()
     {
@@ -33,9 +32,9 @@ public class PlayerSkillBase : SkillBase
 
         IsUnlock = PlayerSkillData.Dynamics.IsUnlock;
         Level = PlayerSkillData.Dynamics.Level;
-        Key = (Enum.TryParse(PlayerSkillData.DefaultBoundKey, out KeyCode key)) ? key : KeyCode.None;
-        _mpCost = PlayerSkillData.MPCost;
-        _maxLevel = PlayerSkillData.MAXLevel;
+        Key = PlayerSkillData.Dynamics.Key;
+        MpCost = PlayerSkillData.MPCost;
+        MaxLevel = PlayerSkillData.MAXLevel;
     }
 
     public override bool IsSkillUsable()
@@ -43,7 +42,7 @@ public class PlayerSkillBase : SkillBase
         if (base.IsSkillUsable() == false) 
             return false;
 
-        if (IsUnlock == false || Owner.Mp < _mpCost)
+        if (IsUnlock == false || Owner.Mp < MpCost)
             return false;
 
         return true;
@@ -54,7 +53,7 @@ public class PlayerSkillBase : SkillBase
         if (base.DoSkill() == false) 
             return false;
 
-        Owner.Mp -= _mpCost;
+        Owner.Mp -= MpCost;
         return true;
     }
 }

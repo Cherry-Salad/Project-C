@@ -9,13 +9,12 @@ public class SkillBase : InitBase
 
     public SkillData Data;
 
-    protected string _type; // 스킬 유형
-    protected string _usageCondition;   // 사용 조건
-
-    protected float _castTime;  // 시전 시간
-    protected float _recoveryTime;  // 시전 후 회복 시간
-    protected float _damageMultiplier;  // 데미지 배율
-    protected float _attackRange;   // 공격 범위
+    public string Name { get; protected set; }
+    public string AnimationName { get; protected set; }
+    public float CastingTime { get; protected set; }    // 시전 시간
+    public float RecoveryTime { get; protected set; }   // 시전 후 회복 시간
+    public float DamageMultiplier { get; protected set; }   // 데미지 배율
+    public float AttackRange { get; protected set; }    // 공격 범위
 
     public override bool Init()
     {
@@ -33,12 +32,12 @@ public class SkillBase : InitBase
         if (data == null)
             return;
 
-        _type = Data.Type;
-        _usageCondition = Data.UsageCondition;
-        _castTime = Data.Effect.CastTime[0];    // TODO: 수정 필요
-        _recoveryTime = Data.Effect.RecoveryTime;
-        _damageMultiplier = Data.Effect.DamageMultiplier;
-        _attackRange = Data.Effect.AttackRange;
+        Name = Data.CodeName;
+        AnimationName = Data.AnimationName;
+        CastingTime = Data.CastingTime;
+        RecoveryTime = Data.RecoveryTime;
+        DamageMultiplier = Data.DamageMultiplier;
+        AttackRange = Data.AttackRange;
     }
 
     public virtual bool IsSkillUsable()
