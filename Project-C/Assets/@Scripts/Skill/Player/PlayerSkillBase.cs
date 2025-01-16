@@ -16,7 +16,7 @@ public class PlayerSkillBase : SkillBase
 
     public override bool Init()
     {
-        if (base.Init() == false) 
+        if (base.Init() == false)
             return false;
 
         return true;
@@ -39,7 +39,7 @@ public class PlayerSkillBase : SkillBase
 
     public override bool IsSkillUsable()
     {
-        if (base.IsSkillUsable() == false) 
+        if (base.IsSkillUsable() == false)
             return false;
 
         if (IsUnlock == false || Owner.Mp < MpCost)
@@ -50,7 +50,7 @@ public class PlayerSkillBase : SkillBase
 
     public override bool DoSkill()
     {
-        if (base.DoSkill() == false) 
+        if (base.DoSkill() == false)
             return false;
 
         Owner.Mp -= MpCost;

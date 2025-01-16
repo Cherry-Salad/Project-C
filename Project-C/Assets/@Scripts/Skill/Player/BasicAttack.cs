@@ -42,7 +42,6 @@ public class BasicAttack : PlayerSkillBase
         if (base.DoSkill() == false) 
             return false;
 
-        Debug.Log($"DoSkill: BasicAttack");
         // TODO: 피격 판정
         return true;
     }
