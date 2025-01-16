@@ -10,7 +10,7 @@ public class Creature : BaseObject
     public ECreatureState State
     {
         get { return _state; }
-        protected set 
+        set 
         {
             if (_state != value)
             {
@@ -78,8 +78,6 @@ public class Creature : BaseObject
             case ECreatureState.DoubleJump:
                 Animator.Play("DoubleJump");
                 break;
-            case ECreatureState.Skill:
-                break;
             case ECreatureState.Dash:
                 Animator.Play("Dash");
                 break;
@@ -111,6 +109,9 @@ public class Creature : BaseObject
                 break;
             case ECreatureState.DoubleJump:
                 UpdateJump();
+                break;
+            case ECreatureState.Skill:
+                UpdateSkill();
                 break;
             case ECreatureState.WallCling:
                 UpdateWallCling();
@@ -171,6 +172,15 @@ public class Creature : BaseObject
 
         // 점프, 낙하
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
+    }
+
+    protected virtual void UpdateSkill()
+    {
+        if (CheckGround() == false)
+        {
+            // 스킬 사용 중이므로 State를 변경하는 대신에 UpdateJump를 호출한다
+            UpdateJump();
+        }
     }
 
     protected virtual void UpdateWallCling()
@@ -269,6 +279,7 @@ public class Creature : BaseObject
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
         }
 
+        ECreatureState preDashState = State;    // 대시 사용하기 전의 상태
         State = ECreatureState.Dash;
 
         // 대시하는 동안 물리적인 현상은 무시한다
@@ -280,7 +291,7 @@ public class Creature : BaseObject
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
 
         // 대시
-        StartCoroutine(CoDash());
+        StartCoroutine(CoDash(preDashState));
     }
 
     IEnumerator CoWallJump(Vector2 moveDir)
@@ -306,7 +317,7 @@ public class Creature : BaseObject
         State = ECreatureState.Jump;
     }
 
-    IEnumerator CoDash()
+    IEnumerator CoDash(ECreatureState preDashState)
     {
         float distance = 3f;    // 대시 거리
         float dashSpeed = MoveSpeed * 3f;
@@ -342,8 +353,15 @@ public class Creature : BaseObject
             yield return null;
         }
 
-        // 캐릭터가 공중에 있으면 점프로 전환
-        State = OnGround ? ECreatureState.Idle : ECreatureState.Jump;
+        if (OnGround)
+        {
+            State = ECreatureState.Idle;
+            yield break;
+        }
+
+        // 캐릭터가 공중에 있으면 낙하로 전환, 이단 점프 재사용 방지
+        State = (preDashState == ECreatureState.DoubleJump) ? preDashState : ECreatureState.Jump;
+        Animator.Play("Jump");
     }
 
     /// <summary>
@@ -364,7 +382,7 @@ public class Creature : BaseObject
     /// <param name="distance">감지 거리</param>
     /// <param name="isDetailedCheck">더 섬세하게 감지할 것인지</param>
     /// <returns></returns>
-    protected RaycastHit2D CheckObstacle(Vector2 dir, float distance, bool isDetailedCheck = false)
+    public RaycastHit2D CheckObstacle(Vector2 dir, float distance, bool isDetailedCheck = false)
     {
         // 캐릭터가 정지 상태인지 확인
         if (dir == Vector2.zero)
@@ -412,7 +430,7 @@ public class Creature : BaseObject
     /// 캐릭터 앞에 벽이 있는가
     /// </summary>
     /// <returns></returns>
-    protected bool CheckWall()
+    public bool CheckWall()
     {
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값 추가
@@ -424,7 +442,7 @@ public class Creature : BaseObject
     /// 캐릭터가 바닥에 있는가
     /// </summary>
     /// <returns></returns>
-    protected bool CheckGround()
+    public bool CheckGround()
     {
         float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
         LayerMask groundLayer = LayerMask.GetMask("Ground");

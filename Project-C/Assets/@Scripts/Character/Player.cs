@@ -21,15 +21,16 @@ public class Player : Creature
 
     bool _moveDirKeyPressed = false;
 
+    #region Jump
     bool _isWallJump = false;
     bool _jumpKeyPressed = false;
     float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
     float _jumpDuration = 0.3f; // 점프 유지 시간, 원래는 0.5초로 했는데 이게 체감상 손가락에 좀 무리가 가더라구..
     float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
+    #endregion
 
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
-
 
     public override bool Init()
     {
