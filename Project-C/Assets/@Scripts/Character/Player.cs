@@ -2,6 +2,7 @@ using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 using Object = UnityEngine.Object;
@@ -43,7 +44,7 @@ public class Player : Creature
         DoubleJumpForce = 1f;
 
         // 기본 공격
-        BasicAttack basicAttack = gameObject.AddComponent<BasicAttack>();
+        BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
         basicAttack.SetInfo(this, null);
         Skills.Add(basicAttack.Key, basicAttack);
 
@@ -108,15 +109,14 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
-        if (IsDashInput())
+        if (IsDashInput() || IsSkillInput())
             return;
+        
+        IsJumpInput();
 
         _moveDirKeyPressed = IsMoveDirInput();
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
-
-        IsJumpInput();
-        IsSkillInput();
     }
 
     bool IsDashInput()

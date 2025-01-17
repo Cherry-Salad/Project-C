@@ -46,7 +46,8 @@ namespace Data
         public string CodeName; // 코드상 이름
         public string AnimationName;    // 스킬 애니메이션 이름
         public float CastingTime;   // 시전 시간
-        public int RecoveryTime;    // 시전후 회복 시간
+        public float RecoveryTime;  // 시전 후 회복 시간(후 딜레이)
+        public float CoolTime;  // 쿨타임
         public int HealingValue;    // 회복량
         public string ProjectileName;   // 투사체 이름
         public int NumberOfShots;   // 투사체 발사 횟수
