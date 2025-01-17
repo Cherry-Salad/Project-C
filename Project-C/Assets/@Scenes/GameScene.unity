@@ -330,6 +330,7 @@ GameObject:
   - component: {fileID: 522470886}
   - component: {fileID: 522470887}
   - component: {fileID: 522470888}
+  - component: {fileID: 522470889}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -465,6 +466,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _state: 0
+  Data:
+    DataId: 0
+    Name: 
+    Hp: 0
+    MaxHp: 0
+    HpLevel: 0
+    Mp: 0
+    MaxMp: 0
+    MpLevel: 0
+    Atk: 0
+    AtkLevel: 0
+    Speed: 0
+    AccessorySlot: 0
+    SkillIdList: 
 --- !u!70 &522470888
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -500,6 +515,59 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.0027885437}
   m_Size: {x: 0.49559963, y: 0.7201729}
   m_Direction: 0
+--- !u!114 &522470889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522470881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6a57981957acc24a89113f3cee7f42b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data:
+    DataId: 0
+    CodeName: 
+    AnimationName: 
+    CastingTime: 0
+    RecoveryTime: 0
+    CoolTime: 0
+    HealingValue: 0
+    ProjectileName: 
+    NumberOfShots: 0
+    DelayBetweenShots: 0
+    InitialAngle: 0
+    DamageMultiplier: 0
+    AttackRange: 0
+    RetentionTime: 0
+  PlayerSkillData:
+    DataId: 0
+    CodeName: 
+    AnimationName: 
+    CastingTime: 0
+    RecoveryTime: 0
+    CoolTime: 0
+    HealingValue: 0
+    ProjectileName: 
+    NumberOfShots: 0
+    DelayBetweenShots: 0
+    InitialAngle: 0
+    DamageMultiplier: 0
+    AttackRange: 0
+    RetentionTime: 0
+    MPCost: 0
+    MAXLevel: 0
+    Dynamics:
+      Level: 0
+      IsUnlock: 0
+      Key: 0
+    DisplayKR:
+      Name: 
+      Description: 
+  MpCost: 0
+  MaxLevel: 0
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

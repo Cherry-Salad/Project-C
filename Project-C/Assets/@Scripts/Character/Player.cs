@@ -292,7 +292,7 @@ public class Player : Creature
     {
         // 추가 점프 힘 적용
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
-        if (State == ECreatureState.Jump && _isWallJump == false)
+        if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {
             // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;

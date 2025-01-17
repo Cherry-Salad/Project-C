@@ -47,6 +47,11 @@ public class Creature : BaseObject
     public float DoubleJumpForce { get; set; }  // 이단 점프할 때 추가적인 점프 힘
     #endregion
 
+    /// <summary>
+    /// 이단 점프 재사용을 방지하기 위해 공중에서 이미 이단 점프를 했는지 확인한다. 
+    /// </summary>
+    protected bool _hasDoubleJumped = false;
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -153,12 +158,14 @@ public class Creature : BaseObject
         {
             // 캐릭터가 공중에 있으면서 벽을 감지
             State = ECreatureState.WallCling;
+            _hasDoubleJumped = false;
             return;
         }
         else if (OnGround)
         {
             // 캐릭터가 바닥에 닿을 때
             State = ECreatureState.Idle;
+            _hasDoubleJumped = false;
             return;
         }
 
@@ -178,8 +185,21 @@ public class Creature : BaseObject
     {
         if (CheckGround() == false)
         {
-            // 스킬 사용 중이므로 State를 변경하는 대신에 UpdateJump를 호출한다
-            UpdateJump();
+            // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
+            float distance = Collider.bounds.extents.x + 0.1f;
+            bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+
+            // 공중이므로 기본 중력 적용
+            Rigidbody.gravityScale = DefaultGravityScale;
+
+            // 점프, 낙하
+            Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
+        }
+        else
+        {
+            Rigidbody.gravityScale = 0f;
+            Rigidbody.velocity = Vector2.zero;
         }
     }
 
@@ -240,7 +260,7 @@ public class Creature : BaseObject
             Rigidbody.velocity = new Vector2(0f, JumpForce);
         }
         // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
-        else if (State == ECreatureState.Jump || State == ECreatureState.WallJump)
+        else if (_hasDoubleJumped == false && (State == ECreatureState.Jump || State == ECreatureState.WallJump))
         {
             State = ECreatureState.DoubleJump;
 
@@ -248,6 +268,7 @@ public class Creature : BaseObject
             Rigidbody.gravityScale = DefaultGravityScale;
 
             // 이단 점프
+            _hasDoubleJumped = true;
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + DoubleJumpForce);
         }
         // 벽에 매달린 상태이거나 벽 타기 또는 벽을 감지했다면 벽 점프로 전환
@@ -279,7 +300,6 @@ public class Creature : BaseObject
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
         }
 
-        ECreatureState preDashState = State;    // 대시 사용하기 전의 상태
         State = ECreatureState.Dash;
 
         // 대시하는 동안 물리적인 현상은 무시한다
@@ -291,7 +311,7 @@ public class Creature : BaseObject
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
 
         // 대시
-        StartCoroutine(CoDash(preDashState));
+        StartCoroutine(CoDash());
     }
 
     IEnumerator CoWallJump(Vector2 moveDir)
@@ -317,7 +337,7 @@ public class Creature : BaseObject
         State = ECreatureState.Jump;
     }
 
-    IEnumerator CoDash(ECreatureState preDashState)
+    IEnumerator CoDash()
     {
         float distance = 3f;    // 대시 거리
         float dashSpeed = MoveSpeed * 3f;
@@ -340,9 +360,9 @@ public class Creature : BaseObject
         while (dir.magnitude > 0.01f)
         {
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
+            OnGround = CheckGround();
             dir = destPos - Rigidbody.position;
 
-            OnGround = CheckGround();
             if (OnGround == false && CheckWall())
             {
                 // 캐릭터가 공중에 있으면서 벽을 감지
@@ -353,15 +373,8 @@ public class Creature : BaseObject
             yield return null;
         }
 
-        if (OnGround)
-        {
-            State = ECreatureState.Idle;
-            yield break;
-        }
-
-        // 캐릭터가 공중에 있으면 낙하로 전환, 이단 점프 재사용 방지
-        State = (preDashState == ECreatureState.DoubleJump) ? preDashState : ECreatureState.Jump;
-        Animator.Play("Jump");
+        // 캐릭터가 공중에 있으면 점프로 전환
+        State = OnGround ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
     /// <summary>
