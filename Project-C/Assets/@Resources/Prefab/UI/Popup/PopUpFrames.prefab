@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: INVENTORY
+  m_text: ??????
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 20023d9e9a0763c4d9674ecb7040912c, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 20023d9e9a0763c4d9674ecb7040912c, type: 2}
