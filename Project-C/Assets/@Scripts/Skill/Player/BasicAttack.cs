@@ -25,7 +25,7 @@ public class BasicAttack : PlayerSkillBase
         AnimationName = "BasicAttack";
         CastingTime = 0f;
         RecoveryTime = 0f;
-        CoolTime = 1f;  // 임시 값
+        CoolTime = 0f;  // 임시 값
         DamageMultiplier = 1.0f;   // 임시 값
         AttackRange = 1f;   // 임시 값
 
@@ -53,19 +53,26 @@ public class BasicAttack : PlayerSkillBase
         Owner.State = ECreatureState.Skill;
         StartCoroutine(CoDoSkill());
 
-        // 사실 이펙트 프리팹을 사용하여 프리팹과 충돌한 애들에게 피격을 주고 싶다. 하지만, 기본 공격 이펙트는 애니메이션에 종속되어 있어 귀찮다.
-        //Collider2D[] hitTarget = Physics2D.OverlapBoxAll(skillPos, boxSize, 0f);
-
-        //foreach (Collider2D target in hitTarget)
-        //{
-        //    MonsterBase monster = target.GetComponent<MonsterBase>();
-        //    if (monster != null)
-        //    {
-        //        // TODO: 피격 판정
-        //    }
-        //}
-
         return true;
+    }
+
+    /// <summary>
+    /// 애니메이션 이벤트로 호출하여, 특정 순간에 공격 판정으로 인식한다
+    /// </summary>
+    void Attack()
+    {
+        // 사실 이펙트 프리팹을 사용하여 프리팹과 충돌한 애들에게 피격을 주고 싶다. 하지만, 기본 공격 이펙트는 플레이어 스프라이트에 종속되어 있어 귀찮다.
+        Vector2 skillPos = Owner.Rigidbody.position + (_skillDir * 3f * Owner.Collider.bounds.extents.x);
+        skillPos.y += 0.1f;
+        Vector2 hitBoxSize = new Vector2(AttackRange, 1f);
+        Collider2D[] hitTarget = Physics2D.OverlapBoxAll(skillPos, hitBoxSize, 0f);
+
+        foreach (Collider2D target in hitTarget)
+        {
+            MonsterBase monster = target.GetComponent<MonsterBase>();
+            if (monster != null)
+                monster.OnDamaged(DamageMultiplier);
+        }
     }
 
     IEnumerator CoDoSkill()
@@ -90,11 +97,11 @@ public class BasicAttack : PlayerSkillBase
 
             stateInfo = Owner.Animator.GetCurrentAnimatorStateInfo(0);
             elapsedTime = duration * stateInfo.normalizedTime;
-            Debug.Log($"duration: {duration:F2}, elapsedTime: {elapsedTime:F2}");
+            //Debug.Log($"duration: {duration:F2}, elapsedTime: {elapsedTime:F2}");
             yield return null;
         }
 
-        Debug.Log("EndSkill");
+        //Debug.Log("EndSkill");
         Owner.State = ECreatureState.Idle;
     }
 

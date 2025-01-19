@@ -315,14 +315,14 @@ public class Creature : BaseObject
         StartCoroutine(CoDash());
     }
 
-    protected virtual void OnDamaged(float damage, Creature attacker = null) 
+    public virtual void OnDamaged(float damage, Creature attacker = null) 
     {
-
+        Debug.Log("OnDamaged");
     }
 
-    protected virtual void OnDamaged(int damage, Creature attacker = null) 
+    public virtual void OnDamaged(int damage, Creature attacker = null) 
     {
-
+        Debug.Log("OnDamaged");
     }
 
     IEnumerator CoWallJump(Vector2 moveDir)

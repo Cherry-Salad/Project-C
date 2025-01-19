@@ -313,7 +313,7 @@ public class Player : Creature
         StartCoroutine(CoDashCooldown());
     }
 
-    protected override void OnDamaged(int damage = 1, Creature attacker = null)
+    public override void OnDamaged(int damage = 1, Creature attacker = null)
     {
         // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
         if (State == ECreatureState.Hurt)
