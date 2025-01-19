@@ -71,9 +71,12 @@ public class MonsterBase : Creature
         _targetGameObject = GameObject.FindGameObjectWithTag(_target); // 타겟 검색 
         this.Rigidbody.velocity = Vector3.zero;                        // 움직임 0으로 초기화 
 
-        _qMark.SetActive(false);
-        _eMark.SetActive(false);
-
+        if (_qMark != null && _eMark != null)
+        {
+            _qMark.SetActive(false);
+            _eMark.SetActive(false);
+        }
+        
         MoveSpeed = _moveSpeed;
 
         return true;

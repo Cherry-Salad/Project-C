@@ -93,6 +93,7 @@ public class Creature : BaseObject
                 Animator.Play("WallSlide");
                 break;
             case ECreatureState.Hurt:
+                Animator.Play("Hurt");
                 break;
             case ECreatureState.Dead:
                 break;
@@ -312,6 +313,16 @@ public class Creature : BaseObject
 
         // 대시
         StartCoroutine(CoDash());
+    }
+
+    protected virtual void OnDamaged(float damage, Creature attacker = null) 
+    {
+
+    }
+
+    protected virtual void OnDamaged(int damage, Creature attacker = null) 
+    {
+
     }
 
     IEnumerator CoWallJump(Vector2 moveDir)

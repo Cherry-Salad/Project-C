@@ -313,10 +313,57 @@ public class Player : Creature
         StartCoroutine(CoDashCooldown());
     }
 
+    protected override void OnDamaged(int damage = 1, Creature attacker = null)
+    {
+        // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
+        if (State == ECreatureState.Hurt)
+            return;
+
+        // HP 감소
+        Hp -= damage;
+        // TODO: HP가 모두 감소 시 사망 처리
+
+        base.OnDamaged(damage, attacker);
+
+        // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
+        State = ECreatureState.Hurt;
+        StartCoroutine(CoHandleInvincibility());
+
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.gravityScale = DefaultGravityScale;
+
+        // 살짝 위로 튀어오르듯이
+        float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
+        Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0).normalized;
+
+        // 넉백
+        float knockbackForce = 3f;
+        Rigidbody.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 몬스터와의 충돌 확인
+        MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
+
+        // 몬스터 충돌할 때 대시 중이라면 피격 무시
+        if (monster != null && State != ECreatureState.Dash)
+            OnDamaged(attacker: monster);
+
+        // TODO: 장애물와 충돌 시 피격
+    }
+
     IEnumerator CoDashCooldown()
     {
         _isDashCooldownComplete = false;
         yield return new WaitForSeconds(_dashCoolTime);
         _isDashCooldownComplete = true;
+    }
+
+    IEnumerator CoHandleInvincibility(float duration = 0.5f)
+    {
+        // 지속 시간만큼 무적 상태이다
+        yield return new WaitForSeconds(duration);
+        State = ECreatureState.Idle;
     }
 }
