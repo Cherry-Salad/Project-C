@@ -7,6 +7,7 @@ using static Define;
 public class BasicAttack : PlayerSkillBase
 {
     Vector2 _skillDir { get { return (Owner.LookLeft) ? Vector2.left : Vector2.right; } }
+    GameObject _hitBox;
 
     public override bool Init()
     {
@@ -57,22 +58,41 @@ public class BasicAttack : PlayerSkillBase
     }
 
     /// <summary>
-    /// 애니메이션 이벤트로 호출하여, 특정 순간에 공격 판정으로 인식한다
+    /// 애니메이션 이벤트로 호출하며, 히트 박스를 생성한다.
     /// </summary>
-    void Attack()
+    void SpawnHitBox()
     {
-        // 사실 이펙트 프리팹을 사용하여 프리팹과 충돌한 애들에게 피격을 주고 싶다. 하지만, 기본 공격 이펙트는 플레이어 스프라이트에 종속되어 있어 귀찮다.
-        Vector2 skillPos = Owner.Rigidbody.position + (_skillDir * 3f * Owner.Collider.bounds.extents.x);
-        skillPos.y += 0.1f;
-        Vector2 hitBoxSize = new Vector2(AttackRange, 1f);
-        Collider2D[] hitTarget = Physics2D.OverlapBoxAll(skillPos, hitBoxSize, 0f);
+        //Vector2 skillPos = Owner.Rigidbody.position + (_skillDir * 3f * Owner.Collider.bounds.extents.x);
+        //skillPos.y += 0.1f;
+        //Vector2 hitBoxSize = new Vector2(AttackRange, 1f);
+        //Collider2D[] hitTarget = Physics2D.OverlapBoxAll(skillPos, hitBoxSize, 0f);
 
-        foreach (Collider2D target in hitTarget)
+        //foreach (Collider2D target in hitTarget)
+        //{
+        //    MonsterBase monster = target.GetComponent<MonsterBase>();
+        //    if (monster != null)
+        //        monster.OnDamaged(DamageMultiplier);
+        //}
+
+        _hitBox = Managers.Resource.Instantiate("BasicAttackHitBox", transform);
+        _hitBox.GetComponent<BasicAttackHitBox>().DamageMultiplier = DamageMultiplier;
+
+        if (_skillDir.x < 0)
         {
-            MonsterBase monster = target.GetComponent<MonsterBase>();
-            if (monster != null)
-                monster.OnDamaged(DamageMultiplier);
+            // 스킬 방향이 왼쪽이라면 x축 반전
+            Vector3 localScale = _hitBox.transform.localScale;
+            localScale.x *= -1;
+            _hitBox.transform.localScale = localScale;
         }
+    }
+
+    /// <summary>
+    /// 애니메이션 이벤트로 호출하며, 생성한 히트 박스를 없앤다.
+    /// </summary>
+    void DespawnHitBox()
+    {
+        if (_hitBox != null)
+            Managers.Resource.Destroy(_hitBox);
     }
 
     IEnumerator CoDoSkill()
@@ -93,7 +113,10 @@ public class BasicAttack : PlayerSkillBase
         {
             // 피격 시 스킬 취소
             if (Owner.State == ECreatureState.Hurt)
+            {
+                DespawnHitBox();
                 yield break;
+            }
 
             stateInfo = Owner.Animator.GetCurrentAnimatorStateInfo(0);
             elapsedTime = duration * stateInfo.normalizedTime;
@@ -103,21 +126,5 @@ public class BasicAttack : PlayerSkillBase
 
         //Debug.Log("EndSkill");
         Owner.State = ECreatureState.Idle;
-    }
-
-    void OnDrawGizmos() // 디버깅을 위하여 스킬 범위 시각화
-    {
-        if (Owner == null)
-            return;
-
-        // 가운데 위치 조정
-        Vector2 boxCenter = Owner.Rigidbody.position + (_skillDir * 3f * Owner.Collider.bounds.extents.x);
-        boxCenter.y += 0.1f;
-        
-        // 크기
-        Vector2 boxSize = new Vector2(AttackRange, 1f);
-        
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(boxCenter, boxSize);
     }
 }
