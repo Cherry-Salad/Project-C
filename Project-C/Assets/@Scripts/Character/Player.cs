@@ -225,8 +225,42 @@ public class Player : Creature
         if (_isDashCooldownComplete == false)
             return;
 
+<<<<<<< Updated upstream
         base.OnDash();
         StartCoroutine(CoDashCooldown());
+=======
+        // HP 감소
+        Hp -= damage;
+        // TODO: HP가 모두 감소 시 사망 처리
+
+        base.OnDamaged(damage, attacker);
+
+        // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
+        State = ECreatureState.Hurt;
+        StartCoroutine(CoHandleInvincibility());
+
+        Rigidbody.velocity = Vector2.zero;
+        Rigidbody.gravityScale = DefaultGravityScale;
+
+        // 살짝 위로 튀어오르듯이
+        float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
+        Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0).normalized;
+
+        // 넉백
+        float knockbackForce = 3f;
+        Rigidbody.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 몬스터와의 충돌 확인
+        MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
+
+        if (monster != null)
+            OnDamaged(attacker: monster);
+
+        // TODO: 장애물와 충돌 시 피격
+>>>>>>> Stashed changes
     }
 
     IEnumerator CoDashCooldown()
