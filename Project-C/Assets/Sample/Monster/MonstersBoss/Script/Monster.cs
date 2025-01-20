@@ -5,7 +5,7 @@ namespace Assets.PixelFantasy.PixelMonsters.Common.Scripts
     /// <summary>
     /// The main monster script.
     /// </summary>
-    public class Monster : Creature
+    public class ExMonster : ExCreature
     {
     }
 }

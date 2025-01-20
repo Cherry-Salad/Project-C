@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Assets.PixelFantasy.PixelMonsters.Common.Scripts
 {
-    [RequireComponent(typeof(Creature))]
+    [RequireComponent(typeof(ExCreature))]
     [RequireComponent(typeof(Animator))]
     public class InanimateControls : MonoBehaviour
     {
-        private Creature _creature;
+        private ExCreature _creature;
         private Animator _animator;
 
         public void Start()
         {
-            _creature = GetComponent<Creature>();
+            _creature = GetComponent<ExCreature>();
             _animator = GetComponent<Animator>();
             _animator.SetBool("Idle", true);
         }

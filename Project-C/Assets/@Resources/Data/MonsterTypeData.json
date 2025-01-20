@@ -1,0 +1,213 @@
+{
+  "MonsterType": {  
+    "GoblinWarrior": {              
+      "Base": {                           // 기본 데이터
+        "Role": "MeleeAttacker",          // 몬스터 역할
+        "MovementSpeed": 1.0,             // 기본 속도
+        "BelligerenceLevel": 2,           // 호전성 레벨
+        "DefaultGravity": 1               // 기본 중력
+      },
+
+      "Scan": {                           // 탐색 상태
+        "Distance": 10.0,                 // 탐색 범위
+        "MovementMultiplier": 0.7         // 속도 변환값
+      },
+
+      "Battle": {                       // 전투 상태
+        "BattleEndTime": 15,              // 타겟 이탈후 상태 유지 시간
+        "MovementMultiplier": 1.0,        // 속도 변환값
+        "Attack": [                       // 공격 패턴
+          {
+            "Name": "SwordAttack",        // 공격 이름
+            "Type": "Melee",              // 공격 유형
+            "IsBodyHitBox": true,         // 몬스터에 히트 박스 생성 여부
+            "RecoveryTime": 0.5,          // 시전후 회복 시간
+
+            "AttackRange": 1.0,           // 공격 범위
+            "RetentionTime": 0.1,         // 공격 유지 시간
+            "MovementMultiplier": 1.0,    // 속도 변환값
+            "InitialAngle": 0,            // 공격 각도
+
+            "ProjectileName": "",         // 투사체 이름
+            "NumberOfShots": 0,           // 투사체 발사 횟수
+            "DelayBetweenShots": 0        // 투사체 발사간 간격 시간
+          }
+        ]
+      }
+    },
+
+    "GoblinBoomerangThrower": {
+      "Base": {
+        "Role": "RangedAttacker",
+        "MovementSpeed": 1.0,
+        "BelligerenceLevel": 2,
+        "DefaultGravity": 1
+      },
+
+      "Scan": {
+        "Distance": 13.0,
+        "MovementMultiplier": 0.6
+      },
+
+      "Battle": {
+        "BattleEndTime": 15,
+        "MovementMultiplier": 1.0,
+        "Attack": [
+          {
+            "Name": "BoomerangAttack",
+            "Type": "Projectile",
+            "IsBodyHitBox": false,
+            "RecoveryTime": 0.5,
+
+            "AttackRange": 0,
+            "RetentionTime": 0,
+            "MovementMultiplier": 1.0,
+            "InitialAngle": 0,
+
+            "ProjectileName": "GoblinBoomerang",
+            "NumberOfShots": 1,
+            "DelayBetweenShots": 0
+          }
+        ]
+      }
+    },
+
+    "GoblinWizard": {
+      "Base": {
+        "Role": "RangedAttacker",
+        "MovementSpeed": 1.0,
+        "BelligerenceLevel": 2,
+        "DefaultGravity": 1
+      },
+
+      "Scan": {
+        "Distance": 13.0,
+        "MovementMultiplier": 0.6
+      },
+
+      "Battle": {
+        "BattleEndTime": 15,
+        "MovementMultiplier": 0.8,
+        "Attack": [
+          {
+            "Name": "MagicAttack",
+            "Type": "Projectile",
+            "IsBodyHitBox": false,
+            "RecoveryTime": 0.5,
+
+            "AttackRange": 0,
+            "RetentionTime": 0,
+            "MovementMultiplier": 0.8,
+            "InitialAngle": 0,
+
+            "ProjectileName": "GoblinMagic",
+            "NumberOfShots": 1,
+            "DelayBetweenShots": 0
+          }
+        ]
+      }
+    },
+
+    "GoblinFly": {
+      "Base": {
+        "Role": "MeleeAttacker",
+        "MovementSpeed": 1.0,
+        "BelligerenceLevel": 2,
+        "DefaultGravity": 0
+      },
+
+      "Scan": {
+        "Distance": 10.0,
+        "MovementMultiplier": 1.0
+      },
+
+      "Battle": {
+        "BattleEndTime": 15,
+        "MovementMultiplier": 1.2,
+        "Attack": [
+          {
+            "Name": "BodySlam",
+            "Type": "BodySlam",
+            "IsBodyHitBox": true,
+            "RecoveryTime": 0.5,
+
+            "AttackRange": 0,
+            "RetentionTime": 0,
+            "MovementMultiplier": 1.8,
+            "InitialAngle": 0,
+
+            "ProjectileName": "",
+            "NumberOfShots": 0,
+            "DelayBetweenShots": 0
+          }
+        ]
+      }
+    },
+
+    "GoblinElite": {
+      "Base": {
+        "Role": "HybridAttacker",
+        "MovementSpeed": 1.0,
+        "BelligerenceLevel": 3,
+        "DefaultGravity": 1
+      },
+
+      "Scan": {
+        "Distance": 10.0,
+        "MovementMultiplier": 0.8
+      },
+
+      "Battle": {
+        "BattleEndTime": 15,
+        "MovementMultiplier": 1.2,
+        "Attack": [
+          {
+            "Name": "GoblinTornado",
+            "Type": "BodySlam",
+            "IsBodyHitBox": true,
+            "RecoveryTime": 2,
+
+            "AttackRange": 0,
+            "RetentionTime": 0,
+            "MovementMultiplier": 2.0,
+            "InitialAngle": 0,
+
+            "ProjectileName": "",
+            "NumberOfShots": 0,
+            "DelayBetweenShots": 0
+          },
+          {
+            "Name": "ThrowingAxe",
+            "Type": "Projectile",
+            "IsBodyHitBox": false,
+            "RecoveryTime": 0.5,
+
+            "AttackRange": 0,
+            "RetentionTime": 0,
+            "MovementMultiplier": 1.2,
+            "InitialAngle": 80,
+
+            "ProjectileName": "GoblinAxe",
+            "NumberOfShots": 3,
+            "DelayBetweenShots": 0.1
+          },
+          {
+            "Name": "EyeLaserAttack",
+            "Type": "Projectile",
+            "IsBodyHitBox": false,
+            "RecoveryTime": 0.5,
+
+            "AttackRange": 0,
+            "RetentionTime": 0,
+            "MovementMultiplier": 1.2,
+            "InitialAngle": 0,
+
+            "ProjectileName": "GoblinEyeLaser",
+            "NumberOfShots": 1,
+            "DelayBetweenShots": 0
+          }
+        ]
+      }
+    }
+  }
+}
