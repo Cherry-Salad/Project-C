@@ -377,6 +377,10 @@ public class Creature : BaseObject
 
             if (OnGround == false && CheckWall())
             {
+                // 대시가 끝나면 충돌 처리 활성화
+                if (Collider.isTrigger)
+                    Collider.isTrigger = false;
+
                 // 캐릭터가 공중에 있으면서 벽을 감지
                 State = ECreatureState.WallCling;
                 yield break;
