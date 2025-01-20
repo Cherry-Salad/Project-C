@@ -35,4 +35,6 @@ public class Define
         Hurt,
         Dead,
     }
+
+    public static int PLAYER_ID = 100001;
 }

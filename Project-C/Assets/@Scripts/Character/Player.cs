@@ -1,17 +1,34 @@
+using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
+using Object = UnityEngine.Object;
 
 public class Player : Creature
 {
+    public PlayerData Data;
+
+    #region Stat
+    public int HpLevel { get; set; }
+    public int MpLevel { get; set; }
+    public int AtkLevel { get; set; }
+    public int AccessorySlot { get; set; }
+    #endregion
+
+    public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
+
     bool _moveDirKeyPressed = false;
 
+    #region Jump
     bool _isWallJump = false;
     bool _jumpKeyPressed = false;
     float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
     float _jumpDuration = 0.3f; // 점프 유지 시간, 원래는 0.5초로 했는데 이게 체감상 손가락에 좀 무리가 가더라구..
     float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
+    #endregion
 
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
@@ -23,11 +40,61 @@ public class Player : Creature
 
         ObjectType = EObjectType.Player;
         
-        MoveSpeed = 5f;    // TODO: 데이터를 파싱하여 MoveSpeed 불러오기
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        Managers.Resource.LoadAsync<Object>("Dust");    // Test
+        // 기본 공격, TODO: 모든 스킬 추가
+        BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
+        basicAttack.SetInfo(this, null);
+        Skills.Add(basicAttack.Key, basicAttack);
+
+        // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
+        #region PreLoad 어드레서블 모두 로드
+        Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
+        {
+            // 모두 로드
+            if (loadCount == totalCount)
+            {
+                Managers.Data.Init();
+
+                // 플레이어 스탯
+                Data = Managers.Data.PlayerDataDic[PLAYER_ID];
+                Hp = Data.Hp;
+                MaxHp = Data.MaxHp;
+                HpLevel = Data.HpLevel;
+                Mp = Data.Mp;
+                MaxMp = Data.MaxMp;
+                MpLevel = Data.MpLevel;
+                Atk = Data.Atk;
+                AtkLevel = Data.AtkLevel;
+                MoveSpeed = Data.Speed;
+                AccessorySlot = Data.AccessorySlot;
+
+                // 확인용
+                Debug.Log($"Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
+                Debug.Log($"Mp: {Mp}, MaxMp: {MaxMp}, MpLevel: {MpLevel}");
+                Debug.Log($"Atk: {Atk}, AtkLevel: {AtkLevel}");
+                Debug.Log($"MoveSpeed: {MoveSpeed}, AccessorySlot: {AccessorySlot}, Data parsing successful!");
+
+                // 플레이어 스킬
+                foreach (int skillId in Data.SkillIdList)
+                {
+                    if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
+                        return;
+
+                    Debug.Log($"{data.CodeName}: {skillId}");
+
+                    //SkillBase skill = gameObject.AddComponent(Type.GetType(data.CodeName)) as SkillBase;
+                    //if (skill == null)
+                    //    return;
+
+                    //skill.SetInfo(this, data);
+                    //Skills.Add(skill);
+                }
+            }
+        });
+        #endregion
+
         return true;
     }
 
@@ -42,10 +109,11 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
-        if (IsDashInput())
+        if (IsDashInput() || IsSkillInput())
             return;
-
+        
         IsJumpInput();
+
         _moveDirKeyPressed = IsMoveDirInput();
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
@@ -108,7 +176,13 @@ public class Player : Creature
 
         // 방향키 입력을 두 개 이상 눌렸다면 입력 취소
         if (pressedCount > 1)
+        {
+            // 벽에 매달린 상태이거나 벽 타기 중이라면 벽 점프로 전환
+            if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing)
+                OnWallJump();
+
             return false;
+        }
 
         if (leftPressed)
         {
@@ -126,6 +200,22 @@ public class Player : Creature
         return false;
     }
 
+    bool IsSkillInput()
+    {
+        // 스킬키 입력
+        foreach (KeyCode keyCode in Skills.Keys)
+        {
+            if (Input.GetKeyDown(keyCode))
+            {
+                Debug.Log($"입력된 키: {keyCode}");
+                Skills[keyCode].DoSkill();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     protected override void UpdateAnimation()
     {
         base.UpdateAnimation();
@@ -134,10 +224,10 @@ public class Player : Creature
         switch (State)
         {
             case ECreatureState.Dash:
-                ShowDustEffect();
+                SpawnDust();
                 break;
             case ECreatureState.WallCling:
-                ShowDustEffect();
+                SpawnDust();
                 break;
         }
     }
@@ -208,7 +298,7 @@ public class Player : Creature
     {
         // 추가 점프 힘 적용
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
-        if (State == ECreatureState.Jump && _isWallJump == false)
+        if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {
             // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
@@ -220,15 +310,24 @@ public class Player : Creature
         }
     }
 
-    protected override void OnDash()
+    protected override bool OnDash()
     {
         if (_isDashCooldownComplete == false)
+            return false;
+
+        if (base.OnDash() == false) 
+            return false;
+        
+        StartCoroutine(CoDashCooldown());
+        return true;
+    }
+
+    public override void OnDamaged(int damage = 1, Creature attacker = null)
+    {
+        // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
+        if (State == ECreatureState.Hurt)
             return;
 
-<<<<<<< Updated upstream
-        base.OnDash();
-        StartCoroutine(CoDashCooldown());
-=======
         // HP 감소
         Hp -= damage;
         // TODO: HP가 모두 감소 시 사망 처리
@@ -256,11 +355,11 @@ public class Player : Creature
         // 몬스터와의 충돌 확인
         MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
 
-        if (monster != null)
+        // 몬스터 충돌할 때 대시 중이라면 피격 무시
+        if (monster != null && State != ECreatureState.Dash)
             OnDamaged(attacker: monster);
 
         // TODO: 장애물와 충돌 시 피격
->>>>>>> Stashed changes
     }
 
     IEnumerator CoDashCooldown()
@@ -268,5 +367,14 @@ public class Player : Creature
         _isDashCooldownComplete = false;
         yield return new WaitForSeconds(_dashCoolTime);
         _isDashCooldownComplete = true;
+    }
+
+    IEnumerator CoHandleInvincibility(float duration = 0.5f)
+    {
+        // 지속 시간만큼 무적 상태이다
+        yield return new WaitForSeconds(duration);
+
+        // 캐릭터가 공중에 있으면 점프로 전환
+        State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 }
