@@ -303,9 +303,10 @@ public class Creature : BaseObject
 
         State = ECreatureState.Dash;
 
-        // 대시하는 동안 물리적인 현상은 무시한다
+        // 대시하는 동안 물리적인 제약에서 벗어난다
         Rigidbody.gravityScale = 0f;
         Rigidbody.velocity = Vector2.zero;
+        Collider.isTrigger = true;
 
         // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
         if (MoveDir == Vector2.zero)
@@ -384,6 +385,10 @@ public class Creature : BaseObject
             yield return null;
         }
 
+        // 대시가 끝나면 충돌 처리 활성화
+        if (Collider.isTrigger)
+            Collider.isTrigger = false;
+        
         // 캐릭터가 공중에 있으면 점프로 전환
         State = OnGround ? ECreatureState.Idle : ECreatureState.Jump;
     }

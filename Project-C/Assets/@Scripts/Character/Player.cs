@@ -176,7 +176,13 @@ public class Player : Creature
 
         // 방향키 입력을 두 개 이상 눌렸다면 입력 취소
         if (pressedCount > 1)
+        {
+            // 벽에 매달린 상태이거나 벽 타기 중이라면 벽 점프로 전환
+            if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing)
+                OnWallJump();
+
             return false;
+        }
 
         if (leftPressed)
         {
