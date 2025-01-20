@@ -50,6 +50,8 @@ public class BasicAttack : PlayerSkillBase
         if (base.DoSkill() == false) 
             return false;
 
+        Owner.Mp -= MpCost;
+
         Owner.Animator.Play(AnimationName);
         Owner.State = ECreatureState.Skill;
         StartCoroutine(CoDoSkill());
@@ -109,10 +111,10 @@ public class BasicAttack : PlayerSkillBase
         float elapsedTime = 0f;
 
         // 스킬 애니메이션 재생 중
-        while (elapsedTime < duration && stateInfo.IsName(AnimationName))
+        while (elapsedTime < duration)
         {
             // 피격 시 스킬 취소
-            if (Owner.State == ECreatureState.Hurt)
+            if (Owner.State == ECreatureState.Hurt || stateInfo.IsName(AnimationName) == false)
             {
                 DespawnHitBox();
                 yield break;
@@ -125,6 +127,7 @@ public class BasicAttack : PlayerSkillBase
         }
 
         //Debug.Log("EndSkill");
-        Owner.State = ECreatureState.Idle;
+        // 캐릭터가 공중에 있으면 점프로 전환
+        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 }

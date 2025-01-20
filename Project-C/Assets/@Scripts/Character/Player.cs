@@ -310,13 +310,16 @@ public class Player : Creature
         }
     }
 
-    protected override void OnDash()
+    protected override bool OnDash()
     {
         if (_isDashCooldownComplete == false)
-            return;
+            return false;
 
-        base.OnDash();
+        if (base.OnDash() == false) 
+            return false;
+        
         StartCoroutine(CoDashCooldown());
+        return true;
     }
 
     public override void OnDamaged(int damage = 1, Creature attacker = null)
@@ -370,6 +373,8 @@ public class Player : Creature
     {
         // 지속 시간만큼 무적 상태이다
         yield return new WaitForSeconds(duration);
-        State = ECreatureState.Idle;
+
+        // 캐릭터가 공중에 있으면 점프로 전환
+        State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 }

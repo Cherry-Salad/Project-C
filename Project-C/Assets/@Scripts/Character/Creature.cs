@@ -292,7 +292,7 @@ public class Creature : BaseObject
         StartCoroutine(CoWallJump(MoveDir));
     }
 
-    protected virtual void OnDash()
+    protected virtual bool OnDash()
     {
         // 벽에 매달린 상태에서 방향키를 누르지 않고 대시하면 반대 방향으로 대시한다
         if (State == ECreatureState.WallCling)
@@ -301,19 +301,39 @@ public class Creature : BaseObject
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
         }
 
-        State = ECreatureState.Dash;
-
-        // 대시하는 동안 물리적인 제약에서 벗어난다
-        Rigidbody.gravityScale = 0f;
-        Rigidbody.velocity = Vector2.zero;
-        Collider.isTrigger = true;
-
         // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
         if (MoveDir == Vector2.zero)
             MoveDir = LookLeft ? Vector2.left : Vector2.right;
 
-        // 대시
-        StartCoroutine(CoDash());
+        float distance = 3f;    // 대시 거리
+        float dashSpeed = MoveSpeed * 3f;
+
+        // 목적지 설정
+        Vector2 destPos = FindDashDestPos(MoveDir, distance);
+
+        // 현재 위치와 목적지 간의 이동 방향과 남은 거리
+        Vector2 dir = destPos - Rigidbody.position;
+
+        // 대시가 가능한지 확인
+        if (dir.magnitude > 0.1f)
+        {
+            State = ECreatureState.Dash;
+
+            // 대시하는 동안 물리적인 제약에서 벗어난다
+            Rigidbody.gravityScale = 0f;
+            Rigidbody.velocity = Vector2.zero;
+            Collider.isTrigger = true;
+
+            // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
+            if (MoveDir == Vector2.zero)
+                MoveDir = LookLeft ? Vector2.left : Vector2.right;
+
+            // 대시
+            StartCoroutine(CoDash(dir, destPos, dashSpeed));
+            return true;
+        }
+
+        return false;
     }
 
     public virtual void OnDamaged(float damage, Creature attacker = null) 
@@ -349,27 +369,13 @@ public class Creature : BaseObject
         State = ECreatureState.Jump;
     }
 
-    IEnumerator CoDash()
+    IEnumerator CoDash(Vector2 dir, Vector2 destPos, float dashSpeed)
     {
-        float distance = 3f;    // 대시 거리
-        float dashSpeed = MoveSpeed * 3f;
-
-        // 벽이나 다른 물체에 의해 막힐 수 있으므로 해당 방향으로 최대한 갈 수 있는 거리를 구한다
-        RaycastHit2D hit = CheckObstacle(MoveDir, distance);
-
-        // 목적지 설정
-        Vector2 destPos = hit.collider != null
-        ? hit.point - MoveDir * 0.1f    // 충돌 지점에서 약간 떨어진 위치
-        : Rigidbody.position + MoveDir * distance;  // 원래 목적지
-
-        // 현재 위치와 목적지 간의 이동 방향과 남은 거리
-        Vector2 dir = destPos - Rigidbody.position;
-
         // 바닥 감지
         bool OnGround = CheckGround();
 
         // 대시
-        while (dir.magnitude > 0.01f)
+        while (dir.magnitude > 0.1f)
         {
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             OnGround = CheckGround();
@@ -513,6 +519,48 @@ public class Creature : BaseObject
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// 벽이나 다른 물체에 의해 막힐 수 있으므로, 대시할 수 있는 최대 목적지를 구한다
+    /// </summary>
+    /// <param name="dir">방향</param>
+    /// <param name="distance">거리</param>
+    /// <returns></returns>
+    Vector2 FindDashDestPos(Vector2 dir, float distance)
+    {
+        List<RaycastHit2D> obstacles = new List<RaycastHit2D>();
+
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(LayerMask.GetMask("Ground", "Wall"));
+        filter.useTriggers = false;
+
+        Collider.Cast(dir, filter, obstacles, distance);
+
+        if (obstacles.Count > 0)
+        {
+            RaycastHit2D closestHit = obstacles[0];
+            float closestDistance = closestHit.distance;
+
+            // 가장 가까운 충돌 거리 계산
+            foreach (var obstacle in obstacles)
+            {
+                if (obstacle.distance < closestDistance)
+                {
+                    closestHit = obstacle;
+                    closestDistance = obstacle.distance;
+                }
+            }
+
+            // 충돌 지점에서 약간 떨어진 위치
+            Vector2 destPos = Rigidbody.position + dir * closestDistance;
+            Debug.DrawLine(Rigidbody.position, (destPos), Color.green, 0.5f);
+            return destPos;
+        }
+
+        // 충돌이 없다면 원래 목적지
+        Debug.DrawLine(Rigidbody.position, Rigidbody.position + dir * distance, Color.red);
+        return Rigidbody.position + dir * distance;
     }
     #endregion
 }

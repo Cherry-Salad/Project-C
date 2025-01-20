@@ -53,7 +53,6 @@ public class PlayerSkillBase : SkillBase
         if (base.DoSkill() == false)
             return false;
 
-        Owner.Mp -= MpCost;
         return true;
     }
 }
