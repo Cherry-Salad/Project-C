@@ -84,11 +84,11 @@ public class Dust : InitBase
             if (remainingTime > 0)
                 yield return new WaitForSeconds(remainingTime);
         }
-        
-        DestroyDust();
+
+        Despawn();
     }
 
-    public void DestroyDust()
+    public void Despawn()
     {
         Managers.Resource.Destroy(gameObject);
     }

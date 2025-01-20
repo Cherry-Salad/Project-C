@@ -43,7 +43,7 @@ public class Player : Creature
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        // 기본 공격
+        // 기본 공격, TODO: 모든 스킬 추가
         BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
         basicAttack.SetInfo(this, null);
         Skills.Add(basicAttack.Key, basicAttack);
@@ -218,10 +218,10 @@ public class Player : Creature
         switch (State)
         {
             case ECreatureState.Dash:
-                ShowDustEffect();
+                SpawnDust();
                 break;
             case ECreatureState.WallCling:
-                ShowDustEffect();
+                SpawnDust();
                 break;
         }
     }

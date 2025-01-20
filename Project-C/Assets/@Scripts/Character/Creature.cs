@@ -391,7 +391,7 @@ public class Creature : BaseObject
     /// <summary>
     /// Dash, WallCling 등의 상태에 따라 다양한 먼지 효과를 연출한다
     /// </summary>
-    protected void ShowDustEffect()
+    protected void SpawnDust()
     {
         Dust dust = Managers.Resource.Instantiate("Dust").GetComponent<Dust>();
         if (dust != null)
