@@ -64,18 +64,6 @@ public class BasicAttack : PlayerSkillBase
     /// </summary>
     void SpawnHitBox()
     {
-        //Vector2 skillPos = Owner.Rigidbody.position + (_skillDir * 3f * Owner.Collider.bounds.extents.x);
-        //skillPos.y += 0.1f;
-        //Vector2 hitBoxSize = new Vector2(AttackRange, 1f);
-        //Collider2D[] hitTarget = Physics2D.OverlapBoxAll(skillPos, hitBoxSize, 0f);
-
-        //foreach (Collider2D target in hitTarget)
-        //{
-        //    MonsterBase monster = target.GetComponent<MonsterBase>();
-        //    if (monster != null)
-        //        monster.OnDamaged(DamageMultiplier);
-        //}
-
         _hitBox = Managers.Resource.Instantiate("BasicAttackHitBox", transform);
         _hitBox.GetComponent<BasicAttackHitBox>().DamageMultiplier = DamageMultiplier;
 
