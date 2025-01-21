@@ -1,0 +1,83 @@
+{
+  "PlayerSkill" : [
+    {
+      "DataId": 200001,
+      "CodeName": "SelfHealing",
+      "AnimationName": "SelfHealing",
+      "MPCost": 2,
+      "MAXLevel": 3,
+      "CastingTime": 2.0,
+      "RecoveryTime": 1,
+      "HealingValue": 2,
+      "ProjectileName": "",
+      "NumberOfShots": 0,
+      "DelayBetweenShots": 0,
+      "InitialAngle": 0,
+      "DamageMultiplier": 0,
+      "AttackRange": 0,
+      "RetentionTime": 0,
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true, 
+        "Key": 0
+      },
+      "DisplayKR": {                        // 게임 UI 출력 관련 (한글)
+        "Name": "회복",
+        "Description": "체력을 회복합니다."
+      }
+    },
+    {
+      "DataId": 200002,
+      "CodeName": "IceBall",
+      "AnimationName": "IceBall",
+      "MPCost": 2,
+      "MAXLevel": 3,
+      "CastingTime": 0.3,
+      "RecoveryTime": 1,
+      "HealingValue": 2,
+      "ProjectileName": "PlayerIceBall",
+      "NumberOfShots": 1,
+      "DelayBetweenShots": 0,
+      "InitialAngle": 0,
+      "DamageMultiplier": 1.5,
+      "AttackRange": 1.0,
+      "RetentionTime": 0.1,
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "Key": 0
+      },
+      "DisplayKR": {
+        "Name": "아이스 볼",
+        "Description": "얼음 투사체를 발사 합니다."
+      }
+    },
+    {
+      "DataId": 200003,
+      "CodeName": "IceBreak",
+      "AnimationName": "IceBreak",
+      "MPCost": 2,
+      "MAXLevel": 3,
+      "CastingTime": 0.3,
+      "RecoveryTime": 1,
+      "HealingValue": 0,
+      "ProjectileName": "0",
+      "NumberOfShots": 0,
+      "DelayBetweenShots": 0,
+      "InitialAngle": 0,
+      "DamageMultiplier": 2,
+      "AttackRange": 1.0,
+      "RetentionTime": 0.1,
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "Key": 0
+      },
+      "DisplayKR": {
+        "Name": "아이스 브레이크",
+        "Description": "전방에 강한 얼음 공격을 합니다."
+      }
+    }
+  ]
+}
+
