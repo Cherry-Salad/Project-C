@@ -98,6 +98,11 @@ public class Player : Creature
         return true;
     }
 
+    void Update()
+    {
+        GetInput();
+    }
+
     /// <summary>
     /// 입력 키를 감지한다.
     /// 대시, 피격, 스킬을 사용할 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
@@ -236,7 +241,6 @@ public class Player : Creature
     {
         // 물리 상태를 업데이트 한 뒤에 입력 처리
         base.UpdateController();
-        GetInput();
     }
 
     protected override void UpdateIdle()
@@ -300,6 +304,7 @@ public class Player : Creature
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
         if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {
+            Debug.Log("OnJumpHold");
             // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
 

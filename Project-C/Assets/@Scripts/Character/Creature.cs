@@ -58,13 +58,8 @@ public class Creature : BaseObject
             return false;
 
         State = ECreatureState.Idle;
-
+        StartCoroutine(CoUpdate());
         return true;
-    }
-
-    void Update()
-    {
-        UpdateController();
     }
 
     protected virtual void UpdateAnimation()
@@ -97,6 +92,20 @@ public class Creature : BaseObject
                 break;
             case ECreatureState.Dead:
                 break;
+        }
+    }
+
+    protected IEnumerator CoUpdate()
+    {
+        while (true)
+        {
+            // 200FPS 이상처럼 프레임이 높다면, 물리 연산을 시작하기도 전에 벽과 바닥, 장애물을 감지하는 버그가 나타난다.
+            // 프레임이 높을수록 Update가 더 빠르게 호출된 것이 원인이었다.
+            // 예를 들어 OnJump를 통해 속력과 중력을 바꾸었다. 그런데, 프레임이 높으면 캐릭터를 위로 올리기도 전에 바닥을 감지하여 Idle로 전환된다.
+            // FixedUpdate도 사용해봤다. 그런데 간혹 타이밍이 어긋나거나 애니메이션 전환을 실패하여 때려치웠다.
+            // 이를 방지하기 위해 이벤트 함수의 실행 순서를 참고하였다. 물리 엔진 업데이트 주기에 맞춰 UpdateController가 호출되기 때문에 버그를 방지한다.
+            yield return new WaitForFixedUpdate();
+            UpdateController();
         }
     }
 
@@ -274,7 +283,9 @@ public class Creature : BaseObject
         }
         // 벽에 매달린 상태이거나 벽 타기 또는 벽을 감지했다면 벽 점프로 전환
         else if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || isWall)
+        {
             OnWallJump();
+        }
     }
 
     protected virtual void OnWallJump()
@@ -362,7 +373,7 @@ public class Creature : BaseObject
             // 벽 점프
             Rigidbody.velocity = new Vector2(velocityX, JumpForce);
             elapsedTime += Time.deltaTime;
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         // 벽 점프가 끝나면 기본(1단) 점프로 전환
