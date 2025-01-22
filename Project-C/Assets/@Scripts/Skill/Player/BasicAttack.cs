@@ -7,7 +7,7 @@ using static Define;
 public class BasicAttack : PlayerSkillBase
 {
     Vector2 _skillDir { get { return (Owner.LookLeft) ? Vector2.left : Vector2.right; } }
-    GameObject _hitBox;
+    BasicAttackHitBox _hitBox;
 
     public override bool Init()
     {
@@ -64,16 +64,13 @@ public class BasicAttack : PlayerSkillBase
     /// </summary>
     void SpawnHitBox()
     {
-        _hitBox = Managers.Resource.Instantiate("BasicAttackHitBox", transform);
-        _hitBox.GetComponent<BasicAttackHitBox>().DamageMultiplier = DamageMultiplier;
-
-        if (_skillDir.x < 0)
+        if (_hitBox == null)
         {
-            // 스킬 방향이 왼쪽이라면 x축 반전
-            Vector3 localScale = _hitBox.transform.localScale;
-            localScale.x *= -1;
-            _hitBox.transform.localScale = localScale;
+            GameObject go = Managers.Resource.Instantiate("BasicAttackHitBox", transform);
+            _hitBox = go.GetComponent<BasicAttackHitBox>();
         }
+
+        _hitBox.SetInfo(Owner.LookLeft, DamageMultiplier);
     }
 
     /// <summary>
@@ -81,9 +78,8 @@ public class BasicAttack : PlayerSkillBase
     /// </summary>
     void DespawnHitBox()
     {
-        // 커밋 연습 테스트
         if (_hitBox != null)
-            Managers.Resource.Destroy(_hitBox);
+            _hitBox.gameObject.SetActive(false);
     }
 
     IEnumerator CoDoSkill()

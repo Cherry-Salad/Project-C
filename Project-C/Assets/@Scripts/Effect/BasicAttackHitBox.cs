@@ -5,7 +5,25 @@ using UnityEngine;
 public class BasicAttackHitBox : InitBase
 {
     BoxCollider2D Collider;
-    public float DamageMultiplier { get; set; }
+    float _damageMultiplier;
+
+    bool _lookLeft;
+    public bool LookLeft
+    {
+        get { return _lookLeft; }
+        set 
+        {
+            if (LookLeft != value)
+            {
+                _lookLeft = value;
+                
+                // 히트 박스 x축 반전
+                Vector3 localScale = transform.localScale;
+                localScale.x *= -1;
+                transform.localScale = localScale;
+            }
+        }
+    }
 
     public override bool Init()
     {
@@ -16,12 +34,19 @@ public class BasicAttackHitBox : InitBase
         return true;
     }
 
+    public void SetInfo(bool lookLeft, float damageMultiplier, bool setActive = true)
+    {
+        LookLeft = lookLeft;
+        _damageMultiplier = damageMultiplier;
+        gameObject.SetActive(setActive);
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         MonsterBase monster = collision.GetComponent<MonsterBase>();
         if (monster != null)
         {
-            monster.OnDamaged(DamageMultiplier);
+            monster.OnDamaged(_damageMultiplier);
         }
     }
 

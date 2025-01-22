@@ -304,7 +304,6 @@ public class Player : Creature
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
         if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {
-            Debug.Log("OnJumpHold");
             // 공중이므로 기본 중력 적용
             Rigidbody.gravityScale = DefaultGravityScale;
 
@@ -365,7 +364,6 @@ public class Player : Creature
             OnDamaged(attacker: monster);
 
         // TODO: 장애물와 충돌 시 피격
-        // 커밋 연습 테스트
     }
 
     IEnumerator CoDashCooldown()
