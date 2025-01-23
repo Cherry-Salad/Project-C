@@ -37,10 +37,10 @@ public class Creature : BaseObject
     }
 
     #region Stat
-    public int Hp { get; set; }
-    public int MaxHp { get; set; }
-    public int Mp { get; set; }
-    public int MaxMp { get; set; }
+    public float Hp { get; set; }
+    public float MaxHp { get; set; }
+    public float Mp { get; set; }
+    public float MaxMp { get; set; }
     public float Atk { get; set; }
     public float MoveSpeed { get; set; }
     public float JumpForce { get; set; }
@@ -348,11 +348,6 @@ public class Creature : BaseObject
     }
 
     public virtual void OnDamaged(float damage, Creature attacker = null) 
-    {
-        Debug.Log("OnDamaged");
-    }
-
-    public virtual void OnDamaged(int damage, Creature attacker = null) 
     {
         Debug.Log("OnDamaged");
     }

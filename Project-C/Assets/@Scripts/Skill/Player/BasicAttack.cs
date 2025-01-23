@@ -59,6 +59,13 @@ public class BasicAttack : PlayerSkillBase
         return true;
     }
 
+    public void EndSkill()
+    {
+        Debug.Log("EndSkill");
+        // 캐릭터가 공중에 있으면 점프로 전환
+        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
+    }
+
     /// <summary>
     /// 애니메이션 이벤트로 호출하며, 히트 박스를 생성한다.
     /// </summary>
@@ -111,8 +118,6 @@ public class BasicAttack : PlayerSkillBase
             yield return null;
         }
 
-        //Debug.Log("EndSkill");
-        // 캐릭터가 공중에 있으면 점프로 전환
-        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
+        EndSkill();
     }
 }

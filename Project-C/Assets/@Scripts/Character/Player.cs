@@ -84,12 +84,17 @@ public class Player : Creature
 
                     Debug.Log($"{data.CodeName}: {skillId}");
 
-                    //SkillBase skill = gameObject.AddComponent(Type.GetType(data.CodeName)) as SkillBase;
-                    //if (skill == null)
-                    //    return;
+                    var type = Type.GetType(data.CodeName);
+                    if (type == null)
+                        return;
 
-                    //skill.SetInfo(this, data);
-                    //Skills.Add(skill);
+                    // GetOrAddComponent가 안돼서 null 검사
+                    PlayerSkillBase skill = gameObject.GetComponent(type) as PlayerSkillBase;
+                    if (skill == null)
+                        skill = gameObject.AddComponent(type) as PlayerSkillBase;
+
+                    skill.SetInfo(this, data);
+                    Skills.Add(skill.Key, skill);
                 }
             }
         });
@@ -326,7 +331,7 @@ public class Player : Creature
         return true;
     }
 
-    public override void OnDamaged(int damage = 1, Creature attacker = null)
+    public override void OnDamaged(float damage = 1f, Creature attacker = null)
     {
         // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
         if (State == ECreatureState.Hurt)

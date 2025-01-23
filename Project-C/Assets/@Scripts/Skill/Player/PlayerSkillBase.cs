@@ -42,6 +42,7 @@ public class PlayerSkillBase : SkillBase
         if (base.IsSkillUsable() == false)
             return false;
 
+        // 스킬이 잠금되어 있거나 마나가 부족하면 사용 불가능
         if (IsUnlock == false || Owner.Mp < MpCost)
             return false;
 
