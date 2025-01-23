@@ -6,8 +6,8 @@
       "AnimationName": "SelfHealing",
       "MPCost": 2,
       "MAXLevel": 3,
-      "CastingTime": 2.0,
-      "RecoveryTime": 1,
+      "CastingTime": 1.5,
+      "RecoveryTime": 0,
       "HealingValue": 2,
       "ProjectileName": "",
       "NumberOfShots": 0,
@@ -19,7 +19,7 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true, 
-        "Key": 0
+        "Key": 120  // X
       },
       "DisplayKR": {                        // 게임 UI 출력 관련 (한글)
         "Name": "회복",

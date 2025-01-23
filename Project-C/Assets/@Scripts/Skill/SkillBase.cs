@@ -1,4 +1,5 @@
 using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,10 +16,10 @@ public class SkillBase : InitBase
     public float CastingTime { get; protected set; }    // 시전 시간
     public float RecoveryTime { get; protected set; }   // 후 딜레이
     public float CoolTime { get; protected set; }   // 시전 후 회복 시간
+    public float HealingValue { get; protected set; }   // 회복량
     public float DamageMultiplier { get; protected set; }   // 데미지 배율
     public float AttackRange { get; protected set; }    // 공격 범위
 
-    protected bool _isCastingComplete = false;  // 캐스팅 완료 여부
     protected bool _isCooldownComplete = true;  // 쿨타임 완료 여부
 
     public override bool Init()
@@ -42,6 +43,7 @@ public class SkillBase : InitBase
         CastingTime = Data.CastingTime;
         RecoveryTime = Data.RecoveryTime;
         CoolTime = Data.CoolTime;
+        HealingValue = Data.HealingValue;
         DamageMultiplier = Data.DamageMultiplier;
         AttackRange = Data.AttackRange;
     }
@@ -66,11 +68,10 @@ public class SkillBase : InitBase
     /// <summary>
     /// 캐스팅을 시작한다. 피격 당하면 캐스팅을 취소한다.
     /// </summary>
+    /// <param name="action">캐스팅을 완료하면 호출할 이벤트</param>
     /// <returns></returns>
-    protected IEnumerator CoCastingSkill()
+    protected IEnumerator CoDoCastingSkill(Action action)
     {
-        _isCastingComplete = false;
-        
         float elapsedTime = 0f;
         while (elapsedTime < CastingTime)
         {
@@ -82,7 +83,7 @@ public class SkillBase : InitBase
             yield return null;
         }
 
-        _isCastingComplete = true;
+        action();
     }
 
     protected IEnumerator CoSkillCooldown()
