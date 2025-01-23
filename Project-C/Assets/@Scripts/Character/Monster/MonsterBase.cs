@@ -36,7 +36,6 @@ public class MonsterBase : Creature
     private int _scanRange = 2; // 탐색 거리
     private float _attackRange = 1f; // 공격 범위
     private string _target = "Player"; // 타겟 
-    private string _monsterRole = "MeleeAttacker"; //몬스터 역할
     private float _moveSpeed = 3f;
 
     private float _surveillanceTime = 5f; // 한 방향 검사 시간 
@@ -44,6 +43,9 @@ public class MonsterBase : Creature
     /*
      * 객체 관리 필드 
      */
+    protected Data.MonsterData DataRecorder;
+    protected Data.MonsterTypeData TypeRecorder;
+
     [SerializeReference] private GameObject _qMark; // 상태전환 확인용 오브젝트 (?)
     [SerializeReference] private GameObject _eMark; // 상태전환 확인용 오브젝트 (!)
     [SerializeReference] protected List<GameObject> _hitBoxList; // 히트 박스 보관 리스트 
@@ -52,14 +54,17 @@ public class MonsterBase : Creature
     private Coroutine _battleTimerCoroutine;    // 전투 종료 타이머 코루틴
     private Coroutine _surveillanceCoroutine;   // 방향 전환 코루틴
     private Coroutine skillRoutine;             // 스킬 사용 관리 코루틴
+    protected bool _isCompleteLoad = false;
     private readonly EBehaviorPattern _INIT_STAIT = EBehaviorPattern.ScanMove;
 
     protected bool isCanAttack = true; // 공격 가능 여부 확인
     protected int selectSkill = 0;
     protected List<IEnumerator> skillCoroutineList;
 
+    
     protected override void UpdateController()
     {
+        if (!_isCompleteLoad) return;
         base.UpdateController();
 
         switch(BehaviorPattern)
@@ -90,6 +95,8 @@ public class MonsterBase : Creature
         this.Rigidbody.velocity = Vector3.zero;                        // 움직임 0으로 초기화 
         MoveDir = Vector2.right;                                        // 방향 초기화
 
+        _isCompleteLoad = false;
+
         if (_qMark != null && _eMark != null)
         {
             _qMark.SetActive(false);
@@ -98,21 +105,26 @@ public class MonsterBase : Creature
         
         MoveSpeed = _moveSpeed;
 
+        
+
         return true;
     }
 
     protected override void UpdateIdle()
     {
+        if (!_isCompleteLoad) return;
         base.UpdateIdle();
+        
 
         if (isCanAttack && BehaviorPattern == EBehaviorPattern.Battle)
             Attack();
-        
     }
 
     protected override void UpdateRun()
     {
+        if (!_isCompleteLoad) return;
         base.UpdateRun();
+
         if (Input.GetKey(KeyCode.R)){
             StartCoroutine(HurtCoroutine());
         }
@@ -177,8 +189,15 @@ public class MonsterBase : Creature
         }
         else 
         {
+            float targetPosX = _targetGameObject.transform.position.x;
+            float myPosX = this.transform.position.x;
+            float rangeArea = _attackRange;
+
             isCanAttack = false;
-            if (CheckFrontGround() && !CheckWall())
+
+            if ((targetPosX - rangeArea) < myPosX && myPosX < (targetPosX + rangeArea))
+                StopMove();
+            else if (CheckFrontGround() && !CheckWall())
                 State = ECreatureState.Run;
         }
 

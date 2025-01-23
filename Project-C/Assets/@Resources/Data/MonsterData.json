@@ -1,5 +1,5 @@
 {
-  "Monsters": [
+  "MonsterData": [
     {
       "DataID": 300001,                 // 몬스터 ID
       "Type": "GoblinWarrior",          // 몬스터 타입
