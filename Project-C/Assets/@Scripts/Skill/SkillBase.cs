@@ -20,7 +20,7 @@ public class SkillBase : InitBase
     public float DamageMultiplier { get; protected set; }   // 데미지 배율
     public float AttackRange { get; protected set; }    // 공격 범위
 
-    protected bool _isCooldownComplete = true;  // 쿨타임 완료 여부
+    protected bool _completeCooldown = true;  // 쿨타임 완료 여부
 
     public override bool Init()
     {
@@ -38,6 +38,7 @@ public class SkillBase : InitBase
         if (data == null)
             return;
 
+        #region 스킬 정보
         Name = Data.CodeName;
         AnimationName = Data.AnimationName;
         ProjectileId = Data.ProjectileId;
@@ -47,11 +48,12 @@ public class SkillBase : InitBase
         HealingValue = Data.HealingValue;
         DamageMultiplier = Data.DamageMultiplier;
         AttackRange = Data.AttackRange;
+        #endregion
     }
 
     public virtual bool IsSkillUsable()
     {
-        if (_isCooldownComplete == false)
+        if (_completeCooldown == false)
             return false;
 
         return true;
@@ -64,6 +66,43 @@ public class SkillBase : InitBase
 
         Debug.Log($"DoSkill: {Name}");
         return true;
+    }
+
+    public virtual void SpawnProjectile(Vector3 spawnPos)
+    {
+        if (Managers.Data.ProjectileDataDic.TryGetValue(ProjectileId, out var data) == false)
+            return;
+
+        Projectile projectile = Managers.Resource.Instantiate(data.Name).GetComponent<Projectile>();
+        if (projectile == null) 
+            return;
+
+        // 투사체 소환 위치 설정
+        projectile.transform.position = spawnPos;
+
+        // 충돌을 제외할 레이어 필터링
+        LayerMask excludeLayers = 0;
+        excludeLayers.AddLayer(ELayer.Default);
+        excludeLayers.AddLayer(ELayer.Projectile);
+
+        switch (Owner.ObjectType)
+        {
+            case EObjectType.Player:
+                excludeLayers.AddLayer(ELayer.Player);
+                break;
+            case EObjectType.Monster:
+                excludeLayers.AddLayer(ELayer.Monster);
+                break;
+        }
+
+        projectile.SetInfo(Owner, this, data, excludeLayers);
+    }
+
+    public virtual void EndSkill()
+    {
+        Debug.Log("EndSkill");
+        // 캐릭터가 공중에 있으면 점프로 전환
+        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
     /// <summary>
@@ -89,8 +128,8 @@ public class SkillBase : InitBase
 
     protected IEnumerator CoSkillCooldown()
     {
-        _isCooldownComplete = false;
+        _completeCooldown = false;
         yield return new WaitForSeconds(CoolTime);
-        _isCooldownComplete = true;
+        _completeCooldown = true;
     }
 }

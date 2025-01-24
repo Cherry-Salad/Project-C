@@ -2,43 +2,43 @@
   "Projectile" : [
     {
       "DataID" : 390001,              // 투사체 ID
-      "CodeName" : "IceBall", // 투사체 이름
+      "Name" : "IceBall", // 투사체 이름
       "DefaultGravity" : 0,           // 기본 중력값
       "BaseSpeed" : 1.5,              // 기본 속도
       "LifeTime" : 5,                 // 투사체 유지 시간
       "HitBoxSize" : 1.0              // 투사체 히트 박스 사이즈
     },
     {
-      "DataID" : 390002,
-      "CodeName" : "GoblinMagic",
-      "DefaultGravity" : 0,
-      "BaseSpeed" : 1.5,
-      "LifeTime" : 5,
-      "HitBoxSize" : 1.0
+      "DataID": 390002,
+      "Name": "GoblinMagic",
+      "DefaultGravity": 0,
+      "BaseSpeed": 1.5,
+      "LifeTime": 5,
+      "HitBoxSize": 1.0
     },
     {
-      "DataID" : 390003,
-      "CodeName" : "GoblinBoomerang",
-      "DefaultGravity" : 0,
-      "BaseSpeed" : 1.3,
-      "LifeTime" : 5,
-      "HitBoxSize" : 1.0
+      "DataID": 390003,
+      "Name": "GoblinBoomerang",
+      "DefaultGravity": 0,
+      "BaseSpeed": 1.3,
+      "LifeTime": 5,
+      "HitBoxSize": 1.0
     },
     {
-      "DataID" : 390004,
-      "CodeName" : "GoblinEyeLaser",
-      "DefaultGravity" : 0,
-      "BaseSpeed" : 1.0,
-      "LifeTime" : 5,
-      "HitBoxSize" : 1.0
+      "DataID": 390004,
+      "Name": "GoblinEyeLaser",
+      "DefaultGravity": 0,
+      "BaseSpeed": 1.0,
+      "LifeTime": 5,
+      "HitBoxSize": 1.0
     },
     {
-      "DataID" : 390005,
-      "CodeName" : "GoblinAxe",
-      "DefaultGravity" : 1,
-      "BaseSpeed" : 1.5,
-      "LifeTime" : 5,
-      "HitBoxSize" : 1.0
+      "DataID": 390005,
+      "Name": "GoblinAxe",
+      "DefaultGravity": 1,
+      "BaseSpeed": 1.5,
+      "LifeTime": 5,
+      "HitBoxSize": 1.0
     }
   ]
 }

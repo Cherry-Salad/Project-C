@@ -121,10 +121,11 @@ namespace Data
     [Serializable]
     public class ProjectileData
     {
-        public int DataId;
+        public int DataId; 
         public string Name;
-        public int DefaultGravity;
-        public float BaseSpeed;
+        public int DefaultGravity;  // 기본 중력
+        public float BaseSpeed; // 기본 속도
+        public float LifeTime;   // 투사체 유지 시간
     }
 
     [Serializable]

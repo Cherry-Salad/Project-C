@@ -31,7 +31,7 @@ public class Player : Creature
     #endregion
 
     float _dashCoolTime = 1.0f; // 대시 쿨타임
-    bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
+    bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
 
     public override bool Init()
     {
@@ -119,7 +119,7 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
-        if (IsDashInput() || IsSkillInput())
+        if ((State != ECreatureState.WallJump && IsDashInput()) || IsSkillInput())
             return;
         
         IsJumpInput();
@@ -321,7 +321,7 @@ public class Player : Creature
 
     protected override bool OnDash()
     {
-        if (_isDashCooldownComplete == false)
+        if (_completeDashCooldown == false)
             return false;
 
         if (base.OnDash() == false) 
@@ -373,9 +373,9 @@ public class Player : Creature
 
     IEnumerator CoDashCooldown()
     {
-        _isDashCooldownComplete = false;
+        _completeDashCooldown = false;
         yield return new WaitForSeconds(_dashCoolTime);
-        _isDashCooldownComplete = true;
+        _completeDashCooldown = true;
     }
 
     IEnumerator CoHandleInvincibility(float duration = 0.5f)

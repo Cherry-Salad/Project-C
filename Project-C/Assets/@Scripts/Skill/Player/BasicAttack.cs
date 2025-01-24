@@ -59,11 +59,9 @@ public class BasicAttack : PlayerSkillBase
         return true;
     }
 
-    public void EndSkill()
+    public override void EndSkill()
     {
-        Debug.Log("EndSkill");
-        // 캐릭터가 공중에 있으면 점프로 전환
-        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
+        base.EndSkill();
     }
 
     /// <summary>
