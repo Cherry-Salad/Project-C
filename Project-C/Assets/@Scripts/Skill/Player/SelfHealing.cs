@@ -70,7 +70,7 @@ public class SelfHealing : PlayerSkillBase
         {
             // 꾹 눌러야 캐스팅 시작
             Owner.Animator.Play(AnimationName);
-            _casting = StartCoroutine(CoDoCastingSkill(Heal));
+            _casting = StartCoroutine(CoDoCastingSkill(OnHeal));
         }
     }
 
@@ -94,7 +94,7 @@ public class SelfHealing : PlayerSkillBase
         Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
-    void Heal()
+    void OnHeal()
     {
         Owner.Animator.Play($"{AnimationName}Complete");
 
