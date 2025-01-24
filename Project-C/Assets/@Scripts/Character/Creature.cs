@@ -401,6 +401,8 @@ public class Creature : BaseObject
             yield return null;
         }
 
+        Rigidbody.position = destPos;
+
         // 대시가 끝나면 충돌 처리 활성화
         if (Collider.isTrigger)
             Collider.isTrigger = false;
@@ -498,7 +500,7 @@ public class Creature : BaseObject
     /// <returns></returns>
     public bool CheckGround()
     {
-        float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
+        float groundCheckDistance = Collider.bounds.extents.y + 0.01f;   // 바닥 감지 거리
         
         // 충돌 필터링
         LayerMask includeLayers = 0;

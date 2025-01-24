@@ -68,7 +68,7 @@ public class SkillBase : InitBase
         return true;
     }
 
-    public virtual void SpawnProjectile(Vector3 spawnPos)
+    public virtual void SpawnProjectile(Vector3 spawnPos, Vector3 dir)
     {
         if (Managers.Data.ProjectileDataDic.TryGetValue(ProjectileId, out var data) == false)
             return;
@@ -95,7 +95,7 @@ public class SkillBase : InitBase
                 break;
         }
 
-        projectile.SetInfo(Owner, this, data, excludeLayers);
+        projectile.SetInfo(Owner, this, data, excludeLayers, dir);
     }
 
     public virtual void EndSkill()

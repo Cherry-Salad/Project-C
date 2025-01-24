@@ -7,7 +7,7 @@ using static Define;
 public class SelfHealing : PlayerSkillBase
 {
     bool _isCasting = false;
-    Coroutine _casting = null;
+    Coroutine _coCasting = null;
     float _castingStartTime = 0;
 
     public override bool Init()
@@ -66,11 +66,11 @@ public class SelfHealing : PlayerSkillBase
         }
 
         float pressedTime = Time.time - _castingStartTime;
-        if (_casting == null && pressedTime > 0.5f)
+        if (_coCasting == null && pressedTime > 0.5f)
         {
             // 꾹 눌러야 캐스팅 시작
             Owner.Animator.Play(AnimationName);
-            _casting = StartCoroutine(CoDoCastingSkill(OnHeal));
+            _coCasting = StartCoroutine(CoDoCastingSkill(OnHeal));
         }
     }
 
@@ -84,10 +84,10 @@ public class SelfHealing : PlayerSkillBase
         _isCasting = false;
         _castingStartTime = 0f;
 
-        if (_casting != null)
+        if (_coCasting != null)
         {
-            StopCoroutine(_casting);
-            _casting = null;
+            StopCoroutine(_coCasting);
+            _coCasting = null;
         }
 
         // 캐릭터가 공중에 있으면 점프로 전환
@@ -103,6 +103,6 @@ public class SelfHealing : PlayerSkillBase
         Debug.Log($"Heal {Owner.Hp}");
 
         // 마나 소비
-        Owner.Mp -= MpCost;
+        //Owner.Mp -= MpCost;   // 테스트를 위하여 마나 소비는 껐다
     }
 }

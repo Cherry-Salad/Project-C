@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 9201386276469228807}
   - component: {fileID: 4404531872078630682}
   - component: {fileID: -727134876736360928}
+  - component: {fileID: 2300702865162090913}
   m_Layer: 11
   m_Name: IceBall
   m_TagString: Untagged
@@ -161,3 +162,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40d935091a6b86419b89467269cf851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &2300702865162090913
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8925349548270924270}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d8cd4fbf4b4e6a74e92d8062c0d1d346, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

@@ -33,13 +33,13 @@ public class IceBall : PlayerSkillBase
 
         Owner.Animator.Play(AnimationName);
         Owner.State = ECreatureState.Skill;
-        Owner.Mp -= MpCost;
+        //Owner.Mp -= MpCost;   // 테스트를 위하여 마나 소비는 껐다
         return true;
     }
 
     void OnSpawnIceBall()
     {
-        SpawnProjectile(Owner.transform.position + (Vector3)_skillDir);
+        SpawnProjectile(Owner.transform.position + (Vector3)_skillDir, (Vector3)_skillDir);
     }
 
     void OnEndSkill()

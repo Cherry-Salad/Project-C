@@ -40,7 +40,7 @@
       "DelayBetweenShots": 0,
       "InitialAngle": 0,
       "DamageMultiplier": 1.5,
-      "AttackRange": 1.0,
+      "AttackRange": 0,
       "RetentionTime": 0,
       "Dynamics": {
         "Level": 0,

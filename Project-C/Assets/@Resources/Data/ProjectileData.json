@@ -4,8 +4,8 @@
       "DataID" : 390001,              // 투사체 ID
       "Name" : "IceBall", // 투사체 이름
       "DefaultGravity" : 0,           // 기본 중력값
-      "BaseSpeed" : 1.5,              // 기본 속도
-      "LifeTime" : 5,                 // 투사체 유지 시간
+      "BaseSpeed" : 20.0, // 기본 속도
+      "LifeTime" : 0.5, // 투사체 유지 시간
       "HitBoxSize" : 1.0              // 투사체 히트 박스 사이즈
     },
     {
