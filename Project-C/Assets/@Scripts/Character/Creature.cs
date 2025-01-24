@@ -347,9 +347,9 @@ public class Creature : BaseObject
         return false;
     }
 
-    public virtual void OnDamaged(float damage, Creature attacker = null) 
+    public override void OnDamaged(float damage, Creature attacker = null) 
     {
-        Debug.Log("OnDamaged");
+        base.OnDamaged(damage, attacker);
     }
 
     IEnumerator CoWallJump(Vector2 moveDir)

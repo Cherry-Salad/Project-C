@@ -61,7 +61,7 @@ public class SelfHealing : PlayerSkillBase
         if (Input.GetKeyUp(Key))
         {
             // 캐스팅 취소
-            CancelCasting();
+            OnCancelCasting();
             return;
         }
 
@@ -77,7 +77,7 @@ public class SelfHealing : PlayerSkillBase
     /// <summary>
     /// 애니메이션 이벤트로 호출한다.
     /// </summary>
-    public void CancelCasting()
+    public void OnCancelCasting()
     {
         Debug.Log("EndSkill");
 

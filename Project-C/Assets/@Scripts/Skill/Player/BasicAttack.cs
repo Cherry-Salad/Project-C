@@ -69,7 +69,7 @@ public class BasicAttack : PlayerSkillBase
     /// <summary>
     /// 애니메이션 이벤트로 호출하며, 히트 박스를 생성한다.
     /// </summary>
-    void SpawnHitBox()
+    void OnSpawnHitBox()
     {
         if (_hitBox == null)
         {
@@ -83,7 +83,7 @@ public class BasicAttack : PlayerSkillBase
     /// <summary>
     /// 애니메이션 이벤트로 호출하며, 생성한 히트 박스를 없앤다.
     /// </summary>
-    void DespawnHitBox()
+    void OnDespawnHitBox()
     {
         if (_hitBox != null)
             _hitBox.gameObject.SetActive(false);
@@ -108,7 +108,7 @@ public class BasicAttack : PlayerSkillBase
             // 피격 시 스킬 취소
             if (Owner.State == ECreatureState.Hurt || stateInfo.IsName(AnimationName) == false)
             {
-                DespawnHitBox();
+                OnDespawnHitBox();
                 yield break;
             }
 
