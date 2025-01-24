@@ -40,8 +40,9 @@ namespace Data
         public string TypeLevel;
         public string AttackTarget;
         public List<int> SpawnPosition;
-        public string SpawnViewDirection;
+        public bool IsSpawnViewRight;
         public bool Resurrection;
+        public float SurveillanceTime;
 
         public int MaxHP;
         public int AttackSuccessDropMp;
@@ -140,7 +141,9 @@ namespace Data
     public class MonsterTypeScan
     {
         public float Distance;
-        public float MovementMultiplier;
+        public float MaxScanAngle;
+        public float MinScanAngle;
+        public float ViewAngle;
     }
 
     [Serializable]
@@ -164,6 +167,7 @@ namespace Data
         public float RetentionTime;
         public float MovementMultiplier;
         public int InitialAngle;
+        public float HitBoxPos;
 
         public string ProjectileName;
         public int NumberOfShots;
@@ -175,7 +179,7 @@ namespace Data
     public static class MonsterDataLoader
     {
         private static Dictionary<int, MonsterData> _monsterDataDic;
-        private static Dictionary<string, MonsterTypeData> _monsterTypeDataDIc;
+        private static Dictionary<string, MonsterTypeData> _monsterTypeDataDic;
         private static TaskCompletionSource<bool> _loadTaskCompletion = new TaskCompletionSource<bool>();
 
         private const string _MONSTER_DATA_PATH = "MonsterData";
@@ -194,7 +198,8 @@ namespace Data
         public static void loadMonsterDataGroup()
         {
             if (_isLoad) return;
-            
+            _isFirst = false;
+
             Managers.Resource.LoadAllAsync<Object>(_MONSTER_DATA_GROUP, (key, loadCount, totalCount) =>
             {
                 _isLoad = true;
@@ -202,35 +207,34 @@ namespace Data
                 if(loadCount == totalCount)
                 {
                     _monsterDataDic = loadJson<MonsterDataDictionaryMaker, int, MonsterData>(_MONSTER_DATA_PATH).MakeDict();
-                    _monsterTypeDataDIc = loadJson<MonsterTypeDictionaryMaker, string, MonsterTypeData>(_MONSTER_TYPE_DATA_PATH).MakeDict();
+                    _monsterTypeDataDic = loadJson<MonsterTypeDictionaryMaker, string, MonsterTypeData>(_MONSTER_TYPE_DATA_PATH).MakeDict();
 
-                    _isFirst = false;
+                    
                     _isLoad = false;
                     _loadTaskCompletion.TrySetResult(true);
                 }
             });
         }
-       
+
+        public static async Task LoadData()
+        {
+            if (_isFirst) loadMonsterDataGroup();
+            
+            await _loadTaskCompletion.Task;
+        }
+
         public static async Task<MonsterData> MonsterDataLoad(int id)
         {
-            if(_isFirst)
-            {
-                loadMonsterDataGroup();
-                await _loadTaskCompletion.Task;
-            }
-            
+            await LoadData();
+
             return _monsterDataDic[id];
         }
 
         public static async Task<MonsterTypeData> MonsterTypeLoad(string typeName)
         {
-            if(_isFirst)
-            {
-                loadMonsterDataGroup();
-                await _loadTaskCompletion.Task;
-            }
-            
-            return _monsterTypeDataDIc[typeName];
+            await LoadData();
+
+            return _monsterTypeDataDic[typeName];
         }
 
     }
