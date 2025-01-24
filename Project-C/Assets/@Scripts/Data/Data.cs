@@ -49,7 +49,7 @@ namespace Data
         public float RecoveryTime;  // 시전 후 회복 시간(후 딜레이)
         public float CoolTime;  // 쿨타임
         public int HealingValue;    // 회복량
-        public string ProjectileName;   // 투사체 이름
+        public int ProjectileId;   // 투사체 데이터 아이디
         public int NumberOfShots;   // 투사체 발사 횟수
         public int DelayBetweenShots;   // 투사체 발사간 시간 간격
         public int InitialAngle;    // 투사체 발사 각도
@@ -112,6 +112,30 @@ namespace Data
             Dictionary<int, PlayerSkillData> dict = new Dictionary<int, PlayerSkillData>();
             foreach (PlayerSkillData skillData in PlayerSkill)
                 dict.Add(skillData.DataId, skillData);
+            return dict;
+        }
+    }
+    #endregion
+
+    #region ProjectileData
+    [Serializable]
+    public class ProjectileData
+    {
+        public int DataId;
+        public string Name;
+        public int DefaultGravity;
+        public float BaseSpeed;
+    }
+
+    [Serializable]
+    public class ProjectileDataLoader : ILoader<int, ProjectileData>
+    {
+        public List<ProjectileData> Projectile = new List<ProjectileData>();
+        public Dictionary<int, ProjectileData> MakeDict()
+        {
+            Dictionary<int, ProjectileData> dict = new Dictionary<int, ProjectileData>();
+            foreach (ProjectileData projectileData in Projectile)
+                dict.Add(projectileData.DataId, projectileData);
             return dict;
         }
     }

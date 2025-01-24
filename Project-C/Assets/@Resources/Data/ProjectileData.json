@@ -2,7 +2,7 @@
   "Projectile" : [
     {
       "DataID" : 390001,              // 투사체 ID
-      "CodeName" : "PlayerIceBall",   // 투사체 이름
+      "CodeName" : "IceBall", // 투사체 이름
       "DefaultGravity" : 0,           // 기본 중력값
       "BaseSpeed" : 1.5,              // 기본 속도
       "LifeTime" : 5,                 // 투사체 유지 시간

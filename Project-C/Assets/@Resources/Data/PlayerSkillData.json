@@ -9,7 +9,7 @@
       "CastingTime": 1.5,
       "RecoveryTime": 0,
       "HealingValue": 2,
-      "ProjectileName": "",
+      "ProjectileId": 0,
       "NumberOfShots": 0,
       "DelayBetweenShots": 0,
       "InitialAngle": 0,
@@ -18,10 +18,10 @@
       "RetentionTime": 0,
       "Dynamics": {
         "Level": 0,
-        "IsUnlock": true, 
-        "Key": 120  // X
+        "IsUnlock": true,
+        "Key": 120 // X
       },
-      "DisplayKR": {                        // 게임 UI 출력 관련 (한글)
+      "DisplayKR": { // 게임 UI 출력 관련 (한글)
         "Name": "회복",
         "Description": "체력을 회복합니다."
       }
@@ -32,20 +32,20 @@
       "AnimationName": "IceBall",
       "MPCost": 2,
       "MAXLevel": 3,
-      "CastingTime": 0.3,
+      "CastingTime": 0,
       "RecoveryTime": 1,
       "HealingValue": 2,
-      "ProjectileName": "PlayerIceBall",
+      "ProjectileId": 390001,
       "NumberOfShots": 1,
       "DelayBetweenShots": 0,
       "InitialAngle": 0,
       "DamageMultiplier": 1.5,
       "AttackRange": 1.0,
-      "RetentionTime": 0.1,
+      "RetentionTime": 0,
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 0
+        "Key": 97
       },
       "DisplayKR": {
         "Name": "아이스 볼",
@@ -61,7 +61,7 @@
       "CastingTime": 0.3,
       "RecoveryTime": 1,
       "HealingValue": 0,
-      "ProjectileName": "0",
+      "ProjectileId": 0,
       "NumberOfShots": 0,
       "DelayBetweenShots": 0,
       "InitialAngle": 0,

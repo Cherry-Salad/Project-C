@@ -8,11 +8,11 @@ using static Define;
 public class SkillBase : InitBase
 {
     public Creature Owner { get; private set; }
-
     public SkillData Data;
 
     public string Name { get; protected set; }
     public string AnimationName { get; protected set; }
+    public int ProjectileId { get; protected set; }
     public float CastingTime { get; protected set; }    // 시전 시간
     public float RecoveryTime { get; protected set; }   // 후 딜레이
     public float CoolTime { get; protected set; }   // 시전 후 회복 시간
@@ -40,6 +40,7 @@ public class SkillBase : InitBase
 
         Name = Data.CodeName;
         AnimationName = Data.AnimationName;
+        ProjectileId = Data.ProjectileId;
         CastingTime = Data.CastingTime;
         RecoveryTime = Data.RecoveryTime;
         CoolTime = Data.CoolTime;
