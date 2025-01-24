@@ -14,6 +14,21 @@ public class Define
         Env,    // Environment, 환경(ex: 나무, 돌)
     }
 
+    public enum ELayer
+    {
+        Default,
+        TransparentFX,
+        IgnoreRaycast,
+        Water = 4,
+        UI, // 5부터 시작
+        Wall,
+        Ground,
+        Monster,
+        HitBox,
+        Player,
+        Projectile
+    }
+
     public enum ECreatureState
     {
         None,

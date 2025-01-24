@@ -433,8 +433,12 @@ public class Creature : BaseObject
         if (dir == Vector2.zero)
             return default;
 
-        LayerMask obstacleLayer = LayerMask.GetMask("Ground", "Wall");
-        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
+        // 충돌 필터링
+        LayerMask excludeLayers = 0;
+        excludeLayers.AddLayer(ELayer.Wall);
+        excludeLayers.AddLayer(ELayer.Ground);
+
+        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, excludeLayers);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);
 
         if (obstacle.collider != null || isDetailedCheck == false)
@@ -451,7 +455,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(dir, dirUp, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.green);
 
-            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, obstacleLayer);
+            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, excludeLayers);
             if (obstacle.collider != null)
                 return obstacle;
         }
@@ -463,7 +467,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(dir, dirDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.magenta);
 
-            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, obstacleLayer);
+            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, excludeLayers);
             if (obstacle.collider != null)
                 return obstacle;
         }
@@ -480,7 +484,12 @@ public class Creature : BaseObject
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값 추가
         Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
-        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));
+
+        // 충돌 필터링
+        LayerMask excludeLayers = 0;
+        excludeLayers.AddLayer(ELayer.Wall);
+
+        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, excludeLayers);
     }
 
     /// <summary>
@@ -490,11 +499,15 @@ public class Creature : BaseObject
     public bool CheckGround()
     {
         float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
-        LayerMask groundLayer = LayerMask.GetMask("Ground");
+        
+        // 충돌 필터링
+        LayerMask excludeLayers = 0;
+        excludeLayers.AddLayer(ELayer.Ground);
+        
         Debug.DrawRay(Rigidbody.position, Vector2.down * groundCheckDistance, Color.red);
 
         // 캐릭터 밑의 평평한 바닥 감지
-        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, groundLayer))
+        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, excludeLayers))
             return true;
 
         // 캐릭터 밑의 경사진 바닥 감지
@@ -509,7 +522,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.red);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, groundLayer))
+            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, excludeLayers))
                 return true;
         }
 
@@ -520,7 +533,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.blue);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, groundLayer))
+            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, excludeLayers))
                 return true;
         }
 
@@ -536,9 +549,14 @@ public class Creature : BaseObject
     Vector2 FindDashDestPos(Vector2 dir, float distance)
     {
         List<RaycastHit2D> obstacles = new List<RaycastHit2D>();
-
         ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(LayerMask.GetMask("Ground", "Wall"));
+
+        // 충돌 필터링
+        LayerMask excludeLayers = 0;
+        excludeLayers.AddLayer(ELayer.Wall);
+        excludeLayers.AddLayer(ELayer.Ground);
+        
+        filter.SetLayerMask(excludeLayers);
         filter.useTriggers = false;
 
         Collider.Cast(dir, filter, obstacles, distance);
