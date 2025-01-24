@@ -434,11 +434,11 @@ public class Creature : BaseObject
             return default;
 
         // 충돌 필터링
-        LayerMask excludeLayers = 0;
-        excludeLayers.AddLayer(ELayer.Wall);
-        excludeLayers.AddLayer(ELayer.Ground);
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Wall);
+        includeLayers.AddLayer(ELayer.Ground);
 
-        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, excludeLayers);
+        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, includeLayers);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);
 
         if (obstacle.collider != null || isDetailedCheck == false)
@@ -455,7 +455,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(dir, dirUp, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.green);
 
-            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, excludeLayers);
+            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, includeLayers);
             if (obstacle.collider != null)
                 return obstacle;
         }
@@ -467,7 +467,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(dir, dirDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.magenta);
 
-            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, excludeLayers);
+            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, includeLayers);
             if (obstacle.collider != null)
                 return obstacle;
         }
@@ -486,10 +486,10 @@ public class Creature : BaseObject
         Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
 
         // 충돌 필터링
-        LayerMask excludeLayers = 0;
-        excludeLayers.AddLayer(ELayer.Wall);
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Wall);
 
-        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, excludeLayers);
+        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, includeLayers);
     }
 
     /// <summary>
@@ -501,13 +501,13 @@ public class Creature : BaseObject
         float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
         
         // 충돌 필터링
-        LayerMask excludeLayers = 0;
-        excludeLayers.AddLayer(ELayer.Ground);
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Ground);
         
         Debug.DrawRay(Rigidbody.position, Vector2.down * groundCheckDistance, Color.red);
 
         // 캐릭터 밑의 평평한 바닥 감지
-        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, excludeLayers))
+        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers))
             return true;
 
         // 캐릭터 밑의 경사진 바닥 감지
@@ -522,7 +522,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.red);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, excludeLayers))
+            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
                 return true;
         }
 
@@ -533,7 +533,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.blue);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, excludeLayers))
+            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
                 return true;
         }
 
@@ -552,11 +552,11 @@ public class Creature : BaseObject
         ContactFilter2D filter = new ContactFilter2D();
 
         // 충돌 필터링
-        LayerMask excludeLayers = 0;
-        excludeLayers.AddLayer(ELayer.Wall);
-        excludeLayers.AddLayer(ELayer.Ground);
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Wall);
+        includeLayers.AddLayer(ELayer.Ground);
         
-        filter.SetLayerMask(excludeLayers);
+        filter.SetLayerMask(includeLayers);
         filter.useTriggers = false;
 
         Collider.Cast(dir, filter, obstacles, distance);
