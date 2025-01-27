@@ -53,6 +53,11 @@ public class SkillBase : InitBase
 
     public virtual bool IsSkillUsable()
     {
+        // 이미 스킬 애니메이션이 재생되어 있다면 이벤트 호출이 꼬일 수 있으므로, 중복 방지
+        AnimatorStateInfo stateInfo = Owner.Animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName(AnimationName))
+            return false;
+
         if (_completeCooldown == false)
             return false;
 
@@ -101,6 +106,7 @@ public class SkillBase : InitBase
     public virtual void EndSkill()
     {
         Debug.Log("EndSkill");
+
         // 캐릭터가 공중에 있으면 점프로 전환
         Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
