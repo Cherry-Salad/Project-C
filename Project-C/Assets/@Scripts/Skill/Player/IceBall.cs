@@ -33,8 +33,8 @@ public class IceBall : PlayerSkillBase
 
         Debug.Log("DoSkill");
         
-        Owner.Animator.Play(AnimationName);
         Owner.State = ECreatureState.Skill;
+        Owner.Animator.Play(AnimationName);
         //Owner.Mp -= MpCost;   // 테스트를 위하여 마나 소비는 껐다
         return true;
     }

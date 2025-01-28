@@ -33,6 +33,9 @@ public class Player : Creature
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
 
+    KeyCode _pressedSkillKey = KeyCode.None;
+    float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -212,13 +215,63 @@ public class Player : Creature
 
     bool IsSkillInput()
     {
+        // 꾹 눌러야 하는 키
+        if (_pressedSkillKey != KeyCode.None) 
+        {
+            if (Input.GetKeyUp(_pressedSkillKey))
+            {
+                _pressedSkillKey = KeyCode.None;
+                _skillKeyPressedTime = 0f;
+            }
+            else
+            {
+                // 키를 누르고 있다
+                float pressedTime = Time.time - _skillKeyPressedTime;
+                if (pressedTime >= Skills[_pressedSkillKey].KeyPressedTime)
+                {
+                    Skills[_pressedSkillKey].DoSkill();
+
+                    _pressedSkillKey = KeyCode.None;
+                    _skillKeyPressedTime = 0f;
+                }
+
+                return true;
+            }
+        }
+        
         // 스킬키 입력
         foreach (KeyCode keyCode in Skills.Keys)
         {
             if (Input.GetKeyDown(keyCode))
             {
                 Debug.Log($"입력된 키: {keyCode}");
-                Skills[keyCode].DoSkill();
+
+                if (Skills[keyCode].KeyPressedTime > 0)
+                {
+                    // 꾹 눌러야 하는 키
+                    _pressedSkillKey = keyCode;
+                    _skillKeyPressedTime = Time.time;
+                }
+                else
+                {
+                    Skills[keyCode].DoSkill();
+                    _pressedSkillKey = KeyCode.None;
+                    _skillKeyPressedTime = 0f;
+                }
+
+                return true;
+            }
+
+            if (Input.GetKey(keyCode))
+            {
+                Debug.Log($"입력된 키: {keyCode}");
+                if (Skills[keyCode].KeyPressedTime > 0)
+                {
+                    // 꾹 눌러야 하는 키
+                    _pressedSkillKey = keyCode;
+                    _skillKeyPressedTime = Time.time;
+                }
+
                 return true;
             }
         }

@@ -6,11 +6,7 @@ using static Define;
 
 public class SelfHealing : PlayerSkillBase
 {
-    public float PressedTime = 0.3f;
-
-    bool _isCasting = false;
     Coroutine _coCasting = null;
-    float _castingStartTime = 0;
 
     public override bool Init()
     {
@@ -28,32 +24,17 @@ public class SelfHealing : PlayerSkillBase
     void Update()
     {
         // 캐스팅 시작 신호가 들어올 때까지 기다린다
-        if (_isCasting == false)
+        if (_coCasting == null)
             return;
 
         if (Owner.ObjectType == EObjectType.Player)
-            GetInput();
-    }
-
-    void GetInput()
-    {
-        if (Input.GetKeyUp(Key))
         {
-            // 캐스팅 취소
-            OnCancelCasting();
-            return;
-        }
-
-        // 캐스팅을 이미 시작하고 있다면 
-        if (_coCasting != null)
-            return;
-
-        float pressedTime = Time.time - _castingStartTime;
-        if (pressedTime > PressedTime)
-        {
-            // 꾹 눌러야 캐스팅 시작
-            Owner.Animator.Play(AnimationName);
-            _coCasting = StartCoroutine(CoDoCastingSkill(OnHeal));
+            if (Input.GetKeyUp(Key))
+            {
+                // 캐스팅 취소
+                OnCancelCasting();
+                return;
+            }
         }
     }
 
@@ -75,10 +56,8 @@ public class SelfHealing : PlayerSkillBase
             return false;
 
         Owner.State = ECreatureState.Skill;
-
-        // 캐스팅 시작
-        _isCasting = true;
-        _castingStartTime = Time.time;
+        Owner.Animator.Play(AnimationName);
+        _coCasting = StartCoroutine(CoDoCastingSkill(OnHeal));
         
         return true;
     }
@@ -89,9 +68,6 @@ public class SelfHealing : PlayerSkillBase
     public void OnCancelCasting()
     {
         Debug.Log("EndSkill");
-
-        _isCasting = false;
-        _castingStartTime = 0f;
 
         // 캐스팅을 멈춘다
         if (_coCasting != null)
@@ -106,6 +82,7 @@ public class SelfHealing : PlayerSkillBase
 
     void OnHeal()
     {
+        _coCasting = null;
         Owner.Animator.Play($"{AnimationName}Complete");
 
         // 최대 체력을 초과해서 힐링할 수 없다

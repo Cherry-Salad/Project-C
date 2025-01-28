@@ -83,6 +83,7 @@ namespace Data
         public int Level;   // 스킬 레벨
         public bool IsUnlock;   // 해금 여부
         public KeyCode Key; // 현재 할당 키
+        public float KeyPressedTime;    // 키 누르는 시간
     }
 
     /// <summary>

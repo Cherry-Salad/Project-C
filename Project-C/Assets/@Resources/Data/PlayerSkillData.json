@@ -20,7 +20,8 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 120 // X
+        "Key": 120, // X
+        "KeyPressedTime": 0.3
       },
       "DisplayKR": { // 게임 UI 출력 관련 (한글)
         "Name": "회복",
@@ -47,7 +48,8 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 97 // A
+        "Key": 97, // A
+        "KeyPressedTime": 0
       },
       "DisplayKR": {
         "Name": "아이스 볼",
@@ -74,7 +76,8 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 115 // S
+        "Key": 115, // S
+        "KeyPressedTime": 0
       },
       "DisplayKR": {
         "Name": "아이스 브레이크",

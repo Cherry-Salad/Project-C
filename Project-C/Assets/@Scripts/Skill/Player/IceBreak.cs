@@ -40,8 +40,8 @@ public class IceBreak : PlayerSkillBase
 
         //Owner.Mp -= MpCost;
 
-        Owner.Animator.Play(AnimationName);
         Owner.State = ECreatureState.Skill;
+        Owner.Animator.Play(AnimationName);
         StartCoroutine(CoDoSkill());
 
         return true;
