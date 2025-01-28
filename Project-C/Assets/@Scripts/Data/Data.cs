@@ -45,6 +45,7 @@ namespace Data
         public int DataId;
         public string CodeName; // 코드상 이름
         public string AnimationName;    // 스킬 애니메이션 이름
+        public string PrefabName;   // 스킬 프리팹 이름
         public float CastingTime;   // 시전 시간
         public float RecoveryTime;  // 시전 후 회복 시간(후 딜레이)
         public float CoolTime;  // 쿨타임

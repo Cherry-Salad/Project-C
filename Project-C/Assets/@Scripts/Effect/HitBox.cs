@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicAttackHitBox : InitBase
+public class HitBox : InitBase
 {
-    BoxCollider2D Collider;
+    public BoxCollider2D Collider { get; private set; }
     float _damageMultiplier;
 
     bool _lookLeft;
@@ -16,8 +16,12 @@ public class BasicAttackHitBox : InitBase
             if (LookLeft != value)
             {
                 _lookLeft = value;
-                
+
                 // 히트 박스 x축 반전
+                Vector3 localPos = transform.localPosition;
+                localPos.x *= -1;
+                transform.localPosition = localPos;
+
                 Vector3 localScale = transform.localScale;
                 localScale.x *= -1;
                 transform.localScale = localScale;
@@ -34,11 +38,17 @@ public class BasicAttackHitBox : InitBase
         return true;
     }
 
-    public void SetInfo(bool lookLeft, float damageMultiplier, bool setActive = true)
+    public void SetInfo(bool lookLeft, float damageMultiplier, LayerMask excludeLayers, bool setActive = true)
     {
         LookLeft = lookLeft;
         _damageMultiplier = damageMultiplier;
+        Collider.excludeLayers = excludeLayers;
         gameObject.SetActive(setActive);
+    }
+
+    public void OnDestroy()
+    {
+        Managers.Resource.Destroy(gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

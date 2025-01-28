@@ -4,6 +4,7 @@
       "DataId": 200001,
       "CodeName": "SelfHealing",
       "AnimationName": "SelfHealing",
+      "PrefabName": null,
       "MPCost": 2,
       "MAXLevel": 3,
       "CastingTime": 1.5,
@@ -30,6 +31,7 @@
       "DataId": 200002,
       "CodeName": "IceBall",
       "AnimationName": "IceBall",
+      "PrefabName": "IceBall",
       "MPCost": 2,
       "MAXLevel": 3,
       "CastingTime": 0,
@@ -45,7 +47,7 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 97
+        "Key": 97 // A
       },
       "DisplayKR": {
         "Name": "아이스 볼",
@@ -56,22 +58,23 @@
       "DataId": 200003,
       "CodeName": "IceBreak",
       "AnimationName": "IceBreak",
+      "PrefabName": "IceBreak",
       "MPCost": 2,
       "MAXLevel": 3,
       "CastingTime": 0.3,
-      "RecoveryTime": 1,
+      "RecoveryTime": 0,
       "HealingValue": 0,
       "ProjectileId": 0,
       "NumberOfShots": 0,
       "DelayBetweenShots": 0,
       "InitialAngle": 0,
       "DamageMultiplier": 2,
-      "AttackRange": 1.0,
-      "RetentionTime": 0.1,
+      "AttackRange": 0,
+      "RetentionTime": 0,
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 0
+        "Key": 115 // S
       },
       "DisplayKR": {
         "Name": "아이스 브레이크",

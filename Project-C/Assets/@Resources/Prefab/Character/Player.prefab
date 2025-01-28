@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2539579250733559445}
   - component: {fileID: 4003761375572069060}
   - component: {fileID: 1323234469142326157}
+  - component: {fileID: 4057098659065583151}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -221,7 +222,7 @@ MonoBehaviour:
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
@@ -236,7 +237,7 @@ MonoBehaviour:
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
@@ -249,6 +250,7 @@ MonoBehaviour:
       Level: 0
       IsUnlock: 0
       Key: 0
+      KeyPressedTime: 0
     DisplayKR:
       Name: 
       Description: 
@@ -274,7 +276,7 @@ MonoBehaviour:
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
@@ -289,7 +291,7 @@ MonoBehaviour:
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
@@ -302,11 +304,13 @@ MonoBehaviour:
       Level: 0
       IsUnlock: 0
       Key: 0
+      KeyPressedTime: 0
     DisplayKR:
       Name: 
       Description: 
   MpCost: 0
   MaxLevel: 0
+  PressedTime: 0.3
 --- !u!114 &1323234469142326157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,7 +331,7 @@ MonoBehaviour:
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
@@ -342,7 +346,7 @@ MonoBehaviour:
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
@@ -355,6 +359,61 @@ MonoBehaviour:
       Level: 0
       IsUnlock: 0
       Key: 0
+      KeyPressedTime: 0
+    DisplayKR:
+      Name: 
+      Description: 
+  MpCost: 0
+  MaxLevel: 0
+--- !u!114 &4057098659065583151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437542613349629660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734ceddbe10323549807d1599fbfae02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data:
+    DataId: 0
+    CodeName: 
+    AnimationName: 
+    CastingTime: 0
+    RecoveryTime: 0
+    CoolTime: 0
+    HealingValue: 0
+    ProjectileId: 0
+    NumberOfShots: 0
+    DelayBetweenShots: 0
+    InitialAngle: 0
+    DamageMultiplier: 0
+    AttackRange: 0
+    RetentionTime: 0
+  PlayerSkillData:
+    DataId: 0
+    CodeName: 
+    AnimationName: 
+    CastingTime: 0
+    RecoveryTime: 0
+    CoolTime: 0
+    HealingValue: 0
+    ProjectileId: 0
+    NumberOfShots: 0
+    DelayBetweenShots: 0
+    InitialAngle: 0
+    DamageMultiplier: 0
+    AttackRange: 0
+    RetentionTime: 0
+    MPCost: 0
+    MAXLevel: 0
+    Dynamics:
+      Level: 0
+      IsUnlock: 0
+      Key: 0
+      KeyPressedTime: 0
     DisplayKR:
       Name: 
       Description: 

@@ -12,6 +12,7 @@ public class SkillBase : InitBase
 
     public string Name { get; protected set; }
     public string AnimationName { get; protected set; }
+    public string PrefabName { get; protected set; }
     public int ProjectileId { get; protected set; }
     public float CastingTime { get; protected set; }    // 시전 시간
     public float RecoveryTime { get; protected set; }   // 후 딜레이
@@ -41,6 +42,7 @@ public class SkillBase : InitBase
         #region 스킬 정보
         Name = Data.CodeName;
         AnimationName = Data.AnimationName;
+        PrefabName = Data.PrefabName;
         ProjectileId = Data.ProjectileId;
         CastingTime = Data.CastingTime;
         RecoveryTime = Data.RecoveryTime;
@@ -78,7 +80,7 @@ public class SkillBase : InitBase
         if (Managers.Data.ProjectileDataDic.TryGetValue(ProjectileId, out var data) == false)
             return;
 
-        Projectile projectile = Managers.Resource.Instantiate(data.Name).GetComponent<Projectile>();
+        Projectile projectile = Managers.Resource.Instantiate(PrefabName).GetComponent<Projectile>();
         if (projectile == null) 
             return;
 

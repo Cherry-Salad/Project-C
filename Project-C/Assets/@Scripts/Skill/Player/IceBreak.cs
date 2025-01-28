@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class BasicAttack : PlayerSkillBase
+public class IceBreak : PlayerSkillBase
 {
     Vector2 _skillDir { get { return (Owner.LookLeft) ? Vector2.left : Vector2.right; } }
     HitBox _hitBox;
@@ -20,22 +20,6 @@ public class BasicAttack : PlayerSkillBase
     public override void SetInfo(Creature owner, SkillData data)
     {
         base.SetInfo(owner, data);
-
-        // 기본 공격은 스킬 데이터로 구성하지 않았다. 임시로 직접 구성하였다.
-        Name = "BasicAttack";
-        AnimationName = "BasicAttack";
-        PrefabName = "BasicAttackHitBox";
-        CastingTime = 0f;
-        RecoveryTime = 0f;
-        CoolTime = 0f;  // 임시 값
-        DamageMultiplier = 1.0f;   // 임시 값
-        AttackRange = 1f;   // 임시 값
-
-        IsUnlock = true;
-        Level = 0;
-        Key = KeyCode.Z;
-        MpCost = 0;
-        MaxLevel = 1;  // 임시 값
     }
 
     public override bool IsSkillUsable()
@@ -43,15 +27,18 @@ public class BasicAttack : PlayerSkillBase
         if (base.IsSkillUsable() == false)
             return false;
 
+        if (Owner.CheckGround() == false)
+            return false;
+
         return true;
     }
 
     public override bool DoSkill()
     {
-        if (base.DoSkill() == false) 
+        if (base.DoSkill() == false)
             return false;
 
-        Owner.Mp -= MpCost;
+        //Owner.Mp -= MpCost;
 
         Owner.Animator.Play(AnimationName);
         Owner.State = ECreatureState.Skill;
@@ -68,43 +55,29 @@ public class BasicAttack : PlayerSkillBase
     /// <summary>
     /// 애니메이션 이벤트로 호출하며, 히트 박스를 생성한다.
     /// </summary>
-    void OnSpawnHitBox()
+    void OnSpawnIceBreak()
     {
-        if (_hitBox == null)
-        {
-            GameObject go = Managers.Resource.Instantiate(PrefabName, transform);
-            _hitBox = go.GetComponent<HitBox>();
-        }
+        GameObject go = Managers.Resource.Instantiate(PrefabName, transform);
+        _hitBox = go.GetComponent<HitBox>();
+        
+        // 충돌을 제외할 레이어 필터링
+        LayerMask excludeLayers = 0;
+        excludeLayers.AddLayer(ELayer.Default);
+        excludeLayers.AddLayer(ELayer.Ground);
+        excludeLayers.AddLayer(ELayer.Wall);
 
-        LayerMask excludeLayers = _hitBox.Collider.excludeLayers;
-        if (excludeLayers.value == 0)
+        switch (Owner.ObjectType)
         {
-            // 충돌을 제외할 레이어 필터링
-            excludeLayers.AddLayer(ELayer.Default);
-            excludeLayers.AddLayer(ELayer.Ground);
-            excludeLayers.AddLayer(ELayer.Wall);
-
-            switch (Owner.ObjectType)
-            {
-                case EObjectType.Player:
-                    excludeLayers.AddLayer(ELayer.Player);
-                    break;
-                case EObjectType.Monster:
-                    excludeLayers.AddLayer(ELayer.Monster);
-                    break;
-            }
+            case EObjectType.Player:
+                excludeLayers.AddLayer(ELayer.Player);
+                break;
+            case EObjectType.Monster:
+                excludeLayers.AddLayer(ELayer.Monster);
+                break;
         }
 
         _hitBox.SetInfo(Owner.LookLeft, DamageMultiplier, excludeLayers);
-    }
-
-    /// <summary>
-    /// 애니메이션 이벤트로 호출하며, 생성한 히트 박스를 없앤다.
-    /// </summary>
-    void OnDespawnHitBox()
-    {
-        if (_hitBox != null)
-            _hitBox.gameObject.SetActive(false);
+        _hitBox.transform.parent = null;
     }
 
     IEnumerator CoDoSkill()
@@ -126,7 +99,7 @@ public class BasicAttack : PlayerSkillBase
             // 피격 시 스킬 취소
             if (Owner.State == ECreatureState.Hurt || stateInfo.IsName(AnimationName) == false)
             {
-                OnDespawnHitBox();
+                Managers.Resource.Destroy(_hitBox.gameObject);
                 yield break;
             }
 
