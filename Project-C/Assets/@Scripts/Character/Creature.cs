@@ -385,7 +385,6 @@ public class Creature : BaseObject
         {
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             OnGround = CheckGround();
-            dir = destPos - Rigidbody.position;
 
             if (OnGround == false && CheckWall())
             {
@@ -398,6 +397,7 @@ public class Creature : BaseObject
                 yield break;
             }
 
+            dir = destPos - Rigidbody.position;
             yield return null;
         }
 
