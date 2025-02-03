@@ -142,7 +142,6 @@ public class Creature : BaseObject
         if (CheckGround())
         {
             // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
-            Rigidbody.gravityScale = 0f;
             Rigidbody.velocity = Vector2.zero;
         }
         else
@@ -184,9 +183,6 @@ public class Creature : BaseObject
         bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
         float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
 
-        // 공중이므로 기본 중력 적용
-        Rigidbody.gravityScale = DefaultGravityScale;
-
         // 점프, 낙하
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
     }
@@ -200,16 +196,12 @@ public class Creature : BaseObject
             bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
             float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
 
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
-
             // 점프, 낙하
             Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
         }
         else
         {
             // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
-            Rigidbody.gravityScale = 0f;
             Rigidbody.velocity = Vector2.zero;
         }
     }
@@ -264,9 +256,6 @@ public class Creature : BaseObject
         {
             State = ECreatureState.Jump;
 
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
-
             // 기본(1단) 점프
             // 경사진 바닥에서도 점프를 할 수 있도록 velocity.x를 0으로 설정
             Rigidbody.velocity = new Vector2(0f, JumpForce);
@@ -275,9 +264,6 @@ public class Creature : BaseObject
         else if (_hasDoubleJumped == false && (State == ECreatureState.Jump || State == ECreatureState.WallJump))
         {
             State = ECreatureState.DoubleJump;
-
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
 
             // 이단 점프
             _hasDoubleJumped = true;
@@ -297,9 +283,6 @@ public class Creature : BaseObject
         // 현재 캐릭터는 벽을 마주하고 있으므로, 반대 방향을 바라봐야 한다
         LookLeft = !LookLeft;
         MoveDir = LookLeft ? Vector2.left : Vector2.right;
-
-        // 공중이므로 기본 중력 적용
-        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 벽 점프
         StartCoroutine(CoWallJump(MoveDir));
@@ -373,8 +356,9 @@ public class Creature : BaseObject
             yield return new WaitForFixedUpdate();
         }
 
-        // 벽 점프가 끝나면 기본(1단) 점프로 전환
-        State = ECreatureState.Jump;
+        // 벽 점프가 끝나면 전환
+        // 캐릭터가 공중에 있으면 점프로 전환
+        State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
     IEnumerator CoDash(Vector2 dir, Vector2 destPos, float dashSpeed)
@@ -390,6 +374,9 @@ public class Creature : BaseObject
 
             if (OnGround == false && CheckWall())
             {
+                // 기본 중력 적용
+                Rigidbody.gravityScale = DefaultGravityScale;
+
                 // 대시가 끝나면 충돌 처리 활성화
                 if (Collider.isTrigger)
                     Collider.isTrigger = false;
@@ -404,6 +391,9 @@ public class Creature : BaseObject
         }
 
         Rigidbody.position = destPos;
+
+        // 기본 중력 적용
+        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 대시가 끝나면 충돌 처리 활성화
         if (Collider.isTrigger)
@@ -504,7 +494,7 @@ public class Creature : BaseObject
     /// <returns></returns>
     public bool CheckGround()
     {
-        float groundCheckDistance = Collider.bounds.extents.y + 0.01f;   // 바닥 감지 거리
+        float groundCheckDistance = Collider.bounds.extents.y + 0.05f;   // 바닥 감지 거리
         
         // 충돌 필터링
         LayerMask includeLayers = 0;
@@ -516,10 +506,14 @@ public class Creature : BaseObject
         if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers))
             return true;
 
-        #region 경사면 감지
+        #region 섬세하게 감지
+
         int rayCount = 5;   // Raycast 발사 횟수
         Vector2 leftDown = new Vector2(-0.5f, -1f); // 왼쪽 대각선
         Vector2 rightDown = new Vector2(0.5f, -1f); // 오른쪽 대각선
+
+        float minSlopeAngle = 0f;
+        float maxSlopeAngle = 60f;
 
         // Vector2.down부터 leftDown
         for (int i = 1; i <= rayCount; i++)
@@ -528,8 +522,21 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.red);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
-                return true;
+            //if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
+            //{
+            //    return true;
+            //}
+
+            var groundInfo = Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers);
+            if (groundInfo.collider != null)
+            {
+                float slopeAngle = Vector2.Angle(groundInfo.normal, Vector2.up);
+                if (slopeAngle > minSlopeAngle && slopeAngle < maxSlopeAngle)
+                    return true;
+
+                Debug.Log(slopeAngle);
+                return false;
+            }
         }
 
         // Vector2.down부터 rightDown
@@ -539,8 +546,22 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.blue);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
-                return true;
+            //if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
+            //{
+            //    return true;
+            //}
+
+            var groundInfo = Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers);
+            if (groundInfo.collider != null)
+            {
+                float slopeAngle = Vector2.Angle(groundInfo.normal, Vector2.up);
+                if (slopeAngle > minSlopeAngle && slopeAngle < maxSlopeAngle)
+                    return true;
+
+                Debug.Log(slopeAngle);
+                return false;
+            }
+
         }
         #endregion
 

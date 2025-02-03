@@ -365,9 +365,6 @@ public class Player : Creature
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
         if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
-
             //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
             State = ECreatureState.Jump;
@@ -404,7 +401,6 @@ public class Player : Creature
         StartCoroutine(CoHandleInvincibility());
 
         Rigidbody.velocity = Vector2.zero;
-        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 살짝 위로 튀어오르듯이
         float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정

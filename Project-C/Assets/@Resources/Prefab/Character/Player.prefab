@@ -128,7 +128,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 1437542613349629660}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 4b1c6f7475961704286628d9fc21c1f2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -152,7 +152,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.0027885437}
-  m_Size: {x: 0.49559963, y: 0.7201729}
+  m_Size: {x: 0.5, y: 0.7201729}
   m_Direction: 0
 --- !u!95 &1932561570529463955
 Animator:
@@ -218,6 +218,7 @@ MonoBehaviour:
     DataId: 0
     CodeName: 
     AnimationName: 
+    PrefabName: 
     CastingTime: 0
     RecoveryTime: 0
     CoolTime: 0
@@ -229,31 +230,6 @@ MonoBehaviour:
     DamageMultiplier: 0
     AttackRange: 0
     RetentionTime: 0
-  PlayerSkillData:
-    DataId: 0
-    CodeName: 
-    AnimationName: 
-    CastingTime: 0
-    RecoveryTime: 0
-    CoolTime: 0
-    HealingValue: 0
-    ProjectileId: 0
-    NumberOfShots: 0
-    DelayBetweenShots: 0
-    InitialAngle: 0
-    DamageMultiplier: 0
-    AttackRange: 0
-    RetentionTime: 0
-    MPCost: 0
-    MAXLevel: 0
-    Dynamics:
-      Level: 0
-      IsUnlock: 0
-      Key: 0
-      KeyPressedTime: 0
-    DisplayKR:
-      Name: 
-      Description: 
   MpCost: 0
   MaxLevel: 0
 --- !u!114 &4003761375572069060
@@ -272,6 +248,7 @@ MonoBehaviour:
     DataId: 0
     CodeName: 
     AnimationName: 
+    PrefabName: 
     CastingTime: 0
     RecoveryTime: 0
     CoolTime: 0
@@ -283,34 +260,8 @@ MonoBehaviour:
     DamageMultiplier: 0
     AttackRange: 0
     RetentionTime: 0
-  PlayerSkillData:
-    DataId: 0
-    CodeName: 
-    AnimationName: 
-    CastingTime: 0
-    RecoveryTime: 0
-    CoolTime: 0
-    HealingValue: 0
-    ProjectileId: 0
-    NumberOfShots: 0
-    DelayBetweenShots: 0
-    InitialAngle: 0
-    DamageMultiplier: 0
-    AttackRange: 0
-    RetentionTime: 0
-    MPCost: 0
-    MAXLevel: 0
-    Dynamics:
-      Level: 0
-      IsUnlock: 0
-      Key: 0
-      KeyPressedTime: 0
-    DisplayKR:
-      Name: 
-      Description: 
   MpCost: 0
   MaxLevel: 0
-  PressedTime: 0.3
 --- !u!114 &1323234469142326157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,6 +278,7 @@ MonoBehaviour:
     DataId: 0
     CodeName: 
     AnimationName: 
+    PrefabName: 
     CastingTime: 0
     RecoveryTime: 0
     CoolTime: 0
@@ -338,31 +290,6 @@ MonoBehaviour:
     DamageMultiplier: 0
     AttackRange: 0
     RetentionTime: 0
-  PlayerSkillData:
-    DataId: 0
-    CodeName: 
-    AnimationName: 
-    CastingTime: 0
-    RecoveryTime: 0
-    CoolTime: 0
-    HealingValue: 0
-    ProjectileId: 0
-    NumberOfShots: 0
-    DelayBetweenShots: 0
-    InitialAngle: 0
-    DamageMultiplier: 0
-    AttackRange: 0
-    RetentionTime: 0
-    MPCost: 0
-    MAXLevel: 0
-    Dynamics:
-      Level: 0
-      IsUnlock: 0
-      Key: 0
-      KeyPressedTime: 0
-    DisplayKR:
-      Name: 
-      Description: 
   MpCost: 0
   MaxLevel: 0
 --- !u!114 &4057098659065583151
@@ -381,6 +308,7 @@ MonoBehaviour:
     DataId: 0
     CodeName: 
     AnimationName: 
+    PrefabName: 
     CastingTime: 0
     RecoveryTime: 0
     CoolTime: 0
@@ -392,30 +320,5 @@ MonoBehaviour:
     DamageMultiplier: 0
     AttackRange: 0
     RetentionTime: 0
-  PlayerSkillData:
-    DataId: 0
-    CodeName: 
-    AnimationName: 
-    CastingTime: 0
-    RecoveryTime: 0
-    CoolTime: 0
-    HealingValue: 0
-    ProjectileId: 0
-    NumberOfShots: 0
-    DelayBetweenShots: 0
-    InitialAngle: 0
-    DamageMultiplier: 0
-    AttackRange: 0
-    RetentionTime: 0
-    MPCost: 0
-    MAXLevel: 0
-    Dynamics:
-      Level: 0
-      IsUnlock: 0
-      Key: 0
-      KeyPressedTime: 0
-    DisplayKR:
-      Name: 
-      Description: 
   MpCost: 0
   MaxLevel: 0
