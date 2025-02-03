@@ -20,22 +20,6 @@ public class BasicAttack : PlayerSkillBase
     public override void SetInfo(Creature owner, SkillData data)
     {
         base.SetInfo(owner, data);
-
-        // 기본 공격은 스킬 데이터로 구성하지 않았다. 임시로 직접 구성하였다.
-        Name = "BasicAttack";
-        AnimationName = "BasicAttack";
-        PrefabName = "BasicAttackHitBox";
-        CastingTime = 0f;
-        RecoveryTime = 0f;
-        CoolTime = 0f;  // 임시 값
-        DamageMultiplier = 1.0f;   // 임시 값
-        AttackRange = 1f;   // 임시 값
-
-        IsUnlock = true;
-        Level = 0;
-        Key = KeyCode.Z;
-        MpCost = 0;
-        MaxLevel = 1;  // 임시 값
     }
 
     public override bool IsSkillUsable()
@@ -84,6 +68,7 @@ public class BasicAttack : PlayerSkillBase
             excludeLayers.AddLayer(ELayer.Ground);
             excludeLayers.AddLayer(ELayer.Wall);
 
+            // 자기 자신은 제외
             switch (Owner.ObjectType)
             {
                 case EObjectType.Player:

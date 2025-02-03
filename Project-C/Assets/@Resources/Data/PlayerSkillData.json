@@ -1,7 +1,35 @@
 {
-  "PlayerSkill" : [
+  "PlayerSkill": [
     {
       "DataId": 200001,
+      "CodeName": "BasicAttack",
+      "AnimationName": "BasicAttack",
+      "PrefabName": "BasicAttackHitBox",
+      "MPCost": 0,
+      "MAXLevel": 0,
+      "CastingTime": 0,
+      "RecoveryTime": 0,
+      "HealingValue": 0,
+      "ProjectileId": 0,
+      "NumberOfShots": 0,
+      "DelayBetweenShots": 0,
+      "InitialAngle": 0,
+      "DamageMultiplier": 1.0,
+      "AttackRange": 0,
+      "RetentionTime": 0,
+      "Dynamics": {
+        "Level": 0,
+        "IsUnlock": true,
+        "Key": 122, // Z
+        "KeyPressedTime": 0
+      },
+      "DisplayKR": { // 게임 UI 출력 관련 (한글)
+        "Name": "기본 공격",
+        "Description": "기본 공격입니다."
+      }
+    },
+    {
+      "DataId": 200011,
       "CodeName": "SelfHealing",
       "AnimationName": "SelfHealing",
       "PrefabName": null,
@@ -29,7 +57,7 @@
       }
     },
     {
-      "DataId": 200002,
+      "DataId": 200021,
       "CodeName": "IceBall",
       "AnimationName": "IceBall",
       "PrefabName": "IceBall",
@@ -57,7 +85,7 @@
       }
     },
     {
-      "DataId": 200003,
+      "DataId": 200031,
       "CodeName": "IceBreak",
       "AnimationName": "IceBreak",
       "PrefabName": "IceBreak",
