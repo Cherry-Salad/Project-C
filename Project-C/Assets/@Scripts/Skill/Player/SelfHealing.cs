@@ -67,8 +67,6 @@ public class SelfHealing : PlayerSkillBase
     /// </summary>
     public void OnCancelCasting()
     {
-        Debug.Log("EndSkill");
-
         // 캐스팅을 멈춘다
         if (_coCasting != null)
         {
@@ -76,8 +74,7 @@ public class SelfHealing : PlayerSkillBase
             _coCasting = null;
         }
 
-        // 캐릭터가 공중에 있으면 점프로 전환
-        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
+        EndSkill();
     }
 
     void OnHeal()

@@ -20,19 +20,21 @@ public class Player : Creature
 
     public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
 
+    // 이동
     bool _moveDirKeyPressed = false;
 
-    #region Jump
+    // 점프
     bool _isWallJump = false;
     bool _jumpKeyPressed = false;
     float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
     float _jumpDuration = 0.3f; // 점프 유지 시간, 원래는 0.5초로 했는데 이게 체감상 손가락에 좀 무리가 가더라구..
     float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
-    #endregion
 
+    // 대시
     float _dashCoolTime = 1.0f; // 대시 쿨타임
     bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
 
+    // 스킬
     KeyCode _pressedSkillKey = KeyCode.None;
     float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
 
@@ -46,7 +48,7 @@ public class Player : Creature
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        // 기본 공격, TODO: 모든 스킬 추가
+        // 기본 공격
         BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
         basicAttack.SetInfo(this, null);
         Skills.Add(basicAttack.Key, basicAttack);
@@ -106,6 +108,7 @@ public class Player : Creature
         return true;
     }
 
+    #region 입력 감지
     void Update()
     {
         GetInput();
@@ -278,6 +281,7 @@ public class Player : Creature
 
         return false;
     }
+    #endregion
 
     protected override void UpdateAnimation()
     {
@@ -358,7 +362,6 @@ public class Player : Creature
     /// </summary>
     void OnJumpHold()
     {
-        // 추가 점프 힘 적용
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
         if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {

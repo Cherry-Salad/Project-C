@@ -162,16 +162,16 @@ public class Creature : BaseObject
 
     protected virtual void UpdateJump()
     {
-        bool OnGround = CheckGround();
+        bool onGround = CheckGround();
 
-        if (OnGround == false && CheckWall())
+        if (onGround == false && CheckWall())
         {
             // 캐릭터가 공중에 있으면서 벽을 감지
             State = ECreatureState.WallCling;
             _hasDoubleJumped = false;
             return;
         }
-        else if (OnGround)
+        else if (onGround)
         {
             // 캐릭터가 바닥에 닿을 때
             State = ECreatureState.Idle;
@@ -208,6 +208,7 @@ public class Creature : BaseObject
         }
         else
         {
+            // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
             Rigidbody.gravityScale = 0f;
             Rigidbody.velocity = Vector2.zero;
         }
@@ -232,6 +233,7 @@ public class Creature : BaseObject
                 State = ECreatureState.Jump;    // 정지 상태였다면 바로 낙하
             else
                 OnWallJump();   // 벽 점프
+            
             return;
         }
 
@@ -446,6 +448,7 @@ public class Creature : BaseObject
         if (obstacle.collider != null || isDetailedCheck == false)
             return obstacle;
 
+        #region 섬세하게 감지
         int rayCount = 5;   // Raycast 발사 횟수
         Vector2 dirUp = new Vector2(dir.x, 1f);
         Vector2 dirDown = new Vector2(dir.x, -1f);
@@ -473,6 +476,7 @@ public class Creature : BaseObject
             if (obstacle.collider != null)
                 return obstacle;
         }
+        #endregion
 
         return default;
     }
@@ -485,12 +489,12 @@ public class Creature : BaseObject
     {
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값 추가
-        Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
 
         // 충돌 필터링
         LayerMask includeLayers = 0;
         includeLayers.AddLayer(ELayer.Wall);
 
+        Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
         return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, includeLayers);
     }
 
@@ -512,7 +516,7 @@ public class Creature : BaseObject
         if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers))
             return true;
 
-        // 캐릭터 밑의 경사진 바닥 감지
+        #region 경사면 감지
         int rayCount = 5;   // Raycast 발사 횟수
         Vector2 leftDown = new Vector2(-0.5f, -1f); // 왼쪽 대각선
         Vector2 rightDown = new Vector2(0.5f, -1f); // 오른쪽 대각선
@@ -538,6 +542,7 @@ public class Creature : BaseObject
             if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
                 return true;
         }
+        #endregion
 
         return false;
     }

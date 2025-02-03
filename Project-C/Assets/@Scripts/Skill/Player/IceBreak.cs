@@ -66,6 +66,7 @@ public class IceBreak : PlayerSkillBase
         excludeLayers.AddLayer(ELayer.Ground);
         excludeLayers.AddLayer(ELayer.Wall);
 
+        // 자기 자신은 제외
         switch (Owner.ObjectType)
         {
             case EObjectType.Player:

@@ -118,7 +118,7 @@ public class SkillBase : InitBase
     /// </summary>
     /// <param name="action">캐스팅을 완료하면 호출할 이벤트</param>
     /// <returns></returns>
-    protected IEnumerator CoDoCastingSkill(Action action)
+    protected IEnumerator CoDoCastingSkill(Action callback)
     {
         float elapsedTime = 0f;
         while (elapsedTime < CastingTime)
@@ -131,7 +131,7 @@ public class SkillBase : InitBase
             yield return null;
         }
 
-        action();
+        callback?.Invoke();
     }
 
     protected IEnumerator CoSkillCooldown()
