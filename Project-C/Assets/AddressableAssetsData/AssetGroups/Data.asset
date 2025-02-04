@@ -28,12 +28,23 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
+  - m_GUID: 931f3e17e01dfe24486e0edfbc373c0f
+    m_Address: MonsterData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterDataSet
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bba8f77483c0a5e4da1716da57170771
     m_Address: PlayerData
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f32e3a09ff991df4aac2044f1a5bae4a
+    m_Address: MonsterTypeData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterDataSet
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a2ab188775b8a604db585412ad367431, type: 2}

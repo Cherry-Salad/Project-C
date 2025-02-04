@@ -1,5 +1,5 @@
 {
-  "Monsters": [
+  "MonsterData": [
     {
       "DataID": 300001,                 // 몬스터 ID
       "Type": "GoblinWarrior",          // 몬스터 타입
@@ -8,14 +8,15 @@
       "TypeLevel": "Normal",            // 몬스터 등급
       "AttackTarget": "Player",         // 공격 타겟
       "SpawnPosition": [ 0, 0 ],        // 리스폰 위치
-      "SpawnViewDirection": "Left",     // 리스본시 바라보는 방향
+      "IsSpawnViewRight": true,         // 리스본시 바라보는 방향
       "Resurrection": true,             // 부활 가능 여부
+      "SurveillanceTime": 5.0,
 
       "MaxHP": 30,                      // 최대 체력
       "AttackSuccessDropMp": 1,         // 연속 공격 성공시 MP회복량
 
       "Dynamics": {                     // 변화 데이터
-        "HP": 15,                       // HP
+        "HP": 30,                       // HP
         "GroggyGauge": 0,               // 그로기 게이지
         "State": "IDLE",                // 상태
         "StatusEffects": [],            // 상태 효과
@@ -55,8 +56,9 @@
       "TypeLevel": "Normal",
       "AttackTarget": "Player",
       "SpawnPosition": [ 5, 0 ],
-      "SpawnViewDirection": "Left",
+      "IsSpawnViewRight": true,
       "Resurrection": true,
+      "SurveillanceTime": 5.0,
 
       "MaxHP": 20,
       "AttackSuccessDropMp": 1,
@@ -102,8 +104,9 @@
       "TypeLevel": "Normal",
       "AttackTarget": "Player",
       "SpawnPosition": [ 10, 0 ],
-      "SpawnViewDirection": "Left",
+      "IsSpawnViewRight": true,
       "Resurrection": true,
+      "SurveillanceTime": 5.0,
 
       "MaxHP": 18,
       "AttackSuccessDropMp": 1,
@@ -149,8 +152,9 @@
       "TypeLevel": "Normal",
       "AttackTarget": "Player",
       "SpawnPosition": [ 15, 5 ],
-      "SpawnViewDirection": "Left",
+      "IsSpawnViewRight": true,
       "Resurrection": true,
+      "SurveillanceTime": 5.0,
 
       "MaxHP": 15,
       "AttackSuccessDropMp": 1,
@@ -196,8 +200,9 @@
       "TypeLevel": "Boss",
       "AttackTarget": "Player",
       "SpawnPosition": [ 20, 0 ],
-      "SpawnViewDirection": "Left",
+      "IsSpawnViewRight": true,
       "Resurrection": false,
+      "SurveillanceTime": 5.0,
 
       "MaxHP": 300,
       "AttackSuccessDropMp": 1,

@@ -91,6 +91,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - PreLoad
+    - MonsterDataSet
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: afedbf9d355d0994d8beb5ec1805b773, type: 2}
