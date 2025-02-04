@@ -36,7 +36,7 @@ public class MapManager
     }
 
     /// <summary>
-    /// 모든 타일맵의 경계를 계산한다.
+    /// 타일맵의 경계를 계산한다.
     /// </summary>
     void CalculateMapBounds()
     {
