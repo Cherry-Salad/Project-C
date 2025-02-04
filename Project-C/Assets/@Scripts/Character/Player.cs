@@ -101,14 +101,17 @@ public class Player : Creature
                     skill.SetInfo(this, data);
                     Skills.Add(skill.Key, skill);
                 }
+
+                // Test, 맵 불러오기
+                Managers.Map.LoadMap("TestMap");
+
+                // Test, 카메라 설정
+                CameraController camera = Camera.main.GetComponent<CameraController>();
+                if (camera != null)
+                    camera.Target = this;
             }
         });
         #endregion
-
-        // Test, 카메라 설정
-        CameraController camera = Camera.main.GetComponent<CameraController>();
-        if (camera != null)
-            camera.Target = this;
 
         return true;
     }
