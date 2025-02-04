@@ -195,7 +195,10 @@ public class Player : Creature
         {
             // 벽에 매달린 상태이거나 벽 타기 중이라면 벽 점프로 전환
             if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing)
+            {
+                _jumpKeyPressed = true;
                 OnWallJump();
+            }
 
             return false;
         }
@@ -353,7 +356,17 @@ public class Player : Creature
 
     protected override void OnWallJump()
     {
-        base.OnWallJump();
+        if (_jumpKeyPressed)
+        {
+            _jumpKeyPressed = false;
+            base.OnWallJump();
+            return;
+        }
+
+        State = ECreatureState.WallJump;
+        
+        // 벽 점프
+        StartCoroutine(CoWallJump(MoveDir));
         _isWallJump = true;
     }
 

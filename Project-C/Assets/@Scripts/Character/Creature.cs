@@ -161,6 +161,7 @@ public class Creature : BaseObject
 
     protected virtual void UpdateJump()
     {
+        // 캐릭터가 바닥에 닿은지 확인
         bool onGround = CheckGround();
 
         if (onGround == false && CheckWall())
@@ -261,7 +262,7 @@ public class Creature : BaseObject
             Rigidbody.velocity = new Vector2(0f, JumpForce);
         }
         // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
-        else if (_hasDoubleJumped == false && (State == ECreatureState.Jump || State == ECreatureState.WallJump))
+        else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
         {
             State = ECreatureState.DoubleJump;
 
@@ -337,7 +338,7 @@ public class Creature : BaseObject
         base.OnDamaged(damage, attacker);
     }
 
-    IEnumerator CoWallJump(Vector2 moveDir)
+    protected IEnumerator CoWallJump(Vector2 moveDir)
     {
         float elapsedTime = 0f;
         while (elapsedTime < 0.1f)
@@ -367,7 +368,7 @@ public class Creature : BaseObject
         bool OnGround = CheckGround();
 
         // 대시
-        while (dir.magnitude > 0.1f)
+        while (true)
         {
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             OnGround = CheckGround();
@@ -387,6 +388,9 @@ public class Creature : BaseObject
             }
 
             dir = destPos - Rigidbody.position;
+            if (dir.magnitude <= 0.1f)
+                break;
+
             yield return null;
         }
 
@@ -501,13 +505,13 @@ public class Creature : BaseObject
         includeLayers.AddLayer(ELayer.Ground);
         
         Debug.DrawRay(Rigidbody.position, Vector2.down * groundCheckDistance, Color.red);
+        var p = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers);
 
         // 캐릭터 밑의 평평한 바닥 감지
         if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers))
             return true;
 
         #region 섬세하게 감지
-
         int rayCount = 5;   // Raycast 발사 횟수
         Vector2 leftDown = new Vector2(-0.5f, -1f); // 왼쪽 대각선
         Vector2 rightDown = new Vector2(0.5f, -1f); // 오른쪽 대각선
@@ -534,7 +538,7 @@ public class Creature : BaseObject
                 if (slopeAngle > minSlopeAngle && slopeAngle < maxSlopeAngle)
                     return true;
 
-                Debug.Log(slopeAngle);
+                //Debug.Log(slopeAngle);
                 return false;
             }
         }
@@ -558,7 +562,7 @@ public class Creature : BaseObject
                 if (slopeAngle > minSlopeAngle && slopeAngle < maxSlopeAngle)
                     return true;
 
-                Debug.Log(slopeAngle);
+                //Debug.Log(slopeAngle);
                 return false;
             }
 
