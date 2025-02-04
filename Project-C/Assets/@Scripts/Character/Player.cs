@@ -105,6 +105,11 @@ public class Player : Creature
         });
         #endregion
 
+        // Test, 카메라 설정
+        CameraController camera = Camera.main.GetComponent<CameraController>();
+        if (camera != null)
+            camera.Target = this;
+
         return true;
     }
 
