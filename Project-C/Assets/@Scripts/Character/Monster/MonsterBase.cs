@@ -13,6 +13,18 @@ using static MonsterBase;
 using static UnityEditor.Searcher.SearcherWindow.Alignment;
 using static UnityEngine.UI.Image;
 
+public class MonsterProjectile
+{
+    public GameObject Object;
+    public MonsterProjectileBase Projectile;
+
+    public MonsterProjectile(GameObject Object, MonsterProjectileBase Projectile)
+    {
+        this.Object = Object;
+        this.Projectile = Projectile;
+    }
+}
+
 public class MonsterBase : Creature
 {
     public enum EBehaviorPattern
@@ -136,11 +148,13 @@ public class MonsterBase : Creature
         {
             settingData();
             SpriteRenderer.color = Color.white;
+            
         }
     }
 
     private void settingData()
     {
+        this.transform.position = new Vector3(transform.position.x, transform.position.y, DataRecorder.MonsterLoadNumber);
         TargetGameObject = GameObject.FindGameObjectWithTag(DataRecorder.AttackTarget);
         MoveSpeed = TypeRecorder.Base.MovementSpeed;
         Rigidbody.gravityScale = TypeRecorder.Base.DefaultGravity;
@@ -157,6 +171,7 @@ public class MonsterBase : Creature
             MoveDir = Vector2.left;
         }
 
+        SettingProjectile();
         _isCompleteLoad = true;
     }
 
@@ -589,7 +604,24 @@ public class MonsterBase : Creature
     {
         skillList.Clear();
     }
-    
+
+    protected virtual void SettingProjectile()
+    {
+
+    }
+
+    protected virtual MonsterProjectile MakeProjectile(int skillNumber) // 탄막 생성
+    {
+        string PrefabName = TypeRecorder.Battle.Attack[skillNumber].ProjectileName;
+        GameObject newObject = Managers.Resource.Instantiate(PrefabName);
+        MonsterProjectileBase newProjectile = newObject.AddComponent<MonsterProjectileBase>();
+
+        newProjectile.SetData(TypeRecorder.Battle.Attack[skillNumber].ProjectileID);
+        newObject.SetActive(false);
+
+        return new MonsterProjectile(newObject, newProjectile);
+    }
+
     protected void ActiveHitBox(int hitBoxNum) // 히트 박스 활성화
     {
         if (hitBoxList == null) return;

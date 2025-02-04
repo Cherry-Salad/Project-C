@@ -31,9 +31,10 @@
             "RetentionTime": 0.1, // 공격 유지 시간
             "MovementMultiplier": 1.0, // 속도 변환값
             "InitialAngle": 0, // 공격 각도
-            "HitBoxPos":  0.7,
+            "HitBoxPos": 0.7,
 
             "ProjectileName": "", // 투사체 이름
+            "ProjectileID": 0,  // 투사체 ID
             "NumberOfShots": 0, // 투사체 발사 횟수
             "DelayBetweenShots": 0 // 투사체 발사간 간격 시간
           }
@@ -74,7 +75,8 @@
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
-            "ProjectileName": "GoblinBoomerang",
+            "ProjectileName": "GoblinsBoomerang",
+            "ProjectileID": 0,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }
@@ -116,6 +118,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinMagic",
+            "ProjectileID": 0,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }
@@ -158,6 +161,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "",
+            "ProjectileID": 0,
             "NumberOfShots": 0,
             "DelayBetweenShots": 0
           }
@@ -199,6 +203,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "",
+            "ProjectileID": 0,
             "NumberOfShots": 0,
             "DelayBetweenShots": 0
           },
@@ -215,6 +220,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinAxe",
+            "ProjectileID": 0,
             "NumberOfShots": 3,
             "DelayBetweenShots": 0.1
           },
@@ -231,6 +237,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinEyeLaser",
+            "ProjectileID": 0,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }

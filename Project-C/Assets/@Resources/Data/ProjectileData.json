@@ -20,7 +20,7 @@
       "DataID": 390003,
       "Name": "GoblinBoomerang",
       "DefaultGravity": 0,
-      "BaseSpeed": 1.3,
+      "BaseSpeed": 15.0,
       "LifeTime": 5,
       "HitBoxSize": 1.0
     },
