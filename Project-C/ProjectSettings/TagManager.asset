@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - EnemyHitBox
+  - Audio
   layers:
   - Default
   - TransparentFX
