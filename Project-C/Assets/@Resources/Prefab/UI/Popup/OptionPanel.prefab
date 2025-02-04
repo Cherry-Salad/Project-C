@@ -1430,7 +1430,19 @@ MonoBehaviour:
   m_Value: 0.641
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8328444474084639480}
+        m_TargetAssemblyTypeName: OptionSound, Assembly-CSharp
+        m_MethodName: SetMasterVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1580623789857161789
 GameObject:
   m_ObjectHideFlags: 0
@@ -4020,7 +4032,19 @@ MonoBehaviour:
   m_Value: 0.641
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8328444474084639480}
+        m_TargetAssemblyTypeName: OptionSound, Assembly-CSharp
+        m_MethodName: SetBGMVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3821035076491675083
 GameObject:
   m_ObjectHideFlags: 0
@@ -5824,8 +5848,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3347146039204806912}
   - {fileID: 5867891872325162740}
+  - {fileID: 3347146039204806912}
   m_Father: {fileID: 8809638518548348372}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -5922,7 +5946,19 @@ MonoBehaviour:
   m_Value: 0.641
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8328444474084639480}
+        m_TargetAssemblyTypeName: OptionSound, Assembly-CSharp
+        m_MethodName: SetEffectVolume
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5546352893052710551
 GameObject:
   m_ObjectHideFlags: 0
@@ -6904,6 +6940,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1979057176594111672}
+  - component: {fileID: 8328444474084639480}
+  - component: {fileID: 8916144134285268081}
   m_Layer: 5
   m_Name: OptionPanel
   m_TagString: Untagged
@@ -6935,6 +6973,35 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8328444474084639480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6749676678522271458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4b8f890e484d234686908604106c0fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: aa142cb5d382b2542957f08a6bac16b0, type: 2}
+  MasterSlider: {fileID: 2569480079912007989}
+  BGMSlider: {fileID: 5047292502983651686}
+  EffectSlider: {fileID: 1383127676124157284}
+--- !u!114 &8916144134285268081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6749676678522271458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1500ed3ebf072e44382ab33b4a513725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resolutionDropdown: {fileID: 326931575203092168}
 --- !u!1 &6813551455657354621
 GameObject:
   m_ObjectHideFlags: 0

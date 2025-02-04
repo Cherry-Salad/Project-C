@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DUIManager : MonoBehaviour
 {
+    AudioManager audioManager;
+
     public GameObject OptionPanel;
     public GameObject InventoryPanel;
     public GameObject SkillPanel;
@@ -12,6 +14,11 @@ public class DUIManager : MonoBehaviour
     private GameObject activePanel = null;
 
     private Dictionary<KeyCode, GameObject> DUIPanel;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     private void Start()
     {
@@ -31,6 +38,7 @@ public class DUIManager : MonoBehaviour
             if (Input.GetKeyDown(entry.Key))
             {
                 TogglePanel(entry.Value);
+                audioManager.PlaySFX(audioManager.button); //창 열리는 효과음
                 return;
             }
         }
@@ -49,6 +57,7 @@ public class DUIManager : MonoBehaviour
             }
         }
     }
+
     void TogglePanel(GameObject panel)
     {
         if (activePanel == panel) // 같은 패널을 누르면 닫기
@@ -74,7 +83,7 @@ public class DUIManager : MonoBehaviour
         activePanel = panel;
     }
 
-    void ClosePanel()
+    public void ClosePanel()
     {
         if (activePanel != null)
         {
