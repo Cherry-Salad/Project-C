@@ -258,7 +258,7 @@ public class Player : Creature
         {
             if (Input.GetKeyDown(keyCode))
             {
-                Debug.Log($"입력된 키: {keyCode}");
+                //Debug.Log($"입력된 키: {keyCode}");
 
                 if (Skills[keyCode].KeyPressedTime > 0)
                 {
@@ -278,7 +278,7 @@ public class Player : Creature
 
             if (Input.GetKey(keyCode))
             {
-                Debug.Log($"입력된 키: {keyCode}");
+                //Debug.Log($"입력된 키: {keyCode}");
                 if (Skills[keyCode].KeyPressedTime > 0)
                 {
                     // 꾹 눌러야 하는 키

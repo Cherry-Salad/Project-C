@@ -7,7 +7,6 @@ using static Define;
 public class IceBreak : PlayerSkillBase
 {
     Vector2 _skillDir { get { return (Owner.LookLeft) ? Vector2.left : Vector2.right; } }
-    HitBox _hitBox;
 
     public override bool Init()
     {
@@ -57,28 +56,8 @@ public class IceBreak : PlayerSkillBase
     /// </summary>
     void OnSpawnIceBreak()
     {
-        GameObject go = Managers.Resource.Instantiate(PrefabName, transform);
-        _hitBox = go.GetComponent<HitBox>();
-        
-        // 충돌을 제외할 레이어 필터링
-        LayerMask excludeLayers = 0;
-        excludeLayers.AddLayer(ELayer.Default);
-        excludeLayers.AddLayer(ELayer.Ground);
-        excludeLayers.AddLayer(ELayer.Wall);
-
-        // 자기 자신은 제외
-        switch (Owner.ObjectType)
-        {
-            case EObjectType.Player:
-                excludeLayers.AddLayer(ELayer.Player);
-                break;
-            case EObjectType.Monster:
-                excludeLayers.AddLayer(ELayer.Monster);
-                break;
-        }
-
-        _hitBox.SetInfo(Owner.LookLeft, DamageMultiplier, excludeLayers);
-        _hitBox.transform.parent = null;
+        SpawnHitBox(Owner.transform);
+        HitBox.transform.parent = null;
     }
 
     IEnumerator CoDoSkill()
@@ -100,7 +79,7 @@ public class IceBreak : PlayerSkillBase
             // 피격 시 스킬 취소
             if (Owner.State == ECreatureState.Hurt || stateInfo.IsName(AnimationName) == false)
             {
-                Managers.Resource.Destroy(_hitBox.gameObject);
+                Managers.Resource.Destroy(HitBox.gameObject);
                 yield break;
             }
 

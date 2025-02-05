@@ -49,6 +49,7 @@ public class Projectile : BaseObject
         // 충돌을 제외할 레이어 필터링
         Collider.excludeLayers = excludeLayers;
 
+        // TODO: 지금은 일직선으로 발사 밖에 없지만, 발사 종류에 따라 달라진다.
         // 방향대로 투사체가 발사된다
         _coLaunch = StartCoroutine(CoLaunchStraight(dir));
 
@@ -72,9 +73,9 @@ public class Projectile : BaseObject
 
             transform.position = destPos;
         }
-        else
+        else if (Data.LifeTime > 0)
         {
-            // 목적지가 없다면 lifeTime동안 투사체는 발사된다
+            // 목적지가 없다면 lifeTime동안 투사체를 발사한다
             Rigidbody.velocity = dir * _speed;
             yield return null;
         }
@@ -82,16 +83,29 @@ public class Projectile : BaseObject
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerEnter2D");
-        
         // 투사체가 부숴지는 순간이므로, 충돌과 속력이 없다
         Rigidbody.velocity = Vector2.zero;
         Collider.isTrigger = false;
 
+        // SetInfo에서 충돌 대상을 다 필터링해서, BaseObject만 찾으면 된다.
+        // 하지만, 몬스터는 Hit 함수가 따로 있어서 일단 구분하였다.
         BaseObject target = collision.GetComponent<BaseObject>();
         if (target != null)
         {
-            target.OnDamaged(Skill.DamageMultiplier, Owner);
+            Debug.Log("OnTriggerEnter2D");
+
+            float damage = Owner.Atk * Skill.DamageMultiplier;  // 오너 공격력 * 스킬 공격력
+            MonsterBase monster = target as MonsterBase;
+
+            if (monster != null)
+            {
+                // 버그 확인 필요: 아주 간혹, 몬스터의 BodyHitBox가 비활성되어 피격 처리가 안된다.
+                // Test를 위하여 공격력을 낮췄으니 직접 테스트 해보길 바랍니다. 
+                //monster.Hit((int)damage);
+                monster.Hit();  // Test
+            }
+            else
+                target.OnDamaged(damage, Owner);
         }
 
         StopCoroutine(_coLaunch);
