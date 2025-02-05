@@ -56,7 +56,7 @@ public class IceBreak : PlayerSkillBase
     /// </summary>
     void OnSpawnIceBreak()
     {
-        SpawnHitBox(Owner.transform);
+        SpawnHitBox(parent: Owner.transform);
         HitBox.transform.parent = null;
     }
 

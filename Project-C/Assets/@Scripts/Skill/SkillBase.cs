@@ -78,16 +78,27 @@ public class SkillBase : InitBase
         return true;
     }
 
-    public virtual void SpawnHitBox(Vector3 spawnPos, Transform parent = null)
+    /// <summary>
+    /// 히트 박스를 생성한다.
+    /// </summary>
+    /// <param name="spawnPos">소환 위치</param>
+    /// <param name="canRecycle">생성된 히트 박스를 재활용할 것인가?</param>
+    /// <param name="parent"></param>
+    public virtual void SpawnHitBox(Vector3 spawnPos, bool canRecycle = false, Transform parent = null)
     {
-        SpawnHitBox(parent);
+        SpawnHitBox(canRecycle, parent);
         HitBox.transform.localPosition = spawnPos;  // 소환 위치 설정
     }
 
-    public virtual void SpawnHitBox(Transform parent = null)
+    /// <summary>
+    /// 히트 박스를 생성한다.
+    /// </summary>
+    /// <param name="canRecycle">생성된 히트 박스를 재활용할 것인가?</param>
+    /// <param name="parent"></param>
+    public virtual void SpawnHitBox(bool canRecycle = false, Transform parent = null)
     {
         // 히트 박스 생성
-        if (HitBox == null)
+        if (canRecycle == false || (canRecycle && HitBox == null))
         {
             GameObject go = Managers.Resource.Instantiate(PrefabName, parent);
             HitBox = go.GetComponent<HitBox>();

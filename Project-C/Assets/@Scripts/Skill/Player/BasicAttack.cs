@@ -53,7 +53,7 @@ public class BasicAttack : PlayerSkillBase
     /// </summary>
     void OnSpawnHitBox()
     {
-        SpawnHitBox(Owner.transform);
+        SpawnHitBox(true, Owner.transform);
     }
 
     /// <summary>
