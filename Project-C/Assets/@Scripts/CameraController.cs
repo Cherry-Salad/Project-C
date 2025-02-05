@@ -20,7 +20,7 @@ public class CameraController : InitBase
         Camera.main.orthographicSize = 4.5f;
 
         _halfHeight = Camera.main.orthographicSize;
-        _halfWidth = Camera.main.aspect * _halfWidth;
+        _halfWidth = Camera.main.aspect * _halfHeight;
 
         return true;
     }
@@ -40,8 +40,6 @@ public class CameraController : InitBase
         // 카메라 위치를 월드 경계로 제한한다
         float clampedX = Mathf.Clamp(targetPos.x, minBound.x + _halfWidth, maxBound.x - _halfWidth);
         float clampedY = Mathf.Clamp(targetPos.y, minBound.y + _halfHeight, maxBound.y - _halfHeight);
-
-        // TODO: 카메라 위치 월드 경계 세로도 제한
 
         transform.position = new Vector3(clampedX, clampedY, -10);
     }
