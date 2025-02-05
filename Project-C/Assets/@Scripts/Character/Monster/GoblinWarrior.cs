@@ -1,17 +1,18 @@
+using Data;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using static Define;
 using static UnityEngine.GraphicsBuffer;
 
 public class GoblinWarrior : MonsterBase
 {
-    
-    private float _MAKING_HITBOX_POS = 0.7f;
-    private float _ATTACK_RECOVERY_TIME = 0.8f;
-
     private const int _HITBOX_NUM_BODY = 0;
     private const int _HITBOX_NUM_SWORD_ATTACK = 1;
+
+    private const int _SWORD_ATTACK_SKILL_NUMBER = 0;
 
     protected override void UpdateAnimation()
     {
@@ -38,18 +39,20 @@ public class GoblinWarrior : MonsterBase
 
     protected override void RegistrationSkill()
     {
-        skillCoroutineList.Clear();
-        skillCoroutineList.Add(SwordAttack());
-        shufflingSkill(skillCoroutineList);
-    }
+        skillList.Clear();
+        skillList.Add(new Tuple<int, IEnumerator>(_SWORD_ATTACK_SKILL_NUMBER, SwordAttack()));
 
+        shufflingSkill(skillList);
+    }
 
     IEnumerator SwordAttack()
     {
-        float posX = this.transform.position.x + (MoveDir.x * _MAKING_HITBOX_POS);
-        _hitBoxList[_HITBOX_NUM_SWORD_ATTACK].transform.position = new Vector2(posX, this.transform.position.y);
+        Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_SWORD_ATTACK_SKILL_NUMBER];
 
-        yield return new WaitForSeconds(_ATTACK_RECOVERY_TIME);
+        float posX = this.transform.position.x + (MoveDir.x * skillData.HitBoxPos);
+        hitBoxList[_HITBOX_NUM_SWORD_ATTACK].transform.position = new Vector2(posX, this.transform.position.y);
+        
+        yield return new WaitForSeconds(skillData.RecoveryTime);
     }
 
     public void SwordAttackActiveHitBox()
