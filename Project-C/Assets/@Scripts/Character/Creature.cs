@@ -91,6 +91,7 @@ public class Creature : BaseObject
                 Animator.Play("Hurt");
                 break;
             case ECreatureState.Dead:
+                Animator.Play("Dead");
                 break;
         }
     }
@@ -336,6 +337,15 @@ public class Creature : BaseObject
     public override void OnDamaged(float damage, Creature attacker = null) 
     {
         base.OnDamaged(damage, attacker);
+
+        // HP가 0 이하라면 사망 처리
+        State = (Hp <= 0) ? ECreatureState.Dead : ECreatureState.Hurt;
+    }
+
+    public virtual void OnDied()
+    {
+        // 소멸
+        Managers.Resource.Destroy(gameObject);
     }
 
     protected IEnumerator CoWallJump(Vector2 moveDir)
@@ -373,6 +383,7 @@ public class Creature : BaseObject
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             OnGround = CheckGround();
 
+            // 캐릭터가 공중에 있으면서 벽을 감지
             if (OnGround == false && CheckWall())
             {
                 // 기본 중력 적용
@@ -382,7 +393,6 @@ public class Creature : BaseObject
                 if (Collider.isTrigger)
                     Collider.isTrigger = false;
 
-                // 캐릭터가 공중에 있으면서 벽을 감지
                 State = ECreatureState.WallCling;
                 yield break;
             }

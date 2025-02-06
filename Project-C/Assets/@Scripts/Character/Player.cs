@@ -124,11 +124,11 @@ public class Player : Creature
 
     /// <summary>
     /// 입력 키를 감지한다.
-    /// 대시, 피격, 스킬을 사용할 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
+    /// 사망했거나 대시, 피격, 스킬을 사용할 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
     /// </summary>
     void GetInput()
     {
-        if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
+        if (State == ECreatureState.Dead || State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
@@ -408,38 +408,46 @@ public class Player : Creature
     public override void OnDamaged(float damage = 1f, Creature attacker = null)
     {
         // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
-        if (State == ECreatureState.Hurt)
+        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
             return;
 
         // HP 감소
         Hp -= damage;
-        // TODO: HP가 모두 감소 시 사망 처리
-
-        base.OnDamaged(damage, attacker);
 
         // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
         State = ECreatureState.Hurt;
         StartCoroutine(CoHandleInvincibility());
 
-        Rigidbody.velocity = Vector2.zero;
-
         // 살짝 위로 튀어오르듯이
+        Rigidbody.velocity = Vector2.zero;
         float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
-        Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0).normalized;
+        Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0);
 
         // 넉백
-        float knockbackForce = 3f;
+        float knockbackForce = 4.5f;
         Rigidbody.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public override void OnDied()
     {
+        base.OnDied();
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        // 사망했거나 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
+        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
+            return;
+
         // 몬스터와의 충돌 확인
         MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
 
         // 몬스터 충돌할 때 대시 중이라면 피격 무시
         if (monster != null && State != ECreatureState.Dash)
+        {
+            Debug.Log($"{monster.name} 충돌");
             OnDamaged(attacker: monster);
+        }
 
         // TODO: 장애물와 충돌 시 피격
     }
@@ -456,7 +464,30 @@ public class Player : Creature
         // 지속 시간만큼 무적 상태이다
         yield return new WaitForSeconds(duration);
 
-        // 캐릭터가 공중에 있으면 점프로 전환
-        State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
+        if (Hp > 0)
+            State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;  // 캐릭터가 공중에 있으면 점프로 전환
+        else
+            // 사망 판정
+            StartCoroutine(CoUpdateDead());
+    }
+
+    IEnumerator CoUpdateDead()
+    {
+        float elapsedTime = 0f;
+
+        // 캐릭터가 바닥에 떨어질 때까지 피격 애니메이션을 재생
+        // 낙사나 너무 높은 곳에서 떨어질 것을 대비하여, 최대 1.5초를 넘기지 않도록 하였다.
+        while (CheckGround() == false)
+        {
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime >= 1.5f)
+                yield break;
+
+            yield return null;
+        }
+
+        // 사망
+        Rigidbody.velocity = Vector2.zero;
+        State = ECreatureState.Dead;
     }
 }
