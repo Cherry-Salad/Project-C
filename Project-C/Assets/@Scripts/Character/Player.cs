@@ -20,18 +20,23 @@ public class Player : Creature
 
     public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
 
+    // 이동
     bool _moveDirKeyPressed = false;
 
-    #region Jump
+    // 점프
     bool _isWallJump = false;
     bool _jumpKeyPressed = false;
     float _jumpKeyPressedTime = 0f; // 점프 키를 누르고 있는 시간
     float _jumpDuration = 0.3f; // 점프 유지 시간, 원래는 0.5초로 했는데 이게 체감상 손가락에 좀 무리가 가더라구..
     float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
-    #endregion
 
+    // 대시
     float _dashCoolTime = 1.0f; // 대시 쿨타임
-    bool _isDashCooldownComplete = true;    // 대쉬 쿨다운 완료 여부
+    bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
+
+    // 스킬
+    KeyCode _pressedSkillKey = KeyCode.None;
+    float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
 
     public override bool Init()
     {
@@ -43,7 +48,7 @@ public class Player : Creature
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        // 기본 공격, TODO: 모든 스킬 추가
+        // 기본 공격
         BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
         basicAttack.SetInfo(this, null);
         Skills.Add(basicAttack.Key, basicAttack);
@@ -84,18 +89,29 @@ public class Player : Creature
 
                     Debug.Log($"{data.CodeName}: {skillId}");
 
-                    //SkillBase skill = gameObject.AddComponent(Type.GetType(data.CodeName)) as SkillBase;
-                    //if (skill == null)
-                    //    return;
+                    var type = Type.GetType(data.CodeName);
+                    if (type == null)
+                        return;
 
-                    //skill.SetInfo(this, data);
-                    //Skills.Add(skill);
+                    // GetOrAddComponent가 안돼서 null 검사
+                    PlayerSkillBase skill = gameObject.GetComponent(type) as PlayerSkillBase;
+                    if (skill == null)
+                        skill = gameObject.AddComponent(type) as PlayerSkillBase;
+
+                    skill.SetInfo(this, data);
+                    Skills.Add(skill.Key, skill);
                 }
             }
         });
         #endregion
 
         return true;
+    }
+
+    #region 입력 감지
+    void Update()
+    {
+        GetInput();
     }
 
     /// <summary>
@@ -109,7 +125,7 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
-        if (IsDashInput() || IsSkillInput())
+        if ((State != ECreatureState.WallJump && IsDashInput()) || IsSkillInput())
             return;
         
         IsJumpInput();
@@ -179,7 +195,10 @@ public class Player : Creature
         {
             // 벽에 매달린 상태이거나 벽 타기 중이라면 벽 점프로 전환
             if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing)
+            {
+                _jumpKeyPressed = true;
                 OnWallJump();
+            }
 
             return false;
         }
@@ -202,19 +221,70 @@ public class Player : Creature
 
     bool IsSkillInput()
     {
+        // 꾹 눌러야 하는 키
+        if (_pressedSkillKey != KeyCode.None) 
+        {
+            if (Input.GetKeyUp(_pressedSkillKey))
+            {
+                _pressedSkillKey = KeyCode.None;
+                _skillKeyPressedTime = 0f;
+            }
+            else
+            {
+                // 키를 누르고 있다
+                float pressedTime = Time.time - _skillKeyPressedTime;
+                if (pressedTime >= Skills[_pressedSkillKey].KeyPressedTime)
+                {
+                    Skills[_pressedSkillKey].DoSkill();
+
+                    _pressedSkillKey = KeyCode.None;
+                    _skillKeyPressedTime = 0f;
+                }
+
+                return true;
+            }
+        }
+        
         // 스킬키 입력
         foreach (KeyCode keyCode in Skills.Keys)
         {
             if (Input.GetKeyDown(keyCode))
             {
                 Debug.Log($"입력된 키: {keyCode}");
-                Skills[keyCode].DoSkill();
+
+                if (Skills[keyCode].KeyPressedTime > 0)
+                {
+                    // 꾹 눌러야 하는 키
+                    _pressedSkillKey = keyCode;
+                    _skillKeyPressedTime = Time.time;
+                }
+                else
+                {
+                    Skills[keyCode].DoSkill();
+                    _pressedSkillKey = KeyCode.None;
+                    _skillKeyPressedTime = 0f;
+                }
+
+                return true;
+            }
+
+            if (Input.GetKey(keyCode))
+            {
+                Debug.Log($"입력된 키: {keyCode}");
+                if (Skills[keyCode].KeyPressedTime > 0)
+                {
+                    // 꾹 눌러야 하는 키
+                    _pressedSkillKey = keyCode;
+                    _skillKeyPressedTime = Time.time;
+                }
+
                 return true;
             }
         }
 
         return false;
     }
+    #endregion
 
     protected override void UpdateAnimation()
     {
@@ -236,7 +306,6 @@ public class Player : Creature
     {
         // 물리 상태를 업데이트 한 뒤에 입력 처리
         base.UpdateController();
-        GetInput();
     }
 
     protected override void UpdateIdle()
@@ -287,7 +356,17 @@ public class Player : Creature
 
     protected override void OnWallJump()
     {
-        base.OnWallJump();
+        if (_jumpKeyPressed)
+        {
+            _jumpKeyPressed = false;
+            base.OnWallJump();
+            return;
+        }
+
+        State = ECreatureState.WallJump;
+        
+        // 벽 점프
+        StartCoroutine(CoWallJump(MoveDir));
         _isWallJump = true;
     }
 
@@ -296,13 +375,9 @@ public class Player : Creature
     /// </summary>
     void OnJumpHold()
     {
-        // 추가 점프 힘 적용
         // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
         if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
         {
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
-
             //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
             State = ECreatureState.Jump;
@@ -312,7 +387,7 @@ public class Player : Creature
 
     protected override bool OnDash()
     {
-        if (_isDashCooldownComplete == false)
+        if (_completeDashCooldown == false)
             return false;
 
         if (base.OnDash() == false) 
@@ -322,7 +397,7 @@ public class Player : Creature
         return true;
     }
 
-    public override void OnDamaged(int damage = 1, Creature attacker = null)
+    public override void OnDamaged(float damage = 1f, Creature attacker = null)
     {
         // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
         if (State == ECreatureState.Hurt)
@@ -339,7 +414,6 @@ public class Player : Creature
         StartCoroutine(CoHandleInvincibility());
 
         Rigidbody.velocity = Vector2.zero;
-        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 살짝 위로 튀어오르듯이
         float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
@@ -360,14 +434,13 @@ public class Player : Creature
             OnDamaged(attacker: monster);
 
         // TODO: 장애물와 충돌 시 피격
-        // 커밋 연습 테스트
     }
 
     IEnumerator CoDashCooldown()
     {
-        _isDashCooldownComplete = false;
+        _completeDashCooldown = false;
         yield return new WaitForSeconds(_dashCoolTime);
-        _isDashCooldownComplete = true;
+        _completeDashCooldown = true;
     }
 
     IEnumerator CoHandleInvincibility(float duration = 0.5f)

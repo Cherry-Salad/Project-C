@@ -37,4 +37,9 @@ public class BaseObject : InitBase
 
         return true;
     }
+
+    public virtual void OnDamaged(float damage, Creature attacker = null)
+    {
+        Debug.Log("OnDamaged");
+    }
 }

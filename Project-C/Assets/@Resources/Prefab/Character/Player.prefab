@@ -11,10 +11,13 @@ GameObject:
   - component: {fileID: 4305076722190054250}
   - component: {fileID: 4495252832149145516}
   - component: {fileID: 397134643710275491}
+  - component: {fileID: 4352150669749137072}
   - component: {fileID: 1932561570529463955}
   - component: {fileID: 5716280418548078527}
-  - component: {fileID: 4352150669749137072}
-  - component: {fileID: 6534543683504329118}
+  - component: {fileID: 2539579250733559445}
+  - component: {fileID: 4003761375572069060}
+  - component: {fileID: 1323234469142326157}
+  - component: {fileID: 4057098659065583151}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -116,6 +119,41 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!70 &4352150669749137072
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437542613349629660}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: 4b1c6f7475961704286628d9fc21c1f2, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.0027885437}
+  m_Size: {x: 0.5, y: 0.7201729}
+  m_Direction: 0
 --- !u!95 &1932561570529463955
 Animator:
   serializedVersion: 5
@@ -164,42 +202,7 @@ MonoBehaviour:
     Speed: 0
     AccessorySlot: 0
     SkillIdList: 
---- !u!70 &4352150669749137072
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1437542613349629660}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.0027885437}
-  m_Size: {x: 0.49559963, y: 0.7201729}
-  m_Direction: 0
---- !u!114 &6534543683504329118
+--- !u!114 &2539579250733559445
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,40 +218,107 @@ MonoBehaviour:
     DataId: 0
     CodeName: 
     AnimationName: 
+    PrefabName: 
     CastingTime: 0
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
     DamageMultiplier: 0
     AttackRange: 0
     RetentionTime: 0
-  PlayerSkillData:
+  MpCost: 0
+  MaxLevel: 0
+--- !u!114 &4003761375572069060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437542613349629660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 842b5997369b51c488877999534d3245, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data:
     DataId: 0
     CodeName: 
     AnimationName: 
+    PrefabName: 
     CastingTime: 0
     RecoveryTime: 0
     CoolTime: 0
     HealingValue: 0
-    ProjectileName: 
+    ProjectileId: 0
     NumberOfShots: 0
     DelayBetweenShots: 0
     InitialAngle: 0
     DamageMultiplier: 0
     AttackRange: 0
     RetentionTime: 0
-    MPCost: 0
-    MAXLevel: 0
-    Dynamics:
-      Level: 0
-      IsUnlock: 0
-      Key: 0
-    DisplayKR:
-      Name: 
-      Description: 
+  MpCost: 0
+  MaxLevel: 0
+--- !u!114 &1323234469142326157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437542613349629660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6db855a1270352f44af6e8964e9496a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data:
+    DataId: 0
+    CodeName: 
+    AnimationName: 
+    PrefabName: 
+    CastingTime: 0
+    RecoveryTime: 0
+    CoolTime: 0
+    HealingValue: 0
+    ProjectileId: 0
+    NumberOfShots: 0
+    DelayBetweenShots: 0
+    InitialAngle: 0
+    DamageMultiplier: 0
+    AttackRange: 0
+    RetentionTime: 0
+  MpCost: 0
+  MaxLevel: 0
+--- !u!114 &4057098659065583151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437542613349629660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 734ceddbe10323549807d1599fbfae02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data:
+    DataId: 0
+    CodeName: 
+    AnimationName: 
+    PrefabName: 
+    CastingTime: 0
+    RecoveryTime: 0
+    CoolTime: 0
+    HealingValue: 0
+    ProjectileId: 0
+    NumberOfShots: 0
+    DelayBetweenShots: 0
+    InitialAngle: 0
+    DamageMultiplier: 0
+    AttackRange: 0
+    RetentionTime: 0
   MpCost: 0
   MaxLevel: 0

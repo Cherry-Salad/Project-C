@@ -6,11 +6,12 @@ using UnityEngine;
 
 public class PlayerSkillBase : SkillBase
 {
-    public PlayerSkillData PlayerSkillData;
+    public PlayerSkillData PlayerSkillData { get; protected set; }
 
     public bool IsUnlock { get; set; }
     public int Level { get; set; }
     public KeyCode Key { get; set; }
+    public float KeyPressedTime { get; set; }
     public int MpCost = 0;
     public int MaxLevel = 0;
 
@@ -33,6 +34,7 @@ public class PlayerSkillBase : SkillBase
         IsUnlock = PlayerSkillData.Dynamics.IsUnlock;
         Level = PlayerSkillData.Dynamics.Level;
         Key = PlayerSkillData.Dynamics.Key;
+        KeyPressedTime = PlayerSkillData.Dynamics.KeyPressedTime;
         MpCost = PlayerSkillData.MPCost;
         MaxLevel = PlayerSkillData.MAXLevel;
     }
@@ -42,6 +44,7 @@ public class PlayerSkillBase : SkillBase
         if (base.IsSkillUsable() == false)
             return false;
 
+        // 스킬이 잠금되어 있거나 마나가 부족하면 사용 불가능
         if (IsUnlock == false || Owner.Mp < MpCost)
             return false;
 

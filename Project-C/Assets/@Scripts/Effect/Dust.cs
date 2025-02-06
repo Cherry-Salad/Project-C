@@ -85,10 +85,10 @@ public class Dust : InitBase
                 yield return new WaitForSeconds(remainingTime);
         }
 
-        Despawn();
+        OnDespawn();
     }
 
-    public void Despawn()
+    public void OnDespawn()
     {
         Managers.Resource.Destroy(gameObject);
     }

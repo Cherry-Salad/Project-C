@@ -37,10 +37,10 @@ public class Creature : BaseObject
     }
 
     #region Stat
-    public int Hp { get; set; }
-    public int MaxHp { get; set; }
-    public int Mp { get; set; }
-    public int MaxMp { get; set; }
+    public float Hp { get; set; }
+    public float MaxHp { get; set; }
+    public float Mp { get; set; }
+    public float MaxMp { get; set; }
     public float Atk { get; set; }
     public float MoveSpeed { get; set; }
     public float JumpForce { get; set; }
@@ -58,13 +58,8 @@ public class Creature : BaseObject
             return false;
 
         State = ECreatureState.Idle;
-
+        StartCoroutine(CoUpdate());
         return true;
-    }
-
-    void Update()
-    {
-        UpdateController();
     }
 
     protected virtual void UpdateAnimation()
@@ -97,6 +92,20 @@ public class Creature : BaseObject
                 break;
             case ECreatureState.Dead:
                 break;
+        }
+    }
+
+    protected IEnumerator CoUpdate()
+    {
+        while (true)
+        {
+            // 200FPS 이상처럼 프레임이 높다면, 물리 연산을 시작하기도 전에 벽과 바닥, 장애물을 감지하는 버그가 나타난다.
+            // 프레임이 높을수록 Update가 더 빠르게 호출된 것이 원인이었다.
+            // 예를 들어 OnJump를 통해 속력과 중력을 바꾸었다. 그런데, 프레임이 높으면 캐릭터를 위로 올리기도 전에 바닥을 감지하여 Idle로 전환된다.
+            // FixedUpdate도 사용해봤다. 그런데 간혹 타이밍이 어긋나거나 애니메이션 전환을 실패하여 때려치웠다.
+            // 이를 방지하기 위해 이벤트 함수의 실행 순서를 참고하였다. 물리 엔진 업데이트 주기에 맞춰 UpdateController가 호출되기 때문에 버그를 방지한다.
+            yield return new WaitForFixedUpdate();
+            UpdateController();
         }
     }
 
@@ -133,7 +142,6 @@ public class Creature : BaseObject
         if (CheckGround())
         {
             // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
-            Rigidbody.gravityScale = 0f;
             Rigidbody.velocity = Vector2.zero;
         }
         else
@@ -153,16 +161,17 @@ public class Creature : BaseObject
 
     protected virtual void UpdateJump()
     {
-        bool OnGround = CheckGround();
+        // 캐릭터가 바닥에 닿은지 확인
+        bool onGround = CheckGround();
 
-        if (OnGround == false && CheckWall())
+        if (onGround == false && CheckWall())
         {
             // 캐릭터가 공중에 있으면서 벽을 감지
             State = ECreatureState.WallCling;
             _hasDoubleJumped = false;
             return;
         }
-        else if (OnGround)
+        else if (onGround)
         {
             // 캐릭터가 바닥에 닿을 때
             State = ECreatureState.Idle;
@@ -174,9 +183,6 @@ public class Creature : BaseObject
         float distance = Collider.bounds.extents.x + 0.1f;
         bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
         float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
-
-        // 공중이므로 기본 중력 적용
-        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 점프, 낙하
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
@@ -191,15 +197,12 @@ public class Creature : BaseObject
             bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
             float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
 
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
-
             // 점프, 낙하
             Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
         }
         else
         {
-            Rigidbody.gravityScale = 0f;
+            // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
             Rigidbody.velocity = Vector2.zero;
         }
     }
@@ -223,6 +226,7 @@ public class Creature : BaseObject
                 State = ECreatureState.Jump;    // 정지 상태였다면 바로 낙하
             else
                 OnWallJump();   // 벽 점프
+            
             return;
         }
 
@@ -253,20 +257,14 @@ public class Creature : BaseObject
         {
             State = ECreatureState.Jump;
 
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
-
             // 기본(1단) 점프
             // 경사진 바닥에서도 점프를 할 수 있도록 velocity.x를 0으로 설정
             Rigidbody.velocity = new Vector2(0f, JumpForce);
         }
         // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
-        else if (_hasDoubleJumped == false && (State == ECreatureState.Jump || State == ECreatureState.WallJump))
+        else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
         {
             State = ECreatureState.DoubleJump;
-
-            // 공중이므로 기본 중력 적용
-            Rigidbody.gravityScale = DefaultGravityScale;
 
             // 이단 점프
             _hasDoubleJumped = true;
@@ -274,7 +272,9 @@ public class Creature : BaseObject
         }
         // 벽에 매달린 상태이거나 벽 타기 또는 벽을 감지했다면 벽 점프로 전환
         else if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || isWall)
+        {
             OnWallJump();
+        }
     }
 
     protected virtual void OnWallJump()
@@ -284,9 +284,6 @@ public class Creature : BaseObject
         // 현재 캐릭터는 벽을 마주하고 있으므로, 반대 방향을 바라봐야 한다
         LookLeft = !LookLeft;
         MoveDir = LookLeft ? Vector2.left : Vector2.right;
-
-        // 공중이므로 기본 중력 적용
-        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 벽 점프
         StartCoroutine(CoWallJump(MoveDir));
@@ -336,17 +333,12 @@ public class Creature : BaseObject
         return false;
     }
 
-    public virtual void OnDamaged(float damage, Creature attacker = null) 
+    public override void OnDamaged(float damage, Creature attacker = null) 
     {
-        Debug.Log("OnDamaged");
+        base.OnDamaged(damage, attacker);
     }
 
-    public virtual void OnDamaged(int damage, Creature attacker = null) 
-    {
-        Debug.Log("OnDamaged");
-    }
-
-    IEnumerator CoWallJump(Vector2 moveDir)
+    protected IEnumerator CoWallJump(Vector2 moveDir)
     {
         float elapsedTime = 0f;
         while (elapsedTime < 0.1f)
@@ -362,11 +354,12 @@ public class Creature : BaseObject
             // 벽 점프
             Rigidbody.velocity = new Vector2(velocityX, JumpForce);
             elapsedTime += Time.deltaTime;
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
-        // 벽 점프가 끝나면 기본(1단) 점프로 전환
-        State = ECreatureState.Jump;
+        // 벽 점프가 끝나면 전환
+        // 캐릭터가 공중에 있으면 점프로 전환
+        State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
     IEnumerator CoDash(Vector2 dir, Vector2 destPos, float dashSpeed)
@@ -375,14 +368,16 @@ public class Creature : BaseObject
         bool OnGround = CheckGround();
 
         // 대시
-        while (dir.magnitude > 0.1f)
+        while (true)
         {
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             OnGround = CheckGround();
-            dir = destPos - Rigidbody.position;
 
             if (OnGround == false && CheckWall())
             {
+                // 기본 중력 적용
+                Rigidbody.gravityScale = DefaultGravityScale;
+
                 // 대시가 끝나면 충돌 처리 활성화
                 if (Collider.isTrigger)
                     Collider.isTrigger = false;
@@ -392,8 +387,17 @@ public class Creature : BaseObject
                 yield break;
             }
 
+            dir = destPos - Rigidbody.position;
+            if (dir.magnitude <= 0.1f)
+                break;
+
             yield return null;
         }
+
+        Rigidbody.position = destPos;
+
+        // 기본 중력 적용
+        Rigidbody.gravityScale = DefaultGravityScale;
 
         // 대시가 끝나면 충돌 처리 활성화
         if (Collider.isTrigger)
@@ -427,13 +431,18 @@ public class Creature : BaseObject
         if (dir == Vector2.zero)
             return default;
 
-        LayerMask obstacleLayer = LayerMask.GetMask("Ground", "Wall");
-        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, obstacleLayer);
+        // 충돌 필터링
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Wall);
+        includeLayers.AddLayer(ELayer.Ground);
+
+        RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, includeLayers);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);
 
         if (obstacle.collider != null || isDetailedCheck == false)
             return obstacle;
 
+        #region 섬세하게 감지
         int rayCount = 5;   // Raycast 발사 횟수
         Vector2 dirUp = new Vector2(dir.x, 1f);
         Vector2 dirDown = new Vector2(dir.x, -1f);
@@ -445,7 +454,7 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(dir, dirUp, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.green);
 
-            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, obstacleLayer);
+            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, includeLayers);
             if (obstacle.collider != null)
                 return obstacle;
         }
@@ -457,10 +466,11 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(dir, dirDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * distance, Color.magenta);
 
-            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, obstacleLayer);
+            obstacle = Physics2D.Raycast(Rigidbody.position, rayDir, distance, includeLayers);
             if (obstacle.collider != null)
                 return obstacle;
         }
+        #endregion
 
         return default;
     }
@@ -473,8 +483,13 @@ public class Creature : BaseObject
     {
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값 추가
+
+        // 충돌 필터링
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Wall);
+
         Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
-        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, LayerMask.GetMask("Wall"));
+        return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, includeLayers);
     }
 
     /// <summary>
@@ -483,18 +498,26 @@ public class Creature : BaseObject
     /// <returns></returns>
     public bool CheckGround()
     {
-        float groundCheckDistance = Collider.bounds.extents.y + 0.1f;   // 바닥 감지 거리
-        LayerMask groundLayer = LayerMask.GetMask("Ground");
+        float groundCheckDistance = Collider.bounds.extents.y + 0.05f;   // 바닥 감지 거리
+        
+        // 충돌 필터링
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Ground);
+        
         Debug.DrawRay(Rigidbody.position, Vector2.down * groundCheckDistance, Color.red);
+        var p = Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers);
 
         // 캐릭터 밑의 평평한 바닥 감지
-        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, groundLayer))
+        if (Physics2D.Raycast(Rigidbody.position, Vector2.down, groundCheckDistance, includeLayers))
             return true;
 
-        // 캐릭터 밑의 경사진 바닥 감지
+        #region 섬세하게 감지
         int rayCount = 5;   // Raycast 발사 횟수
         Vector2 leftDown = new Vector2(-0.5f, -1f); // 왼쪽 대각선
         Vector2 rightDown = new Vector2(0.5f, -1f); // 오른쪽 대각선
+
+        float minSlopeAngle = 0f;
+        float maxSlopeAngle = 60f;
 
         // Vector2.down부터 leftDown
         for (int i = 1; i <= rayCount; i++)
@@ -503,8 +526,21 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, leftDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.red);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, groundLayer))
-                return true;
+            //if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
+            //{
+            //    return true;
+            //}
+
+            var groundInfo = Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers);
+            if (groundInfo.collider != null)
+            {
+                float slopeAngle = Vector2.Angle(groundInfo.normal, Vector2.up);
+                if (slopeAngle > minSlopeAngle && slopeAngle < maxSlopeAngle)
+                    return true;
+
+                //Debug.Log(slopeAngle);
+                return false;
+            }
         }
 
         // Vector2.down부터 rightDown
@@ -514,9 +550,24 @@ public class Creature : BaseObject
             Vector2 rayDir = Vector2.Lerp(Vector2.down, rightDown, interpolationRatio).normalized;
             Debug.DrawRay(Rigidbody.position, rayDir * groundCheckDistance, Color.blue);
 
-            if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, groundLayer))
-                return true;
+            //if (Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers))
+            //{
+            //    return true;
+            //}
+
+            var groundInfo = Physics2D.Raycast(Rigidbody.position, rayDir, groundCheckDistance, includeLayers);
+            if (groundInfo.collider != null)
+            {
+                float slopeAngle = Vector2.Angle(groundInfo.normal, Vector2.up);
+                if (slopeAngle > minSlopeAngle && slopeAngle < maxSlopeAngle)
+                    return true;
+
+                //Debug.Log(slopeAngle);
+                return false;
+            }
+
         }
+        #endregion
 
         return false;
     }
@@ -530,9 +581,14 @@ public class Creature : BaseObject
     Vector2 FindDashDestPos(Vector2 dir, float distance)
     {
         List<RaycastHit2D> obstacles = new List<RaycastHit2D>();
-
         ContactFilter2D filter = new ContactFilter2D();
-        filter.SetLayerMask(LayerMask.GetMask("Ground", "Wall"));
+
+        // 충돌 필터링
+        LayerMask includeLayers = 0;
+        includeLayers.AddLayer(ELayer.Wall);
+        includeLayers.AddLayer(ELayer.Ground);
+        
+        filter.SetLayerMask(includeLayers);
         filter.useTriggers = false;
 
         Collider.Cast(dir, filter, obstacles, distance);
