@@ -36,7 +36,7 @@ public class Dust : InitBase
                 break;
 
             case ECreatureState.Dead:
-                // TODO
+                PlayDeadEffect("Dead");
                 break;
         }
     }
@@ -50,6 +50,19 @@ public class Dust : InitBase
         else
             // 플레이어 오른쪽
             transform.position = new Vector2(Owner.Collider.bounds.max.x - offset, Owner.Collider.bounds.max.y);
+
+        SpriteRenderer.flipX = Owner.LookLeft;
+        Animator.Play(name);
+    }
+
+    void PlayDeadEffect(string name)
+    {
+        if (Owner.LookLeft)
+            // 플레이어 왼쪽
+            transform.position = new Vector2(Owner.transform.position.x - (Owner.Collider.bounds.extents.x * 3), Owner.transform.position.y);
+        else
+            // 플레이어 오른쪽
+            transform.position = new Vector2(Owner.transform.position.x + (Owner.Collider.bounds.extents.x * 3), Owner.transform.position.y);
 
         SpriteRenderer.flipX = Owner.LookLeft;
         Animator.Play(name);

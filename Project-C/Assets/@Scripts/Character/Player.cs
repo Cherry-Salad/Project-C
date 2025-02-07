@@ -302,11 +302,14 @@ public class Player : Creature
         switch (State)
         {
             case ECreatureState.Dash:
-                SpawnDust();
+                OnSpawnDust();
                 break;
             case ECreatureState.WallCling:
-                SpawnDust();
+                OnSpawnDust();
                 break;
+            //case ECreatureState.Dead: // 애니메이션 이벤트로 호출한다
+            //    OnSpawnDust();
+            //    break;
         }
     }
 

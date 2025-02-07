@@ -336,6 +336,10 @@ public class Creature : BaseObject
 
     public override void OnDamaged(float damage, Creature attacker = null) 
     {
+        // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
+        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
+            return;
+
         base.OnDamaged(damage, attacker);
 
         // HP가 0 이하라면 사망 처리
@@ -420,7 +424,7 @@ public class Creature : BaseObject
     /// <summary>
     /// Dash, WallCling 등의 상태에 따라 다양한 먼지 효과를 연출한다
     /// </summary>
-    protected void SpawnDust()
+    protected void OnSpawnDust()
     {
         Dust dust = Managers.Resource.Instantiate("Dust").GetComponent<Dust>();
         if (dust != null)
