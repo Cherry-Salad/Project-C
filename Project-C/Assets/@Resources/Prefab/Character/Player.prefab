@@ -189,7 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _state: 0
-  _bodyHitBox: {fileID: 0}
   Data:
     DataId: 0
     Name: 
@@ -328,7 +327,7 @@ GameObject:
   - component: {fileID: 6886913830754286404}
   m_Layer: 10
   m_Name: BodyHitBox
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
