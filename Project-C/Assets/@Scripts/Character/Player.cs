@@ -44,7 +44,17 @@ public class Player : Creature
             return false;
 
         ObjectType = EObjectType.Player;
-        
+
+        // 충돌 필터링
+        if (BodyHitBox != null)
+        {
+            BodyHitBox.isTrigger = true;
+            
+            LayerMask includeLayers = 0;
+            includeLayers.AddLayer(ELayer.Monster);
+            BodyHitBox.includeLayers = includeLayers;
+        }
+
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
@@ -436,7 +446,26 @@ public class Player : Creature
         base.OnDied();
     }
 
-    void OnCollisionStay2D(Collision2D collision)
+    //void OnCollisionStay2D(Collision2D collision)
+    //{
+    //    // 사망했거나 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
+    //    if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
+    //        return;
+
+    //    // 몬스터와의 충돌 확인
+    //    MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
+
+    //    // 몬스터 충돌할 때 대시 중이라면 피격 무시
+    //    if (monster != null && State != ECreatureState.Dash)
+    //    {
+    //        Debug.Log($"{monster.name} 충돌");
+    //        OnDamaged(attacker: monster);
+    //    }
+
+    //    // TODO: 장애물와 충돌 시 피격
+    //}
+
+    void OnTriggerStay2D(Collider2D collision)
     {
         // 사망했거나 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
         if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
@@ -452,7 +481,7 @@ public class Player : Creature
             OnDamaged(attacker: monster);
         }
 
-        // TODO: 장애물와 충돌 시 피격
+        // TODO: 장애물과 충돌 시 피격
     }
 
     IEnumerator CoDashCooldown()

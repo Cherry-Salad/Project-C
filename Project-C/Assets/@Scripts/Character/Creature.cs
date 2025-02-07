@@ -36,6 +36,11 @@ public class Creature : BaseObject
         }
     }
 
+    /// <summary>
+    /// 피격 판정 히트 박스
+    /// </summary>
+    public CapsuleCollider2D BodyHitBox { get; protected set; }
+
     #region Stat
     public float Hp { get; set; }
     public float MaxHp { get; set; }
@@ -58,6 +63,7 @@ public class Creature : BaseObject
             return false;
 
         State = ECreatureState.Idle;
+        BodyHitBox = Util.FindChild<CapsuleCollider2D>(gameObject, "BodyHitBox", true);
         StartCoroutine(CoUpdate());
         return true;
     }
