@@ -67,7 +67,7 @@ public class HitBox : InitBase
 
             if (monster != null)
             {
-                // 버그 확인 필요: 아주 간혹, 몬스터의 BodyHitBox가 비활성되어 피격 처리가 안된다.
+                // 버그 확인 필요: 아주 간혹, 몬스터의 BodyHitBox가 비활성(SetActive(false))되어 피격 처리가 안된다.
                 // Test를 위하여 공격력을 낮췄으니 직접 테스트 해보길 바랍니다. 
                 //monster.Hit((int)damage);
                 monster.Hit();  // Test
