@@ -10,6 +10,7 @@ public class MonsterProjectileBase : BaseObject
     protected Data.ProjectileData Data;
 
     protected float Speed;
+    protected Vector2 Dir;
     public bool _isActive;
     public bool _isLoad;
     
@@ -27,7 +28,7 @@ public class MonsterProjectileBase : BaseObject
     public bool SetData(int dataID)
     {
         if (Managers.Data.ProjectileDataDic.TryGetValue(dataID, out Data) == false) return false;
-
+        
         _isLoad = true;
         Speed = 0;
 
@@ -38,14 +39,13 @@ public class MonsterProjectileBase : BaseObject
     {
         _isActive = true;
         
-        dir = dir.normalized;
+        Dir = dir.normalized;
         
         Speed = Data.BaseSpeed;
-        
         DefaultGravityScale = Data.DefaultGravity;
         
         this.transform.position = pos;
-        this.Rigidbody.velocity = new Vector2(dir.x *  Speed, dir.y * Speed);
+        this.Rigidbody.velocity = new Vector2(Dir.x *  Speed, Dir.y * Speed);
 
         StartCoroutine(ChangingVector());
         StartCoroutine(StartLifeTime());
@@ -53,7 +53,6 @@ public class MonsterProjectileBase : BaseObject
 
     public virtual void ShootingProjectile(GameObject target)
     {
-        
 
     }
 
@@ -64,7 +63,6 @@ public class MonsterProjectileBase : BaseObject
 
     protected IEnumerator StartLifeTime()
     {
-        
         yield return new WaitForSeconds(Data.LifeTime);
         EndOfProjectile();
     }
@@ -72,8 +70,19 @@ public class MonsterProjectileBase : BaseObject
     public void EndOfProjectile()
     {
         _isActive = false;
+        Speed = 0;
+        Dir = Vector2.zero;
         this.gameObject.SetActive(false);
     }
 
+    protected void OnTriggerEnter2D(Collider2D collider)
+    {
+        int layerMask = ~LayerMask.GetMask("Monster", "Player", "HitBox");
+
+        if(((1 << collider.gameObject.layer) & layerMask) != 0)
+        {
+            EndOfProjectile();
+        }
+    }
 
 }

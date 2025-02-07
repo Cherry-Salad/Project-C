@@ -31,7 +31,8 @@ public class MonsterBase : Creature
     {
         ScanMove,
         ScanStand,
-        Battle
+        Battle,
+        Init
     }
 
     private EBehaviorPattern _behaviorPattern;
@@ -54,7 +55,7 @@ public class MonsterBase : Creature
     private Coroutine _battleTimerCoroutine;    // 전투 종료 타이머 코루틴
     private Coroutine _surveillanceCoroutine;   // 방향 전환 코루틴
     private Coroutine _skillRoutine;             // 스킬 사용 관리 코루틴
-    private bool _isCompleteLoad = false;       
+    private bool _isCompleteLoad = false;
 
     private EBehaviorPattern _originBehaviorPattern;
 
@@ -94,6 +95,10 @@ public class MonsterBase : Creature
             case EBehaviorPattern.Battle:
                 UpdateBattle();
                 break;
+
+            case EBehaviorPattern.Init:
+                _behaviorPattern = _INIT_STAIT;
+                break;
         }
     }
 
@@ -111,7 +116,7 @@ public class MonsterBase : Creature
         MoveSpeed = 0;
 
         _behaviorPattern = _INIT_STAIT;                                 // 시작 행동 패턴 
-        _originBehaviorPattern = _behaviorPattern;
+        _originBehaviorPattern = EBehaviorPattern.Init;
        
         if (_qMark != null && _eMark != null)
         {
@@ -172,6 +177,7 @@ public class MonsterBase : Creature
         }
 
         SettingProjectile();
+        SelectNextSkill();
         _isCompleteLoad = true;
     }
 
@@ -188,10 +194,6 @@ public class MonsterBase : Creature
     {
         if (!_isCompleteLoad) return;
         base.UpdateRun();
-
-        if (Input.GetKey(KeyCode.R)){
-            Hit();
-        }
 
         if (!CheckFrontGround() || CheckWall())
         {
@@ -211,13 +213,9 @@ public class MonsterBase : Creature
         }
     }
 
-    protected void UpdateScanMove() // 동적 감지 상태의 동작
+    protected virtual void UpdateScanMove() // 동적 감지 상태의 동작
     {
-        if (SearchingTargetInScanState())
-        {
-            _behaviorPattern = EBehaviorPattern.Battle;
-            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
-        }
+        CheackTargetSearching();
 
         if (CheckGround() && (State == ECreatureState.Idle || State == ECreatureState.Jump))
             State = ECreatureState.Run;
@@ -225,14 +223,22 @@ public class MonsterBase : Creature
 
     protected void UpdateScanStand() // 정적 감지 상태의 동작
     {
-        if(SearchingTargetInScanState())
-        {
+        if(CheackTargetSearching())
             StopSurveillance();
-            _behaviorPattern = EBehaviorPattern.Battle;
-            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
-        }
         else
             StartSurveillance();
+    }
+
+    protected bool CheackTargetSearching() // 타겟이 탐색범위내에 감지되는지 확인 
+    {
+        if (SearchingTargetInScanState())
+        {
+            _behaviorPattern = EBehaviorPattern.Battle;
+            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
+            return true;
+        }
+        else 
+            return false;
     }
 
     protected void UpdateBattle() // 전투상태일 때의 동작
@@ -253,17 +259,27 @@ public class MonsterBase : Creature
         }
         else 
         {
-            float targetPosX = TargetGameObject.transform.position.x;
-            float myPosX = this.transform.position.x;
-
-            isCanAttack = false;
-
-            if ((targetPosX - 1) < myPosX && myPosX < (targetPosX + 1))
-                StopMove();
-            else if (CheckFrontGround() && !CheckWall())
-                State = ECreatureState.Run;
+            OnTargetExitAttackRange();
         }
 
+        ViewTarget();
+    }
+
+    protected virtual void OnTargetExitAttackRange() // 타겟이 공격 범위 밖에 있을 경우 실행
+    {
+        float targetPosX = TargetGameObject.transform.position.x;
+        float myPosX = this.transform.position.x;
+
+        isCanAttack = false;
+
+        if ((targetPosX - 1) < myPosX && myPosX < (targetPosX + 1))
+            StopMove();
+        else if (CheckFrontGround() && !CheckWall())
+            State = ECreatureState.Run;
+    }
+
+    protected virtual void ViewTarget() // 몬스터를 타겟을 바라보도록 지정
+    {
         if (TargetGameObject.transform.position.x < this.transform.position.x)
         {
             if (!LookLeft) TurnObject();
@@ -274,7 +290,7 @@ public class MonsterBase : Creature
         }
     }
 
-    private void changeBehaviorPattern()
+    private void changeBehaviorPattern() // 행동 패턴 변화시 초기화 
     {
         switch (BehaviorPattern)
         {
@@ -290,12 +306,12 @@ public class MonsterBase : Creature
         _originBehaviorPattern = BehaviorPattern;
     }
 
-    private void PatternChangeToBattle() // 배틀 상태 전환시
+    protected virtual void PatternChangeToBattle() // 배틀 상태 전환시
     {
         MoveSpeed = TypeRecorder.Base.MovementSpeed * TypeRecorder.Battle.MovementMultiplier;
     }
 
-    private void PatternChangeToScan() // 스캔 상태 전환시 
+    protected virtual void PatternChangeToScan() // 스캔 상태 전환시 
     {
         MoveSpeed = TypeRecorder.Base.MovementSpeed;
     }
@@ -463,7 +479,7 @@ public class MonsterBase : Creature
         StopCoroutine(ref _battleTimerCoroutine);
     }
 
-    private void Attack() // 공격
+    protected void Attack() // 공격
     {
         StartCoroutine(ref _skillRoutine, UsingSkill());
     }
@@ -536,7 +552,7 @@ public class MonsterBase : Creature
         }
     }
 
-    protected virtual IEnumerator Dead()
+    protected virtual IEnumerator Dead() //죽었을 때 처리 
     {
         State = ECreatureState.Dead;
         Coroutine vibrationCoroutine = null;
@@ -550,6 +566,7 @@ public class MonsterBase : Creature
             {
                 color.a = i;
                 SpriteRenderer.color = color;
+                DeadOrganize();
                 yield return new WaitForSeconds(_TRANSPARENCY_RISING_CYCLE_FOR_DEAD); 
             }
         }
@@ -573,7 +590,18 @@ public class MonsterBase : Creature
         else
         {
             StartCoroutine(HurtCoroutine());
+            HitEnd();
         }
+    }
+
+    protected virtual void DeadOrganize() // 죽은후 뒷처리 
+    {
+
+    }
+
+    protected virtual void HitEnd() // 공격 받은후 뒷처리 
+    {
+
     }
 
     protected void shufflingSkill(List<Tuple<int, IEnumerator>> shuffleList) // 스킬 셔플
@@ -605,7 +633,7 @@ public class MonsterBase : Creature
         skillList.Clear();
     }
 
-    protected virtual void SettingProjectile()
+    protected virtual void SettingProjectile() // 총알 세팅 
     {
 
     }
@@ -614,7 +642,7 @@ public class MonsterBase : Creature
     {
         string PrefabName = TypeRecorder.Battle.Attack[skillNumber].ProjectileName;
         GameObject newObject = Managers.Resource.Instantiate(PrefabName);
-        MonsterProjectileBase newProjectile = newObject.AddComponent<MonsterProjectileBase>();
+        MonsterProjectileBase newProjectile = newObject.GetComponent<MonsterProjectileBase>();
 
         newProjectile.SetData(TypeRecorder.Battle.Attack[skillNumber].ProjectileID);
         newObject.SetActive(false);
@@ -641,4 +669,7 @@ public class MonsterBase : Creature
                 hitBox.SetActive(false);
         }
     }
+
+
+
 }

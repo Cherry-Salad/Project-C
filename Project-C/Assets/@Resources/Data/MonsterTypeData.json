@@ -69,14 +69,14 @@
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 5,
             "RetentionTime": 0,
             "MovementMultiplier": 1.0,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinsBoomerang",
-            "ProjectileID": 0,
+            "ProjectileID": 390003,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }
@@ -126,26 +126,25 @@
       }
     },
 
-
     {
       "Type": "GoblinFly",
 
       "Base": {
         "Role": "MeleeAttacker",
-        "MovementSpeed": 1.0,
+        "MovementSpeed": 2.5,
         "BelligerenceLevel": 2,
         "DefaultGravity": 0
       },
 
       "Scan": {
-        "Distance": 10.0,
+        "Distance": 5.0,
         "MaxScanAngle": 45.0,
         "MinScanAngle": -45.0,
         "ViewAngle": 15.0
       },
 
       "Battle": {
-        "BattleEndTime": 15,
+        "BattleEndTime": 1,
         "MovementMultiplier": 1.2,
         "Attack": [
           {
@@ -154,7 +153,7 @@
             "IsBodyHitBox": true,
             "RecoveryTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 1,
             "RetentionTime": 0,
             "MovementMultiplier": 1.8,
             "InitialAngle": 0,

@@ -27,7 +27,7 @@ MonoBehaviour:
     m_Address: GoblinsBoomerang
     m_ReadOnly: 0
     m_SerializedLabels:
-    - PreLoad
+    - MonsterDataSet
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a2ab188775b8a604db585412ad367431, type: 2}
