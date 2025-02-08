@@ -289,8 +289,7 @@ public class Creature : BaseObject
         State = ECreatureState.WallJump;
 
         // 현재 캐릭터는 벽을 마주하고 있으므로, 반대 방향을 바라봐야 한다
-        LookLeft = !LookLeft;
-        MoveDir = LookLeft ? Vector2.left : Vector2.right;
+        MoveDir = TurnObject();
 
         // 벽 점프
         StartCoroutine(CoWallJump(MoveDir));
@@ -300,10 +299,7 @@ public class Creature : BaseObject
     {
         // 벽에 매달린 상태에서 방향키를 누르지 않고 대시하면 반대 방향으로 대시한다
         if (State == ECreatureState.WallCling)
-        {
-            LookLeft = !LookLeft;
-            MoveDir = LookLeft ? Vector2.left : Vector2.right;
-        }
+            MoveDir = TurnObject();
 
         // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
         if (MoveDir == Vector2.zero)
@@ -438,6 +434,12 @@ public class Creature : BaseObject
     }
 
     #region 벽, 바닥, 장애물 감지
+    protected virtual Vector2 TurnObject()
+    {
+        LookLeft = !LookLeft;
+        return LookLeft ? Vector2.left : Vector2.right;
+    }
+
     /// <summary>
     /// 벽이나 벽처럼 통행에 방해되는 장애물을 감지한다
     /// </summary>

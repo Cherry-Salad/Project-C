@@ -613,29 +613,4 @@ public class MonsterBase : Creature
                 hitBox.SetActive(false);
         }
     }
-
-    void OnTriggerStay2D(Collider2D collision)
-    {
-        // 트리거가 활성화된 오브젝트들이 활성화(SetActive(true))가 되어야 플레이어와 충돌을 감지한다.
-        // 그러므로, 기본적으로 바디 히트 박스가 활성화되어야 한다.
-
-        // 사망했다면 충돌 감지를 할 필요없다
-        if (State == ECreatureState.Dead)
-            return;
-
-        // 플레이어 충돌 확인
-        // 기존에는 플레이어에서 OnTriggerStay2D를 사용하여 몬스터와의 충돌을 감지하였다.
-        // 플레이어와 스킬 히트 박스가 부모와 자식 관계이며, 둘다 트리거를 활성화되어 있다.
-        // 자식(스킬 히트 박스)에게 트리거 이벤트가 발생하면 부모(플레이어)의 트리거 이벤트도 같이 호출된다.
-        // 그래서 비교적 안전하게 몬스터에서 플레이어와의 충돌을 감지하도록 수정하였다.
-        Player player = collision.gameObject.GetComponent<Player>();
-
-        if (player != null)
-        {
-            Debug.Log($"{player.name} 충돌");
-            player.OnDamaged(attacker: this);
-        }
-
-        // TODO: 몬스터가 장애물과 충돌한다면?
-    }
 }

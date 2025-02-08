@@ -447,8 +447,23 @@ public class Player : Creature
         base.OnDied();
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerStay2D(Collider2D collision)
     {
+        // 트리거가 활성화된 오브젝트들이 활성화(SetActive(true))가 되어야 플레이어와 충돌을 감지한다.
+        // 그러므로, 기본적으로 바디 히트 박스가 활성화되어야 한다.
+
+        // 사망했다면 충돌 감지를 할 필요없다
+        if (State == ECreatureState.Hurt || State == ECreatureState.Dead)
+            return;
+
+        // 대시 중일 때 몬스터와 충돌하면 안된다
+        // MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
+        if (State != ECreatureState.Dash && collision.gameObject.CompareTag("EnemyHitBox"))
+        {
+            Debug.Log($"{collision.name} 충돌");
+            OnDamaged(attacker: this);
+        }
+
         // TODO: 장애물과 충돌 시 피격
     }
 
