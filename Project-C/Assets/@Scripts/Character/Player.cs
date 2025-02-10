@@ -114,7 +114,7 @@ public class Player : Creature
                 }
 
                 // Test, 맵 불러오기
-                Managers.Map.LoadMap("TestMap");
+                Managers.Map.LoadMap("TutorialMap");
 
                 // Test, 카메라 설정
                 CameraController camera = Camera.main.GetComponent<CameraController>();
