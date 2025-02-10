@@ -10,6 +10,7 @@ public class SkillBase : InitBase
     public Creature Owner { get; private set; }
     public SkillData Data;
 
+    #region Info
     public string Name { get; protected set; }
     public string AnimationName { get; protected set; }
     public string PrefabName { get; protected set; }
@@ -20,7 +21,9 @@ public class SkillBase : InitBase
     public float HealingValue { get; protected set; }   // 회복량
     public float DamageMultiplier { get; protected set; }   // 데미지 배율
     public float AttackRange { get; protected set; }    // 공격 범위
+    #endregion
 
+    public HitBox HitBox { get; protected set; }
     protected bool _completeCooldown = true;  // 쿨타임 완료 여부
 
     public override bool Init()
@@ -75,6 +78,57 @@ public class SkillBase : InitBase
         return true;
     }
 
+    /// <summary>
+    /// 히트 박스를 생성한다.
+    /// </summary>
+    /// <param name="spawnPos">소환 위치</param>
+    /// <param name="canRecycle">생성된 히트 박스를 재활용할 것인가?</param>
+    /// <param name="parent"></param>
+    public virtual void SpawnHitBox(Vector3 spawnPos, bool canRecycle = false, Transform parent = null)
+    {
+        SpawnHitBox(canRecycle, parent);
+        HitBox.transform.localPosition = spawnPos;  // 소환 위치 설정
+    }
+
+    /// <summary>
+    /// 히트 박스를 생성한다.
+    /// </summary>
+    /// <param name="canRecycle">생성된 히트 박스를 재활용할 것인가?</param>
+    /// <param name="parent"></param>
+    public virtual void SpawnHitBox(bool canRecycle = false, Transform parent = null)
+    {
+        // 히트 박스 생성
+        if (canRecycle == false || (canRecycle && HitBox == null))
+        {
+            GameObject go = Managers.Resource.Instantiate(PrefabName, parent);
+            HitBox = go.GetComponent<HitBox>();
+        }
+
+        // 충돌을 제외시킬 레이어
+        LayerMask excludeLayers = HitBox.Collider.excludeLayers;
+
+        // excludeLayers 없다면 필터링 설정
+        if (excludeLayers.value == 0)
+        {
+            excludeLayers.AddLayer(ELayer.Default);
+            excludeLayers.AddLayer(ELayer.Ground);
+            excludeLayers.AddLayer(ELayer.Wall);
+
+            // 자기 자신은 제외
+            switch (Owner.ObjectType)
+            {
+                case EObjectType.Player:
+                    excludeLayers.AddLayer(ELayer.Player);
+                    break;
+                case EObjectType.Monster:
+                    excludeLayers.AddLayer(ELayer.Monster);
+                    break;
+            }
+        }
+
+        HitBox.SetInfo(Owner, this, Owner.LookLeft, excludeLayers);
+    }
+
     public virtual void SpawnProjectile(Vector3 spawnPos, Vector3 dir)
     {
         if (Managers.Data.ProjectileDataDic.TryGetValue(ProjectileId, out var data) == false)
@@ -87,7 +141,7 @@ public class SkillBase : InitBase
         // 투사체 소환 위치 설정
         projectile.transform.position = spawnPos;
 
-        // 충돌을 제외할 레이어 필터링
+        // 충돌을 제외시킬 레이어
         LayerMask excludeLayers = 0;
         excludeLayers.AddLayer(ELayer.Default);
         excludeLayers.AddLayer(ELayer.Projectile);
@@ -107,7 +161,7 @@ public class SkillBase : InitBase
 
     public virtual void EndSkill()
     {
-        Debug.Log("EndSkill");
+        //Debug.Log("EndSkill");
 
         // 캐릭터가 공중에 있으면 점프로 전환
         Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;

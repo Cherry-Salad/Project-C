@@ -335,7 +335,8 @@ public class MonsterBase : Creature
     {
         if(TypeRecorder.Scan.ViewAngle <= 0) return false;
 
-        int layerMask = ~LayerMask.GetMask("Monster");
+        //int layerMask = ~LayerMask.GetMask("Monster");
+        int layerMask = LayerMask.GetMask("Player");
         float angle = TypeRecorder.Scan.MinScanAngle;
 
         while(angle <= TypeRecorder.Scan.MaxScanAngle)
@@ -343,6 +344,9 @@ public class MonsterBase : Creature
             Vector2 unitVector = GetUnitVectorFromAngle(angle);
             Vector2 scanVector = new Vector2(unitVector.x * MoveDir.x, unitVector.y);
 
+            // 레이캐스트에서 레이어를 제외하는 방식으로 감지하면 명확하게 못 찾는다
+            // 그래서 ~LayerMask.GetMask("Monster") 대신에 LayerMask.GetMask("Player")를 사용하였다.
+            // 기왕이면 AddLayer도 써주라
             RaycastHit2D hit = Physics2D.Raycast(Rigidbody.position, scanVector, TypeRecorder.Scan.Distance, layerMask);
             Debug.DrawRay(Rigidbody.position, scanVector * TypeRecorder.Scan.Distance, Color.blue);
 
@@ -367,7 +371,7 @@ public class MonsterBase : Creature
         return false;
     }
 
-    protected void TurnObject() // 오브젝트 회전 
+    protected void TurnObject() // 오브젝트 회전, 크리처에 이미 있으므로 오버라이드 하거나 지워주세요. 만약 오버라이드 할 필요가 없다면, virtual를 지워주세요.
     {
         if (MoveDir == Vector2.left)
         {
