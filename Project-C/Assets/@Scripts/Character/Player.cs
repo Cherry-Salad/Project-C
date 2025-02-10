@@ -212,12 +212,9 @@ public class Player : Creature
         // 방향키 입력을 두 개 이상 눌렸다면 입력 취소
         if (pressedCount > 1)
         {
-            // 벽에 매달린 상태이거나 벽 타기 중이라면 벽 점프로 전환
-            if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing)
-            {
-                _jumpKeyPressed = true;
+            // 벽을 감지하면 벽 점프로 전환
+            if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || CheckWall())
                 OnWallJump();
-            }
 
             return false;
         }
@@ -357,12 +354,59 @@ public class Player : Creature
             _isWallJump = false;
     }
 
+    protected override void UpdateSkill()
+    {
+        if (CheckGround() == false)
+        {
+            // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
+            float distance = Collider.bounds.extents.x + 0.1f;
+            bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+
+            // 점프, 낙하
+            Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
+        }
+        else
+        {
+            // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
+            Rigidbody.velocity = Vector2.zero;
+        }
+    }
+
     protected override void UpdateWallCling()
     {
         if (_moveDirKeyPressed)
             State = ECreatureState.WallClimbing;
 
         base.UpdateWallCling();
+
+        // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
+        Vector2 moveDir = MoveDir;
+        if (MoveDir == Vector2.zero)
+            MoveDir = LookLeft ? Vector2.left : Vector2.right;
+
+        if (CheckGround())
+        {
+            TurnObject();
+            State = ECreatureState.Idle;
+            return;
+        }
+        else if (CheckWall() == false)
+        {
+            TurnObject();
+
+            // 공중이며 벽을 감지하지 못했다면
+            if (moveDir == Vector2.zero)
+                State = ECreatureState.Jump;    // 정지 상태였다면 바로 낙하
+            else
+                OnWallJump();   // 벽 점프
+            
+            return;
+        }
+
+        // 천천히 아래로 내려간다
+        float speed = MoveSpeed / 2f;
+        Rigidbody.velocity = Vector2.down * speed;
     }
 
     protected override void UpdateWallClimbing()
@@ -374,21 +418,35 @@ public class Player : Creature
         }
 
         base.UpdateWallClimbing();
-    }
 
-    protected override void OnWallJump()
-    {
-        if (_jumpKeyPressed)
+        // 벽 타기 중일 때, 벽을 감지하지 못한다면 벽 점프로 전환
+        if (CheckWall() == false)
         {
-            _jumpKeyPressed = false;
-            base.OnWallJump();
+            OnWallJump();
             return;
         }
 
-        State = ECreatureState.WallJump;
-        
+        float wallClimbingSpeed = MoveSpeed / 3f;
+        Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
+    }
+
+    protected override void OnJump()
+    {
+        // 벽을 감지하면 벽 점프로 전환
+        bool isWall = CheckWall();
+        if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || isWall)
+        {
+            OnWallJump();
+            return;
+        }
+
+        base.OnJump();
+    }
+
+    protected override void OnWallJump(float duration = 0.1f)
+    {
         // 벽 점프
-        StartCoroutine(CoWallJump(MoveDir));
+        base.OnWallJump(duration);
         _isWallJump = true;
     }
 
@@ -407,16 +465,14 @@ public class Player : Creature
         }
     }
 
-    protected override bool OnDash()
+    protected override void OnDash(float distance = 3f, float speedMultiplier = 3f, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
+        // 대시 쿨타임 완료 여부
         if (_completeDashCooldown == false)
-            return false;
+            return;
 
-        if (base.OnDash() == false) 
-            return false;
-        
+        base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle);
         StartCoroutine(CoDashCooldown());
-        return true;
     }
 
     public override void OnDamaged(float damage = 1f, Creature attacker = null)

@@ -340,7 +340,7 @@ public class MonsterBase : Creature
         return false;
     }
 
-    protected void TurnObject() // 오브젝트 회전 
+    protected void TurnObject() // 오브젝트 회전, 크리처에 이미 있으므로 오버라이드 하거나 지워주세요. 만약 오버라이드 할 필요가 없다면, virtual를 지워주세요.
     {
         if (MoveDir == Vector2.left)
         {
