@@ -403,6 +403,7 @@ public class Creature : BaseObject
         LayerMask includeLayers = 0;
         includeLayers.AddLayer(ELayer.Wall);
         includeLayers.AddLayer(ELayer.Ground);
+        includeLayers.AddLayer(ELayer.Obstacle);
 
         RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, includeLayers);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);

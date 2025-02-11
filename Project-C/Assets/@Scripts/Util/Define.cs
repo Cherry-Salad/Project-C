@@ -26,7 +26,8 @@ public class Define
         Monster,
         HitBox,
         Player,
-        Projectile
+        Projectile,
+        Obstacle
     }
 
     public enum ECreatureState
