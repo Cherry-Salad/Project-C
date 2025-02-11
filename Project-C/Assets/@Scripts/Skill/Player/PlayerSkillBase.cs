@@ -12,8 +12,8 @@ public class PlayerSkillBase : SkillBase
     public int Level { get; set; }
     public KeyCode Key { get; set; }
     public float KeyPressedTime { get; set; }
-    public int MpCost = 0;
-    public int MaxLevel = 0;
+    public int MpCost { get; set; }
+    public int MaxLevel { get; set; }
 
     public override bool Init()
     {

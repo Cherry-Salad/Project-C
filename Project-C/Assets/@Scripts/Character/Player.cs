@@ -44,7 +44,18 @@ public class Player : Creature
             return false;
 
         ObjectType = EObjectType.Player;
-        
+
+        // 충돌 필터링
+        if (BodyHitBox != null)
+        {
+            BodyHitBox.isTrigger = true;
+            // 플레이어 BodyHitBox에 태그를 Player로 하지 않으면, 몬스터가 플레이어 제대로 못 찾는다
+
+            LayerMask includeLayers = 0;
+            includeLayers.AddLayer(ELayer.Monster);
+            BodyHitBox.includeLayers = includeLayers;
+        }
+
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
@@ -101,6 +112,14 @@ public class Player : Creature
                     skill.SetInfo(this, data);
                     Skills.Add(skill.Key, skill);
                 }
+
+                // Test, 맵 불러오기
+                Managers.Map.LoadMap("TestMap");
+
+                // Test, 카메라 설정
+                CameraController camera = Camera.main.GetComponent<CameraController>();
+                if (camera != null)
+                    camera.Target = this;
             }
         });
         #endregion
@@ -116,11 +135,11 @@ public class Player : Creature
 
     /// <summary>
     /// 입력 키를 감지한다.
-    /// 대시, 피격, 스킬을 사용할 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
+    /// 사망했거나 대시, 피격, 스킬을 사용할 때 캐릭터는 추가적인 조작 불가능(ex: 대시하는 동안 공격과 점프는 불가능)
     /// </summary>
     void GetInput()
     {
-        if (State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
+        if (State == ECreatureState.Dead || State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
@@ -193,12 +212,9 @@ public class Player : Creature
         // 방향키 입력을 두 개 이상 눌렸다면 입력 취소
         if (pressedCount > 1)
         {
-            // 벽에 매달린 상태이거나 벽 타기 중이라면 벽 점프로 전환
-            if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing)
-            {
-                _jumpKeyPressed = true;
+            // 벽을 감지하면 벽 점프로 전환
+            if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || CheckWall())
                 OnWallJump();
-            }
 
             return false;
         }
@@ -250,7 +266,7 @@ public class Player : Creature
         {
             if (Input.GetKeyDown(keyCode))
             {
-                Debug.Log($"입력된 키: {keyCode}");
+                //Debug.Log($"입력된 키: {keyCode}");
 
                 if (Skills[keyCode].KeyPressedTime > 0)
                 {
@@ -270,7 +286,7 @@ public class Player : Creature
 
             if (Input.GetKey(keyCode))
             {
-                Debug.Log($"입력된 키: {keyCode}");
+                //Debug.Log($"입력된 키: {keyCode}");
                 if (Skills[keyCode].KeyPressedTime > 0)
                 {
                     // 꾹 눌러야 하는 키
@@ -294,11 +310,14 @@ public class Player : Creature
         switch (State)
         {
             case ECreatureState.Dash:
-                SpawnDust();
+                OnSpawnDust();
                 break;
             case ECreatureState.WallCling:
-                SpawnDust();
+                OnSpawnDust();
                 break;
+            //case ECreatureState.Dead: // 애니메이션 이벤트로 호출한다
+            //    OnSpawnDust();
+            //    break;
         }
     }
 
@@ -335,12 +354,59 @@ public class Player : Creature
             _isWallJump = false;
     }
 
+    protected override void UpdateSkill()
+    {
+        if (CheckGround() == false)
+        {
+            // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
+            float distance = Collider.bounds.extents.x + 0.1f;
+            bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+
+            // 점프, 낙하
+            Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
+        }
+        else
+        {
+            // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
+            Rigidbody.velocity = Vector2.zero;
+        }
+    }
+
     protected override void UpdateWallCling()
     {
         if (_moveDirKeyPressed)
             State = ECreatureState.WallClimbing;
 
         base.UpdateWallCling();
+
+        // 캐릭터가 정지 상태라면 LookLeft 기준으로 이동 방향 설정
+        Vector2 moveDir = MoveDir;
+        if (MoveDir == Vector2.zero)
+            MoveDir = LookLeft ? Vector2.left : Vector2.right;
+
+        if (CheckGround())
+        {
+            TurnObject();
+            State = ECreatureState.Idle;
+            return;
+        }
+        else if (CheckWall() == false)
+        {
+            TurnObject();
+
+            // 공중이며 벽을 감지하지 못했다면
+            if (moveDir == Vector2.zero)
+                State = ECreatureState.Jump;    // 정지 상태였다면 바로 낙하
+            else
+                OnWallJump();   // 벽 점프
+            
+            return;
+        }
+
+        // 천천히 아래로 내려간다
+        float speed = MoveSpeed / 2f;
+        Rigidbody.velocity = Vector2.down * speed;
     }
 
     protected override void UpdateWallClimbing()
@@ -352,21 +418,35 @@ public class Player : Creature
         }
 
         base.UpdateWallClimbing();
-    }
 
-    protected override void OnWallJump()
-    {
-        if (_jumpKeyPressed)
+        // 벽 타기 중일 때, 벽을 감지하지 못한다면 벽 점프로 전환
+        if (CheckWall() == false)
         {
-            _jumpKeyPressed = false;
-            base.OnWallJump();
+            OnWallJump();
             return;
         }
 
-        State = ECreatureState.WallJump;
-        
+        float wallClimbingSpeed = MoveSpeed / 3f;
+        Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
+    }
+
+    protected override void OnJump()
+    {
+        // 벽을 감지하면 벽 점프로 전환
+        bool isWall = CheckWall();
+        if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || isWall)
+        {
+            OnWallJump();
+            return;
+        }
+
+        base.OnJump();
+    }
+
+    protected override void OnWallJump(float duration = 0.1f)
+    {
         // 벽 점프
-        StartCoroutine(CoWallJump(MoveDir));
+        base.OnWallJump(duration);
         _isWallJump = true;
     }
 
@@ -385,55 +465,62 @@ public class Player : Creature
         }
     }
 
-    protected override bool OnDash()
+    protected override void OnDash(float distance = 3f, float speedMultiplier = 3f, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
+        // 대시 쿨타임 완료 여부
         if (_completeDashCooldown == false)
-            return false;
+            return;
 
-        if (base.OnDash() == false) 
-            return false;
-        
+        base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle);
         StartCoroutine(CoDashCooldown());
-        return true;
     }
 
     public override void OnDamaged(float damage = 1f, Creature attacker = null)
     {
         // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
-        if (State == ECreatureState.Hurt)
+        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
             return;
 
         // HP 감소
         Hp -= damage;
-        // TODO: HP가 모두 감소 시 사망 처리
-
-        base.OnDamaged(damage, attacker);
 
         // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
         State = ECreatureState.Hurt;
         StartCoroutine(CoHandleInvincibility());
 
-        Rigidbody.velocity = Vector2.zero;
-
         // 살짝 위로 튀어오르듯이
+        Rigidbody.velocity = Vector2.zero;
         float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
-        Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0).normalized;
+        Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0);
 
         // 넉백
-        float knockbackForce = 3f;
+        float knockbackForce = 4.5f;
         Rigidbody.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    public override void OnDied()
     {
-        // 몬스터와의 충돌 확인
-        MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
+        base.OnDied();
+    }
 
-        // 몬스터 충돌할 때 대시 중이라면 피격 무시
-        if (monster != null && State != ECreatureState.Dash)
-            OnDamaged(attacker: monster);
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        // 트리거가 활성화된 오브젝트들이 활성화(SetActive(true))가 되어야 플레이어와 충돌을 감지한다.
+        // 그러므로, 기본적으로 바디 히트 박스가 활성화되어야 한다.
 
-        // TODO: 장애물와 충돌 시 피격
+        // 사망했다면 충돌 감지를 할 필요없다
+        if (State == ECreatureState.Hurt || State == ECreatureState.Dead)
+            return;
+
+        // 대시 중일 때 몬스터와 충돌하면 안된다
+        // MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
+        if (State != ECreatureState.Dash && collision.gameObject.CompareTag("EnemyHitBox"))
+        {
+            Debug.Log($"{collision.name} 충돌");
+            OnDamaged(attacker: this);
+        }
+
+        // TODO: 장애물과 충돌 시 피격
     }
 
     IEnumerator CoDashCooldown()
@@ -448,7 +535,30 @@ public class Player : Creature
         // 지속 시간만큼 무적 상태이다
         yield return new WaitForSeconds(duration);
 
-        // 캐릭터가 공중에 있으면 점프로 전환
-        State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
+        if (Hp > 0)
+            State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;  // 캐릭터가 공중에 있으면 점프로 전환
+        else
+            // 사망 판정
+            StartCoroutine(CoUpdateDead());
+    }
+
+    IEnumerator CoUpdateDead()
+    {
+        float elapsedTime = 0f;
+
+        // 캐릭터가 바닥에 떨어질 때까지 피격 애니메이션을 재생
+        // 낙사나 너무 높은 곳에서 떨어질 것을 대비하여, 최대 1.5초를 넘기지 않도록 하였다.
+        while (CheckGround() == false)
+        {
+            elapsedTime += Time.deltaTime;
+            if (elapsedTime >= 1.5f)
+                yield break;
+
+            yield return null;
+        }
+
+        // 사망
+        Rigidbody.velocity = Vector2.zero;
+        State = ECreatureState.Dead;
     }
 }

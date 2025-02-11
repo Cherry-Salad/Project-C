@@ -41,7 +41,8 @@ public class IceBall : PlayerSkillBase
 
     void OnSpawnIceBall()
     {
-        SpawnProjectile(Owner.transform.position + (Vector3)_skillDir, (Vector3)_skillDir);
+        Vector3 offset = (Owner.LookLeft) ? new Vector3(-0.5f, -0.05f, 0) : new Vector3(0.5f, -0.05f, 0);
+        SpawnProjectile(Owner.transform.position + offset, (Vector3)_skillDir);
     }
 
     void OnEndSkill()
