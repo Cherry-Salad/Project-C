@@ -61,8 +61,7 @@ public class BasicAttack : PlayerSkillBase
     /// </summary>
     void OnDespawnHitBox()
     {
-        if (HitBox != null)
-            HitBox.gameObject.SetActive(false);
+        DespawnHitBox(true);
     }
 
     IEnumerator CoDoSkill()

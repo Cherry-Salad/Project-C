@@ -129,6 +129,17 @@ public class SkillBase : InitBase
         HitBox.SetInfo(Owner, this, Owner.LookLeft, excludeLayers);
     }
 
+    public virtual void DespawnHitBox(bool canRecycle = false)
+    {
+        if (HitBox == null)
+            return;
+
+        if (canRecycle)
+            HitBox.gameObject.SetActive(false);
+        else
+            Managers.Resource.Destroy(HitBox.gameObject);
+    }
+
     public virtual void SpawnProjectile(Vector3 spawnPos, Vector3 dir)
     {
         if (Managers.Data.ProjectileDataDic.TryGetValue(ProjectileId, out var data) == false)

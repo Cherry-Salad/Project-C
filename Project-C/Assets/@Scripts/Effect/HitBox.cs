@@ -45,7 +45,16 @@ public class HitBox : InitBase
         Skill = skill;
         LookLeft = lookLeft;
         Collider.excludeLayers = excludeLayers;
-        gameObject.SetActive(setActive);
+
+        if (setActive)
+        {
+            gameObject.SetActive(true);
+
+            // 히트 박스가 비활성화 되어도 Collider 상태를 기억하고 있다.
+            // 그래서 다시 활성화할 때 새로운 충돌로 인식하도록 강제로 충돌 감지 초기화
+            Collider.enabled = false;
+            Collider.enabled = true;
+        }
     }
 
     public void OnDestroy()
@@ -55,7 +64,7 @@ public class HitBox : InitBase
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"{collision.gameObject.name}");
+        Debug.Log($"HitBox TriggerEnter: {collision.gameObject.name}");
 
         // SetInfo에서 충돌 대상을 다 필터링해서, BaseObject만 찾으면 된다.
         // 하지만, 몬스터는 Hit 함수가 따로 있어서 일단 구분하였다.
@@ -66,12 +75,7 @@ public class HitBox : InitBase
             MonsterBase monster = target as MonsterBase;
 
             if (monster != null)
-            {
-                // 버그 확인 필요: 아주 간혹, 몬스터의 BodyHitBox가 비활성(SetActive(false))되어 피격 처리가 안된다.
-                // Test를 위하여 공격력을 낮췄으니 직접 테스트 해보길 바랍니다. 
-                //monster.Hit((int)damage);
-                monster.Hit();  // Test
-            }
+                monster.Hit((int)damage);
             else
                 target.OnDamaged(damage, Owner);
         }
