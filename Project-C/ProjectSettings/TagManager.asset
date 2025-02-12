@@ -6,6 +6,7 @@ TagManager:
   tags:
   - EnemyHitBox
   - Audio
+  - Obstacle
   layers:
   - Default
   - TransparentFX
