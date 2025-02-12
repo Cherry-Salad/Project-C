@@ -156,6 +156,7 @@ public class SkillBase : InitBase
         LayerMask excludeLayers = 0;
         excludeLayers.AddLayer(ELayer.Default);
         excludeLayers.AddLayer(ELayer.Projectile);
+        excludeLayers.AddLayer(ELayer.HitBox);
 
         switch (Owner.ObjectType)
         {

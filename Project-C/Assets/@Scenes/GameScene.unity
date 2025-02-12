@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoblinWarrior
       objectReference: {fileID: 0}
+    - target: {fileID: 1060276632780742768, guid: 60e99082dccf4a34cba511b01a27c0e1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8714091622749492177, guid: 60e99082dccf4a34cba511b01a27c0e1, type: 3}
       propertyPath: m_LocalPosition.x
       value: -3.21
@@ -799,6 +803,10 @@ PrefabInstance:
     - target: {fileID: 1060276632780742768, guid: fcd56443a1b004149a749218cb4bd81a, type: 3}
       propertyPath: m_Name
       value: GoblinBoomerangThrower
+      objectReference: {fileID: 0}
+    - target: {fileID: 1060276632780742768, guid: fcd56443a1b004149a749218cb4bd81a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8714091622749492177, guid: fcd56443a1b004149a749218cb4bd81a, type: 3}
       propertyPath: m_LocalPosition.x

@@ -12,6 +12,7 @@ public class Define
         Npc,
         Projectile,
         Env,    // Environment, 환경(ex: 나무, 돌)
+        Checkpoint,
     }
 
     public enum ELayer

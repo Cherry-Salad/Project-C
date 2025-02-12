@@ -487,7 +487,7 @@ public class Player : Creature
         // HP 감소
         Hp -= damage;
 
-        // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
+        // 무적 상태
         State = ECreatureState.Hurt;
         StartCoroutine(CoHandleInvincibility());
 
@@ -510,6 +510,17 @@ public class Player : Creature
         base.OnDied();
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 체크 포인트와 상호작용
+        if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            Debug.Log("체크포인트 활성화");
+            Vector3 worldPos = collision.bounds.center;
+            Managers.Map.CurrentCheckpoint = worldPos;
+        }
+    }
+
     void OnTriggerStay2D(Collider2D collision)
     {
         // 사망했다면 충돌 감지를 할 필요없다
@@ -522,16 +533,14 @@ public class Player : Creature
         {
             Debug.Log($"{collision.name} 충돌");
             OnDamaged(attacker: this);
-            return;
         }
 
-        // TODO: 장애물과 충돌 시 피격
+        // 장애물 충돌
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log($"장애물 충돌");
-            OnDamaged(attacker: this);
-            // TODO: 체크 포인트로 이동
-            return;
+            Debug.Log($"{collision.name} 충돌");
+            OnDamaged();
+            Managers.Map.RespawnAtCheckpoint();
         }
     }
 

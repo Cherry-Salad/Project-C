@@ -277,6 +277,7 @@ public class Creature : BaseObject
         base.OnDamaged(damage, attacker);
 
         // HP가 0 이하라면 사망 처리
+        Hp -= damage;
         State = (Hp <= 0) ? ECreatureState.Dead : ECreatureState.Hurt;
     }
 
