@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 5005283050113107964}
   - component: {fileID: 4360765430416085529}
   m_Layer: 12
-  m_Name: Obstacle
-  m_TagString: Obstacle
+  m_Name: Trap
+  m_TagString: Trap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

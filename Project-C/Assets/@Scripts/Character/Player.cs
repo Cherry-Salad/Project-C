@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
-using Object = UnityEngine.Object;
 
 public class Player : Creature
 {
@@ -483,7 +482,7 @@ public class Player : Creature
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // 체크 포인트와 상호작용
+        // 체크포인트와 상호작용
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
             Debug.Log("체크포인트 활성화");
@@ -507,7 +506,7 @@ public class Player : Creature
         }
 
         // 장애물 충돌
-        if (collision.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Trap"))
         {
             Debug.Log($"{collision.name} 충돌");
             OnDamaged();

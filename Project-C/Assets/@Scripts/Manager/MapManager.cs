@@ -43,7 +43,6 @@ public class MapManager
 
     public Vector3 CurrentCheckpoint { get; set; }
 
-
     // 맵 경계
     //public Vector2 MinBound { get; private set; }
     //public Vector2 MaxBound { get; private set; }
@@ -66,7 +65,7 @@ public class MapManager
         SpawnCheckpoints();
 
         // 카메라 위치를 월드 경계로 제한
-        CameraController camera = Camera.main.GetComponent<CameraController>();
+        //CameraController camera = Camera.main.GetComponent<CameraController>();
         //camera.Confiner.m_BoundingShape2D = CameraBounds;
 
         // 모든 타일맵의 경계 계산
@@ -77,6 +76,10 @@ public class MapManager
     {
         if (Map != null)
             Managers.Resource.Destroy(Map);
+
+        // TODO: 다른 상호작용 오브젝트 디스폰, 오브젝트 풀링 사용
+        foreach (Transform checkpoint in CheckpointRoot)
+            Managers.Resource.Destroy(checkpoint.gameObject);
     }
 
     void SpawnCheckpoints() // TODO: 체크 포인트 말고 다른 상호작용 오브젝트도 소환, 오브젝트 풀링 사용

@@ -322,6 +322,21 @@ public class Creature : BaseObject
             // UpdateDash를 만들어도 되지만, 목적지를 미리 설정하였기 때문에 코루틴을 사용한다
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             yield return new WaitForFixedUpdate();  // Collider 갱신
+            
+            if (State != ECreatureState.Dash)
+            {
+                if (ignorePhysics)
+                {
+                    // 기본 중력 적용
+                    Rigidbody.gravityScale = DefaultGravityScale;
+
+                    // 대시가 끝나면 충돌 처리 활성화
+                    if (Collider.isTrigger)
+                        Collider.isTrigger = false;
+                }
+
+                yield break;
+            }
 
             // 캐릭터가 공중에 있으면서 벽을 감지
             OnGround = CheckGround();
@@ -404,7 +419,6 @@ public class Creature : BaseObject
         LayerMask includeLayers = 0;
         includeLayers.AddLayer(ELayer.Wall);
         includeLayers.AddLayer(ELayer.Ground);
-        includeLayers.AddLayer(ELayer.Obstacle);
 
         RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, includeLayers);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);

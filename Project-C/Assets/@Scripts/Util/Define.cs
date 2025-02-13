@@ -35,7 +35,7 @@ public class Define
         HitBox,
         Player,
         Projectile,
-        Obstacle
+        Trap
     }
 
     public enum ECreatureState
