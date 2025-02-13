@@ -38,6 +38,11 @@ public class Player : Creature
     KeyCode _pressedSkillKey = KeyCode.None;
     float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
 
+    //UI를 위한 이벤트 추가
+    public event Action OnHpChanged;
+    public event Action OnMpChanged;
+    public event Action OnDataLoaded; //데이터 로드 완료 이벤트 추가
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -64,67 +69,94 @@ public class Player : Creature
         basicAttack.SetInfo(this, null);
         Skills.Add(basicAttack.Key, basicAttack);
 
-        // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
-        #region PreLoad 어드레서블 모두 로드
+        StartCoroutine(LoadPlayerData());
+
+        return true;
+    }
+
+       // Addressables에서 데이터 로드 (비동기)
+    private IEnumerator LoadPlayerData()
+    {
+        yield return new WaitUntil(() => Managers.Resource != null && Managers.Data != null);
+
+        Debug.Log("Addressables 데이터 로드 시작...");
+
         Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
         {
-            // 모두 로드
             if (loadCount == totalCount)
             {
                 Managers.Data.Init();
 
-                // 플레이어 스탯
-                Data = Managers.Data.PlayerDataDic[PLAYER_ID];
-                Hp = Data.Hp;
-                MaxHp = Data.MaxHp;
-                HpLevel = Data.HpLevel;
-                Mp = Data.Mp;
-                MaxMp = Data.MaxMp;
-                MpLevel = Data.MpLevel;
-                Atk = Data.Atk;
-                AtkLevel = Data.AtkLevel;
-                MoveSpeed = Data.Speed;
-                AccessorySlot = Data.AccessorySlot;
+                //플레이어 데이터 적용
+                ApplyPlayerData();
 
-                // 확인용
-                Debug.Log($"Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
-                Debug.Log($"Mp: {Mp}, MaxMp: {MaxMp}, MpLevel: {MpLevel}");
-                Debug.Log($"Atk: {Atk}, AtkLevel: {AtkLevel}");
-                Debug.Log($"MoveSpeed: {MoveSpeed}, AccessorySlot: {AccessorySlot}, Data parsing successful!");
+                //플레이어 스킬 로드
+                LoadSkills();
 
-                // 플레이어 스킬
-                foreach (int skillId in Data.SkillIdList)
-                {
-                    if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
-                        return;
+                //맵 및 카메라 설정
+                SetMapAndCamera();
 
-                    Debug.Log($"{data.CodeName}: {skillId}");
-
-                    var type = Type.GetType(data.CodeName);
-                    if (type == null)
-                        return;
-
-                    // GetOrAddComponent가 안돼서 null 검사
-                    PlayerSkillBase skill = gameObject.GetComponent(type) as PlayerSkillBase;
-                    if (skill == null)
-                        skill = gameObject.AddComponent(type) as PlayerSkillBase;
-
-                    skill.SetInfo(this, data);
-                    Skills.Add(skill.Key, skill);
-                }
-
-                // Test, 맵 불러오기
-                Managers.Map.LoadMap("TestMap");
-
-                // Test, 카메라 설정
-                CameraController camera = Camera.main.GetComponent<CameraController>();
-                if (camera != null)
-                    camera.Target = this;
+                //UI 업데이트 이벤트 호출
+                OnDataLoaded?.Invoke();
             }
         });
-        #endregion
+    }
 
-        return true;
+     //Addressables 데이터 로드 후 플레이어 데이터 적용
+    private void ApplyPlayerData()
+    {
+        Data = Managers.Data.PlayerDataDic[PLAYER_ID];
+
+        Hp = Data.Hp;
+        MaxHp = Data.MaxHp;
+        HpLevel = Data.HpLevel;
+        Mp = Data.Mp;
+        MaxMp = Data.MaxMp;
+        MpLevel = Data.MpLevel;
+        Atk = Data.Atk;
+        AtkLevel = Data.AtkLevel;
+        MoveSpeed = Data.Speed;
+        AccessorySlot = Data.AccessorySlot;
+
+        Debug.Log($"데이터 로드 완료! Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
+    }
+
+     //플레이어 스킬 로드
+    private void LoadSkills()
+    {
+        Debug.Log("플레이어 스킬 로드 시작...");
+
+        foreach (int skillId in Data.SkillIdList)
+        {
+            if (!Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data))
+                continue;
+
+            Debug.Log($"스킬 로드: {data.CodeName} (ID: {skillId})");
+
+            var type = Type.GetType(data.CodeName);
+            if (type == null)
+                continue;
+
+            // GetOrAddComponent가 안돼서 null 검사
+            PlayerSkillBase skill = gameObject.GetComponent(type) as PlayerSkillBase;
+            if (skill == null)
+                skill = gameObject.AddComponent(type) as PlayerSkillBase;
+
+            skill.SetInfo(this, data);
+            Skills.Add(skill.Key, skill);
+        }
+    }
+
+     //맵 및 카메라 설정
+    private void SetMapAndCamera()
+    {
+        // 맵 불러오기
+        Managers.Map.LoadMap("TestMap");
+
+        // 카메라 설정
+        CameraController camera = Camera.main.GetComponent<CameraController>();
+        if (camera != null)
+            camera.Target = this;
     }
 
     #region 입력 감지
@@ -483,6 +515,7 @@ public class Player : Creature
 
         // HP 감소
         Hp -= damage;
+        OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
 
         // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
         State = ECreatureState.Hurt;

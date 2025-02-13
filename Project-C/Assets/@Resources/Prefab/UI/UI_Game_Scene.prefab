@@ -271,10 +271,6 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2122923928827506577, guid: 46ebb270aad5dc848ac45f045342ba17, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 7954177242221068990}
-    - target: {fileID: 2122923928827506577, guid: 46ebb270aad5dc848ac45f045342ba17, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -799,12 +795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59e1faacb4323794e9d81c0bcbd608c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OptionPanel: {fileID: 7954177242221068990}
---- !u!1 &7954177242221068990 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5255155828206017163, guid: 46ebb270aad5dc848ac45f045342ba17, type: 3}
-  m_PrefabInstance: {fileID: 2777870424571009077}
-  m_PrefabAsset: {fileID: 0}
+  OptionPanel: {fileID: 0}
 --- !u!224 &8486021571742838101 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6001219979022103904, guid: 46ebb270aad5dc848ac45f045342ba17, type: 3}
