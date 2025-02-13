@@ -77,10 +77,11 @@ public class MonsterProjectileBase : BaseObject
 
     protected void OnTriggerEnter2D(Collider2D collider)
     {
-        int layerMask = ~LayerMask.GetMask("Monster", "Player", "HitBox");
+        int layerMask = ~LayerMask.GetMask("Monster", "Player", "HitBox", "Default");
 
         if(((1 << collider.gameObject.layer) & layerMask) != 0)
         {
+            Debug.Log(collider.gameObject.layer);
             EndOfProjectile();
         }
     }

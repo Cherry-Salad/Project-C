@@ -25,6 +25,12 @@ public class MonsterProjectile
     }
 }
 
+public struct StartData
+{
+    public Vector2 StartPoint;
+    public Vector2 StartDir;
+}
+
 public class MonsterBase : Creature
 {
     public enum EBehaviorPattern
@@ -32,24 +38,31 @@ public class MonsterBase : Creature
         ScanMove,
         ScanStand,
         Battle,
+        Return,
         Init
     }
 
     private EBehaviorPattern _behaviorPattern;
     public EBehaviorPattern BehaviorPattern { get { return _behaviorPattern; } }
-
     /*
      * 객체 관리 필드 
      */
 
     protected Data.MonsterData DataRecorder;
     protected Data.MonsterTypeData TypeRecorder;
+    protected StartData StartDataRecorder;
 
+    [Header("Monster Default Setting"), Space(10)]
     [SerializeField] public int MonsterID;
+    [SerializeReference] private EBehaviorPattern _INIT_STAIT = EBehaviorPattern.ScanMove;
+    
+
+    [Header("Monster Sub Object Setting"), Space(10)]
     [SerializeReference] private GameObject _qMark; // 상태전환 확인용 오브젝트 (?)
     [SerializeReference] private GameObject _eMark; // 상태전환 확인용 오브젝트 (!)
     [SerializeReference] protected List<GameObject> hitBoxList; // 히트 박스 보관 리스트 
-    [SerializeReference] private EBehaviorPattern _INIT_STAIT = EBehaviorPattern.ScanMove;
+
+    
 
     protected GameObject TargetGameObject;       // 타겟 오브젝트
     private Coroutine _battleTimerCoroutine;    // 전투 종료 타이머 코루틴
@@ -94,6 +107,10 @@ public class MonsterBase : Creature
 
             case EBehaviorPattern.Battle:
                 UpdateBattle();
+                break;
+
+            case EBehaviorPattern.Return:
+                UpdateReturn();
                 break;
 
             case EBehaviorPattern.Init:
@@ -176,6 +193,10 @@ public class MonsterBase : Creature
             MoveDir = Vector2.left;
         }
 
+        StartDataRecorder = new StartData();
+        StartDataRecorder.StartPoint = this.transform.position;
+        StartDataRecorder.StartDir = MoveDir;
+
         SettingProjectile();
         SelectNextSkill();
         _isCompleteLoad = true;
@@ -229,6 +250,35 @@ public class MonsterBase : Creature
             StartSurveillance();
     }
 
+    protected void UpdateBattle() // 전투상태일 때의 동작
+    {
+        if (State == ECreatureState.Skill) return;
+
+        float targetDistance = Vector2.Distance(this.transform.position, TargetGameObject.transform.position);
+
+        if (SearchingTargetInBattleState())
+            StopBattleEndTimer();
+        else
+            StartBattleEndTimer();
+
+        if (targetDistance <= _attackRange) // 공격범위에 진입했을 시
+        {
+            isCanAttack = true;
+            StopMove();
+        }
+        else
+        {
+            OnTargetExitAttackRange();
+        }
+
+        ViewTarget();
+    }
+
+    protected virtual void UpdateReturn()
+    {
+        _behaviorPattern = _INIT_STAIT;
+    }
+                
     protected bool CheackTargetSearching() // 타겟이 탐색범위내에 감지되는지 확인 
     {
         if (SearchingTargetInScanState())
@@ -239,30 +289,6 @@ public class MonsterBase : Creature
         }
         else 
             return false;
-    }
-
-    protected void UpdateBattle() // 전투상태일 때의 동작
-    {
-        if (State == ECreatureState.Skill) return;
-
-        float targetDistance = Vector2.Distance(this.transform.position, TargetGameObject.transform.position);
-
-        if (SearchingTargetInBattleState())
-            StopBattleEndTimer();
-        else    
-            StartBattleEndTimer();
-
-        if (targetDistance <= _attackRange) // 공격범위에 진입했을 시
-        {
-            isCanAttack = true;
-            StopMove();
-        }
-        else 
-        {
-            OnTargetExitAttackRange();
-        }
-
-        ViewTarget();
     }
 
     protected virtual void OnTargetExitAttackRange() // 타겟이 공격 범위 밖에 있을 경우 실행
@@ -302,6 +328,10 @@ public class MonsterBase : Creature
             case EBehaviorPattern.Battle:
                 PatternChangeToBattle();
                 break;
+
+            case EBehaviorPattern.Return:
+                PatternChangeToReturn();
+                break;
         }
         _originBehaviorPattern = BehaviorPattern;
     }
@@ -314,6 +344,11 @@ public class MonsterBase : Creature
     protected virtual void PatternChangeToScan() // 스캔 상태 전환시 
     {
         MoveSpeed = TypeRecorder.Base.MovementSpeed;
+    }
+
+    protected virtual void PatternChangeToReturn() // 리턴 상태 전환시
+    {
+        _behaviorPattern = _INIT_STAIT;
     }
 
     protected bool CheckFrontGround() // 전방 아래의 타일 체크 
@@ -371,7 +406,7 @@ public class MonsterBase : Creature
         return false;
     }
 
-    protected void TurnObject() // 오브젝트 회전, 크리처에 이미 있으므로 오버라이드 하거나 지워주세요. 만약 오버라이드 할 필요가 없다면, virtual를 지워주세요.
+    protected new void TurnObject() // 오브젝트 회전, 크리처에 이미 있으므로 오버라이드 하거나 지워주세요. 만약 오버라이드 할 필요가 없다면, virtual를 지워주세요.
     {
         if (MoveDir == Vector2.left)
         {
@@ -439,10 +474,19 @@ public class MonsterBase : Creature
         return new Vector2(x, y);
     }
 
-    protected void StartCoroutine(ref Coroutine coroutine, IEnumerator routine) // 특정 코루틴 시작
+    protected void StartCoroutine(ref Coroutine coroutine, IEnumerator routine) // 특정 코루틴 시작 (코루틴 필드 제어)
     {
         if (coroutine == null)
             coroutine = StartCoroutine(routine);
+    }
+
+    protected void StartCoroutine(ref bool flag, IEnumerator routine) // 특정 코루틴 시작 (코루틴 플래그 제어)
+    {
+        if (!flag)
+        {
+            flag = true;
+            StartCoroutine(routine);
+        }
     }
 
     protected void StopCoroutine(ref Coroutine coroutine) // 특정 코루틴 종료 
@@ -513,7 +557,7 @@ public class MonsterBase : Creature
 
         StartCoroutine(PopUpStateTransitionIconCoroutine(_qMark));
         isCanAttack = false;
-        _behaviorPattern = _INIT_STAIT;
+        _behaviorPattern = EBehaviorPattern.Return;
     }
 
     private IEnumerator PopUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
@@ -673,7 +717,4 @@ public class MonsterBase : Creature
                 hitBox.SetActive(false);
         }
     }
-
-
-
 }

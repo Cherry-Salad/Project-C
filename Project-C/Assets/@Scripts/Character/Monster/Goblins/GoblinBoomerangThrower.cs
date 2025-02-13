@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
@@ -67,6 +68,7 @@ public class GoblinBoomerangThrower : MonsterBase
         {
             yield return new WaitForEndOfFrame();
         }
+        
         _isThrow = false;
 
         yield return new WaitForSeconds(skillData.RecoveryTime);
@@ -80,7 +82,7 @@ public class GoblinBoomerangThrower : MonsterBase
     public void ShootingProjectile()
     {
         throwBoomerang = _boomerangs.Dequeue();
-
+        
         throwBoomerang.Object.SetActive(true);
         throwBoomerang.Projectile.ShootingProjectile(this.transform.position, selectDirection());
        
@@ -98,11 +100,18 @@ public class GoblinBoomerangThrower : MonsterBase
 
     protected void OnTriggerEnter2D(Collider2D collider)
     {
-        
         if (_isThrow && collider.gameObject == throwBoomerang.Object)
         {
             throwBoomerang.Projectile.EndOfProjectile();
             _isThrow = false;
+        }
+    }
+
+    protected override void DeadOrganize()
+    {
+        foreach (MonsterProjectile boomerang in _boomerangs)
+        {
+            GameObject.Destroy(boomerang.Object);
         }
     }
 }

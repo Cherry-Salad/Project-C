@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
+using UnityEngine.UI;
 using static Define;
 using static MonsterBase;
+using static UnityEditor.PlayerSettings;
 
 public class FlyMonsterBase : MonsterBase
 {
@@ -24,24 +27,33 @@ public class FlyMonsterBase : MonsterBase
     public EFlyStyle FlyStyle { get { return _flyStyle; } }
     public ETurnStyle TurnStyle { get { return _turnStyle; } }
 
+    [Header("Fly Monster Style Setting"), Space(10)]
     [SerializeField] private EFlyStyle _scanFlyStyle = EFlyStyle.Straight;
-    [SerializeField] private float _steeringChangeTime = 0.5f;
-    
-    private Coroutine _steeringAdjustmentCoroutine;
-    private float _steering;
-    private Vector2 _startPoint;
-   
+    [SerializeField] private ETurnStyle _battleTurnStyle = ETurnStyle.FixedHorizontal;
+
+    [Header("Fly Monster Sub Object Setting"), Space(10)]
+    [SerializeField] private GameObject _navigation;
+
+    [Header("Wave Setting"), Space(10)]
+    [SerializeField] private float _waveAmplitude = 1f; // 진동 진폭 (위아래 이동 크기)
+    [SerializeField] private float _waveFrequency = 1f; // 진동 변화 속도 
+    [SerializeField] private float _waveLerpSpeed = 1f; // 진동 기반 속도 변환 보정값
+
+    private Navigator _navigator;
+    private bool _isReturn = false;
+    private Vector2? _nextPoint;
+
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
         DefaultGravityScale = 0;
-        _steering = 0;
 
         _flyStyle = _scanFlyStyle;
         _turnStyle = ETurnStyle.Rotation;
-        _startPoint = this.transform.position;
+        
+        _navigator = _navigation.GetComponent<Navigator>();
         
         return true;
     }
@@ -52,10 +64,37 @@ public class FlyMonsterBase : MonsterBase
             State = ECreatureState.Run;
     }
 
+    protected override void UpdateReturn()
+    {
+        if (!_isReturn) return;
+        if(CheackTargetSearching())
+        {
+            _isReturn = false;
+            return;
+        }
+
+        Vector2 targetPos = _nextPoint.Value;
+        TurnObject(this.transform.position, targetPos, true);
+
+        if (_nextPoint == null || Vector2.Distance(this.transform.position, targetPos) > 0.01f)
+            this.transform.position = Vector3.MoveTowards(this.transform.position, targetPos, MoveSpeed * Time.deltaTime);
+
+        else
+        {
+            _nextPoint = _navigator.LoadPath();
+            if (_nextPoint == null)
+            {
+                _isReturn = false;
+                base.UpdateReturn();
+            }
+        }   
+    }
+
     protected override void UpdateIdle()
     {
         if (isCanAttack && BehaviorPattern == EBehaviorPattern.Battle)
             Attack();
+
         else if(BehaviorPattern == EBehaviorPattern.ScanStand)
         {
             switch(FlyStyle)
@@ -103,8 +142,18 @@ public class FlyMonsterBase : MonsterBase
         {
             case EBehaviorPattern.ScanMove:
             case EBehaviorPattern.ScanStand:
-                Vector2 targetMoveDir = new Vector2(moveDir.x, moveDir.y + Mathf.Sin(_steering) * 2);
-                Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, targetMoveDir * MoveSpeed, Time.deltaTime * 5f);
+                
+                switch(FlyStyle)
+                {
+                    case EFlyStyle.Straight:
+                        Rigidbody.velocity = moveDir.normalized * MoveSpeed;
+                        break;
+
+                    case EFlyStyle.Zigzag:
+                        float waveOffset = moveDir.y + Mathf.Sin(Time.time * _waveFrequency) * _waveAmplitude;
+                        Rigidbody.velocity = Vector2.Lerp(Rigidbody.velocity, new Vector2(moveDir.x, waveOffset) * MoveSpeed, Time.deltaTime * _waveLerpSpeed);
+                        break;
+                }
                 break;
 
             case EBehaviorPattern.Battle:
@@ -116,20 +165,30 @@ public class FlyMonsterBase : MonsterBase
     protected override void PatternChangeToBattle() // 배틀 상태 전환시
     {
         base.PatternChangeToBattle();
-        _steering = 0;
+
         _flyStyle = EFlyStyle.Straight;
-        StopCoroutine(ref _steeringAdjustmentCoroutine);
+        _turnStyle = _battleTurnStyle;
+        _isReturn = false;
     }
 
     protected override void PatternChangeToScan() // 스캔 상태 전환시 
     {
         base.PatternChangeToScan();
 
+        if(StartDataRecorder.StartDir == Vector2.right)
+        {
+            MoveDir = Vector2.right;
+            SpriteRenderer.flipX = false;
+            LookLeft = false;
+        }
+        else
+        {
+            MoveDir = Vector2.right;
+            SpriteRenderer.flipX = true;
+            LookLeft = true;
+        }
+
         _flyStyle = _scanFlyStyle;
-        _steering = 0;
-        SpriteRenderer.flipY = false;
-        transform.rotation = Quaternion.identity;
-        
 
         switch (FlyStyle)
         {
@@ -137,7 +196,6 @@ public class FlyMonsterBase : MonsterBase
                 break;
 
             case EFlyStyle.Zigzag:
-                StartCoroutine(ref _steeringAdjustmentCoroutine, SteeringAdjustmentCoroutine());
                 break;
 
             case EFlyStyle.Circular:
@@ -145,22 +203,23 @@ public class FlyMonsterBase : MonsterBase
         }
     }
 
-    protected virtual IEnumerator SteeringAdjustmentCoroutine()
+    protected override void PatternChangeToReturn() // 귀환 상태 전환시 
     {
-        while(true){
-            yield return new WaitForSeconds(_steeringChangeTime);
-            _steering++;
-            _steering = Mathf.Repeat(_steering, 360f);
-        }
+        SpriteRenderer.flipY = false;
+        transform.rotation = Quaternion.identity;
+        StopMove();
+
+        _isReturn = _navigator.FindPath(this.transform.position, StartDataRecorder.StartPoint);
+
+        if(!_isReturn) 
+            base.PatternChangeToReturn();
+        else
+            _nextPoint = _navigator.LoadPath();
     }
 
-    protected override void OnTargetExitAttackRange()
+    protected override void OnTargetExitAttackRange() // 타겟이 범위에서 벗어났을 경우 
     {
-        Vector2 targetPos = TargetGameObject.transform.position;
-        Vector2 myPos = this.transform.position;
-
-        MoveDir = new Vector2(targetPos.x - myPos.x, targetPos.y - myPos.y);
-        MoveDir.Normalize();
+        MoveDir = getDirection(this.transform.position, TargetGameObject.transform.position);
         State = ECreatureState.Run;
     }
 
@@ -169,7 +228,7 @@ public class FlyMonsterBase : MonsterBase
         switch(TurnStyle)
         {
             case ETurnStyle.FixedHorizontal:
-                base.ViewTarget(); 
+                TurnObject(this.transform.position, TargetGameObject.transform.position, false);
                 break;
 
             case ETurnStyle.Rotation:
@@ -192,5 +251,27 @@ public class FlyMonsterBase : MonsterBase
             SpriteRenderer.flipY = false;
         else
             SpriteRenderer.flipY = true;
+    }
+
+    protected void TurnObject(Vector2 mover, Vector2 target, bool isChangeVector) // 오브젝트 타겟을 바라보도록 회전 
+    {
+        if(mover.x < target.x)
+        {
+            LookLeft = false;
+            SpriteRenderer.flipX = false;
+
+            if(isChangeVector) MoveDir = Vector2.right;
+        }
+        else if(mover.x > target.x)
+        {
+            LookLeft = true;
+            SpriteRenderer.flipX = true;
+            if(isChangeVector) MoveDir = Vector2.left;
+        }
+    }
+
+    protected Vector2 getDirection(Vector2 requesterPos, Vector2 targetPos)
+    {
+        return (targetPos - requesterPos).normalized;
     }
 }

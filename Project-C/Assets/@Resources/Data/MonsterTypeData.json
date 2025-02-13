@@ -153,9 +153,9 @@
             "IsBodyHitBox": true,
             "RecoveryTime": 0.5,
 
-            "AttackRange": 1,
+            "AttackRange": 2.5,
             "RetentionTime": 0,
-            "MovementMultiplier": 1.8,
+            "MovementMultiplier": 15,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
