@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Define
 {
+    public enum EScene
+    {
+        None,
+        MainScene,
+        TutorialScene,
+    }
+
     public enum EObjectType
     {
         None,

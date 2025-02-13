@@ -388,7 +388,7 @@ public class Creature : BaseObject
 
     #region 벽, 바닥, 장애물 등을 감지한다. 반드시, Collider를 갱신(FixedUpdate)한 뒤에 사용한다.
     /// <summary>
-    /// 벽이나 벽처럼 통행에 방해되는 장애물을 감지한다
+    /// 통행에 방해되는 장애물을 감지한다.
     /// </summary>
     /// <param name="dir">방향</param>
     /// <param name="distance">감지 거리</param>

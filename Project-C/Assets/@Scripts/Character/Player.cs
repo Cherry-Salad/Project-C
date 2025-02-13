@@ -62,71 +62,42 @@ public class Player : Creature
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        // 기본 공격
-        BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
-        basicAttack.SetInfo(this, null);
-        Skills.Add(basicAttack.Key, basicAttack);
+        #region 데이터 로드
+        // 플레이어 스탯
+        Data = Managers.Data.PlayerDataDic[PLAYER_ID];
+        Hp = Data.Hp;
+        MaxHp = Data.MaxHp;
+        HpLevel = Data.HpLevel;
+        Mp = Data.Mp;
+        MaxMp = Data.MaxMp;
+        MpLevel = Data.MpLevel;
+        Atk = Data.Atk;
+        AtkLevel = Data.AtkLevel;
+        MoveSpeed = Data.Speed;
+        AccessorySlot = Data.AccessorySlot;
 
-        // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
-        #region PreLoad 어드레서블 모두 로드
-        Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
+        // 플레이어 스킬
+        foreach (int skillId in Data.SkillIdList)
         {
-            // 모두 로드
-            if (loadCount == totalCount)
-            {
-                Managers.Data.Init();
+            if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
+                continue;
 
-                // 플레이어 스탯
-                Data = Managers.Data.PlayerDataDic[PLAYER_ID];
-                Hp = Data.Hp;
-                MaxHp = Data.MaxHp;
-                HpLevel = Data.HpLevel;
-                Mp = Data.Mp;
-                MaxMp = Data.MaxMp;
-                MpLevel = Data.MpLevel;
-                Atk = Data.Atk;
-                AtkLevel = Data.AtkLevel;
-                MoveSpeed = Data.Speed;
-                AccessorySlot = Data.AccessorySlot;
+            Debug.Log($"{data.CodeName}: {skillId}");
 
-                // 확인용
-                Debug.Log($"Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
-                Debug.Log($"Mp: {Mp}, MaxMp: {MaxMp}, MpLevel: {MpLevel}");
-                Debug.Log($"Atk: {Atk}, AtkLevel: {AtkLevel}");
-                Debug.Log($"MoveSpeed: {MoveSpeed}, AccessorySlot: {AccessorySlot}, Data parsing successful!");
+            var type = Type.GetType(data.CodeName);
+            if (type == null)
+                continue;
 
-                // 플레이어 스킬
-                foreach (int skillId in Data.SkillIdList)
-                {
-                    if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
-                        return;
+            // GetOrAddComponent가 안돼서 null 검사
+            PlayerSkillBase skill = gameObject.GetComponent(type) as PlayerSkillBase;
+            if (skill == null)
+                skill = gameObject.AddComponent(type) as PlayerSkillBase;
 
-                    Debug.Log($"{data.CodeName}: {skillId}");
-
-                    var type = Type.GetType(data.CodeName);
-                    if (type == null)
-                        return;
-
-                    // GetOrAddComponent가 안돼서 null 검사
-                    PlayerSkillBase skill = gameObject.GetComponent(type) as PlayerSkillBase;
-                    if (skill == null)
-                        skill = gameObject.AddComponent(type) as PlayerSkillBase;
-
-                    skill.SetInfo(this, data);
-                    Skills.Add(skill.Key, skill);
-                }
-
-                // Test, 맵 불러오기
-                Managers.Map.LoadMap("TutorialMap");
-
-                // Test, 카메라 설정
-                CameraController camera = Camera.main.GetComponent<CameraController>();
-                if (camera != null)
-                    camera.Target = this;
-            }
-        });
+            skill.SetInfo(this, data);
+            Skills.Add(skill.Key, skill);
+        }
         #endregion
-
+        
         return true;
     }
 
