@@ -78,26 +78,11 @@ public class Creature : BaseObject
             case ECreatureState.Run:
                 Animator.Play("Run");
                 break;
-            case ECreatureState.Jump:
-                Animator.Play("Jump");
-                break;
-            case ECreatureState.DoubleJump:
-                Animator.Play("DoubleJump");
-                break;
             case ECreatureState.Dash:
                 Animator.Play("Dash");
                 break;
-            case ECreatureState.WallCling:
-                Animator.Play("WallSlide");
-                break;
-            case ECreatureState.WallClimbing:
-                Animator.Play("WallSlide");
-                break;
             case ECreatureState.Hurt:
                 Animator.Play("Hurt");
-                break;
-            case ECreatureState.Dead:
-                Animator.Play("Dead");
                 break;
         }
     }
@@ -147,23 +132,17 @@ public class Creature : BaseObject
     protected virtual void UpdateIdle()
     {
         if (CheckGround())
-        {
-            // 캐릭터가 경사진 바닥에서 미끄러지는 효과가 있어 중력을 임시로 없앴다
-            Rigidbody.velocity = Vector2.zero;
-        }
+            Rigidbody.velocity = Vector2.zero;  // 움직이지 않는다
         else
-            // 공중에 있다면 점프로 전환
-            State = ECreatureState.Jump;
+            State = ECreatureState.Jump;    // 공중에 있다면 낙하 처리
     }
 
     protected virtual void UpdateRun()
     {
         if (CheckGround())
-            // Rigidbody.velocity.y를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
-            Rigidbody.velocity = MoveDir * MoveSpeed;
+            Rigidbody.velocity = MoveDir * MoveSpeed;   // 수직 속도(velocity.y)를 0으로 하지 않는다면, 캐릭터가 경사진 바닥에서 뛸 때 위로 튀어오른다
         else
-            // 공중에 있다면 점프로 전환
-            State = ECreatureState.Jump;
+            State = ECreatureState.Jump;    // 공중에 있다면 낙하 처리
     }
 
     protected virtual void UpdateJump()
@@ -171,16 +150,14 @@ public class Creature : BaseObject
         // 캐릭터가 바닥에 닿은지 확인
         bool onGround = CheckGround();
 
-        if (onGround == false && CheckWall())
+        if (onGround == false && CheckWall())   // 캐릭터가 공중에 있으면서 벽을 감지
         {
-            // 캐릭터가 공중에 있으면서 벽을 감지
             State = ECreatureState.WallCling;
             _hasDoubleJumped = false;
             return;
         }
-        else if (onGround)
+        else if (onGround)  // 캐릭터가 바닥에 닿을 때
         {
-            // 캐릭터가 바닥에 닿을 때
             State = ECreatureState.Idle;
             _hasDoubleJumped = false;
             return;
@@ -189,9 +166,9 @@ public class Creature : BaseObject
         // 공중이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
         float distance = Collider.bounds.extents.x + 0.1f;
         bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
-        float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+        float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
-        // 점프 중 낙하 처리
+        // 공중에서 낙하 처리
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
     }
 
@@ -203,15 +180,15 @@ public class Creature : BaseObject
 
     protected virtual void OnJump()
     {
-        // 이단 점프 중에는 점프 불가능
+        // 기본(1단) 점프이다. 이단 점프 중에는 불가능
         if (State != ECreatureState.DoubleJump && CheckGround())
         {
             State = ECreatureState.Jump;
 
-            // 기본(1단) 점프
-            // 경사진 바닥에서도 점프를 할 수 있도록 velocity.x를 0으로 설정
+            // 경사진 바닥에서도 점프를 할 수 있도록 수평 속도(velocity.x)를 0으로 설정
             Rigidbody.velocity = new Vector2(0f, JumpForce);
         }
+
         // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
         else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
         {
@@ -234,6 +211,13 @@ public class Creature : BaseObject
         StartCoroutine(CoWallJump(MoveDir, duration));
     }
 
+    /// <summary>
+    /// 캐릭터가 바라보는 방향으로 대시한다.
+    /// </summary>
+    /// <param name="distance">거리</param>
+    /// <param name="speedMultiplier">속도 배율</param>
+    /// <param name="ignorePhysics">물리적인 제약을 무시(중력과 충돌 제외)한다.</param>
+    /// <param name="ignoreObstacle">장애물을 무시한다.</param>
     protected virtual void OnDash(float distance, float speedMultiplier, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
         // 벽에 매달린 상태에서 방향키를 누르지 않고 대시하면 반대 방향으로 대시한다
@@ -268,10 +252,10 @@ public class Creature : BaseObject
         }
     }
 
-    public override void OnDamaged(float damage, Creature attacker = null) 
+    public override void OnDamaged(float damage, bool ignoreInvincibility = false, Creature attacker = null) 
     {
-        // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
-        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
+        // 무적 상태라면 대미지를 입지 않는다
+        if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
             return;
 
         base.OnDamaged(damage, attacker);
@@ -298,12 +282,12 @@ public class Creature : BaseObject
             // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
             float distance = Collider.bounds.extents.x + 0.1f;
             bool noObstacles = CheckObstacle(moveDir, distance, true).collider == null; // 장애물이 없는 지 확인
-            float velocityX = (noObstacles) ? moveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+            float velocityX = (noObstacles) ? moveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocityX)를 0으로 설정
 
             // 벽 점프
             Rigidbody.velocity = new Vector2(velocityX, JumpForce);
             elapsedTime += Time.deltaTime;
-            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();  // Collider 갱신
         }
 
         // 벽 점프가 끝나면 전환
@@ -322,25 +306,13 @@ public class Creature : BaseObject
             // UpdateDash를 만들어도 되지만, 목적지를 미리 설정하였기 때문에 코루틴을 사용한다
             Rigidbody.position = Vector2.MoveTowards(Rigidbody.position, destPos, dashSpeed * Time.deltaTime);
             yield return new WaitForFixedUpdate();  // Collider 갱신
-            
-            if (State != ECreatureState.Dash)
-            {
-                if (ignorePhysics)
-                {
-                    // 기본 중력 적용
-                    Rigidbody.gravityScale = DefaultGravityScale;
 
-                    // 대시가 끝나면 충돌 처리 활성화
-                    if (Collider.isTrigger)
-                        Collider.isTrigger = false;
-                }
-
-                yield break;
-            }
-
-            // 캐릭터가 공중에 있으면서 벽을 감지
+            // 벽 타기로 넘어가야 하는 상황인지 확인한다
             OnGround = CheckGround();
-            if (OnGround == false && CheckWall())
+            bool shouldWallCling = (State == ECreatureState.Dash) && (OnGround == false && CheckWall());
+
+            // 대시가 아닌 다른 상태로 전환
+            if (State != ECreatureState.Dash || shouldWallCling)
             {
                 if (ignorePhysics)
                 {
@@ -351,9 +323,11 @@ public class Creature : BaseObject
                     if (Collider.isTrigger)
                         Collider.isTrigger = false;
                 }
-                
+
                 // 벽 타기로 전환
-                State = ECreatureState.WallCling;
+                if (shouldWallCling)
+                    State = ECreatureState.WallCling;
+                
                 yield break;
             }
 
@@ -586,6 +560,7 @@ public class Creature : BaseObject
 
         Collider.Cast(moveDir, filter, obstacles, distance);
 
+        // 장애물을 찾았다
         if (obstacles.Count > 0)
         {
             RaycastHit2D closestHit = obstacles[0];

@@ -41,6 +41,9 @@ public class MapManager
         }
     }
 
+    /// <summary>
+    /// 현재 활성화된 체크포인트 위치
+    /// </summary>
     public Vector3 CurrentCheckpoint { get; set; }
 
     // 맵 경계
@@ -58,10 +61,10 @@ public class MapManager
         Map = map;
         MapName = mapName;
         CellGrid = map.GetComponent<Grid>();
-        CameraBounds = Util.FindChild<PolygonCollider2D>(map, "CameraBounds");
         Checkpoint = Util.FindChild<Tilemap>(map, "Checkpoint");
+        CameraBounds = Util.FindChild<PolygonCollider2D>(map, "CameraBounds");
+        
         CurrentCheckpoint = Vector3.zero;
-
         SpawnCheckpoints();
 
         // 카메라 위치를 월드 경계로 제한
@@ -110,12 +113,12 @@ public class MapManager
         }
     }
 
+    /// <summary>
+    /// 플레이어를 체크포인트로 리스폰한다.
+    /// </summary>
     public void RespawnAtCheckpoint()
     {
-        if (Checkpoint == null)
-            return;
-
-        if (CurrentCheckpoint == Vector3.zero)
+        if (Checkpoint == null || CurrentCheckpoint == Vector3.zero)
             return;
         
         // TODO: 체크포인트로 이동하는 연출

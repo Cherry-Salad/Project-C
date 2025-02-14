@@ -279,24 +279,33 @@ public class Player : Creature
     {
         base.UpdateAnimation();
         
-        // 임시로 플레이어만 먼지 효과를 연출한다
         switch (State)
         {
+            case ECreatureState.Jump:
+                Animator.Play("Jump");
+                break;
+            case ECreatureState.DoubleJump:
+                Animator.Play("DoubleJump");
+                break;
             case ECreatureState.Dash:
                 OnSpawnDust();
                 break;
             case ECreatureState.WallCling:
+                Animator.Play("WallSlide");
                 OnSpawnDust();
                 break;
-            //case ECreatureState.Dead: // 애니메이션 이벤트로 호출한다
-            //    OnSpawnDust();
-            //    break;
+            case ECreatureState.WallClimbing:
+                Animator.Play("WallSlide");
+                break;
+            case ECreatureState.Dead:
+                Animator.Play("Dead");
+                //OnSpawnDust();  // 애니메이션 이벤트로 호출한다
+                break;
         }
     }
 
     protected override void UpdateController()
     {
-        // 물리 상태를 업데이트 한 뒤에 입력 처리
         base.UpdateController();
     }
 
@@ -334,7 +343,7 @@ public class Player : Creature
             // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
             float distance = Collider.bounds.extents.x + 0.1f;
             bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
-            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
             // 점프, 낙하
             Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
@@ -384,6 +393,8 @@ public class Player : Creature
 
     protected override void UpdateWallClimbing()
     {
+        // 방향키를 눌러야 벽 타기
+        // 만약 누르지 않는다면, 벽에 매달린 상태로 전환
         if (_moveDirKeyPressed == false)
         {
             State = ECreatureState.WallCling;
@@ -399,6 +410,7 @@ public class Player : Creature
             return;
         }
 
+        // 벽 타기 속도
         float wallClimbingSpeed = MoveSpeed / 3f;
         Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
     }
@@ -406,8 +418,7 @@ public class Player : Creature
     protected override void OnJump()
     {
         // 벽을 감지하면 벽 점프로 전환
-        bool isWall = CheckWall();
-        if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || isWall)
+        if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || CheckWall())
         {
             OnWallJump();
             return;
@@ -428,8 +439,12 @@ public class Player : Creature
     /// </summary>
     void OnJumpHold()
     {
-        // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
-        if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
+        // 벽 점프나 이단 점프를 했다면 추가 점프 힘을 적용하지 않는다
+        if (_isWallJump || _hasDoubleJumped)
+            return;
+
+        // 1단 점프일 때 추가 점프 힘 적용
+        if (State == ECreatureState.Jump)
         {
             //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
@@ -448,14 +463,13 @@ public class Player : Creature
         StartCoroutine(CoDashCooldown());
     }
 
-    public override void OnDamaged(float damage = 1f, Creature attacker = null)
+    public override void OnDamaged(float damage = 1f, bool ignoreInvincibility = false, Creature attacker = null)
     {
-        // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
-        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
+        // 무적 상태라면 대미지를 입지 않는다
+        if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
             return;
 
-        // HP 감소
-        Hp -= damage;
+        Hp -= damage;   // HP 감소
 
         // 무적 상태
         State = ECreatureState.Hurt;
@@ -509,7 +523,7 @@ public class Player : Creature
         if (collision.gameObject.CompareTag("Trap"))
         {
             Debug.Log($"{collision.name} 충돌");
-            OnDamaged();
+            OnDamaged(ignoreInvincibility: true);
             Managers.Map.RespawnAtCheckpoint();
         }
     }

@@ -56,13 +56,18 @@ public class SkillBase : InitBase
         #endregion
     }
 
+    /// <summary>
+    /// 스킬 사용 가능한지 확인한다.
+    /// </summary>
+    /// <returns></returns>
     public virtual bool IsSkillUsable()
     {
-        // 이미 스킬 애니메이션이 재생되어 있다면 이벤트 호출이 꼬일 수 있으므로, 중복 방지
+        // 이미 해당 스킬 애니메이션이 재생되어 있다면, 애니메이션 이벤트 호출이 꼬일 수 있다. 중복을 방지한다.
         AnimatorStateInfo stateInfo = Owner.Animator.GetCurrentAnimatorStateInfo(0);
         if (stateInfo.IsName(AnimationName))
             return false;
 
+        // 쿨타임 완료 여부
         if (_completeCooldown == false)
             return false;
 
@@ -76,6 +81,13 @@ public class SkillBase : InitBase
 
         Debug.Log($"DoSkill: {Name}");
         return true;
+    }
+
+    public virtual void EndSkill()
+    {
+        //Debug.Log("EndSkill");
+        // 캐릭터가 공중에 있으면 점프로 전환
+        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
     /// <summary>
@@ -145,6 +157,7 @@ public class SkillBase : InitBase
         if (Managers.Data.ProjectileDataDic.TryGetValue(ProjectileId, out var data) == false)
             return;
 
+        // 투사체 소환
         Projectile projectile = Managers.Resource.Instantiate(PrefabName).GetComponent<Projectile>();
         if (projectile == null) 
             return;
@@ -171,16 +184,8 @@ public class SkillBase : InitBase
         projectile.SetInfo(Owner, this, data, excludeLayers, dir);
     }
 
-    public virtual void EndSkill()
-    {
-        //Debug.Log("EndSkill");
-
-        // 캐릭터가 공중에 있으면 점프로 전환
-        Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
-    }
-
     /// <summary>
-    /// 캐스팅을 시작한다. 피격 당하면 캐스팅을 취소한다.
+    /// 캐스팅을 시작한다. 피격 받으면 캐스팅을 취소한다.
     /// </summary>
     /// <param name="action">캐스팅을 완료하면 호출할 이벤트</param>
     /// <returns></returns>
@@ -197,6 +202,7 @@ public class SkillBase : InitBase
             yield return null;
         }
 
+        // 캐스팅 준비 완료, 이벤트 호출(ex: 스킬 캐스팅)
         callback?.Invoke();
     }
 
