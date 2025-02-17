@@ -42,7 +42,7 @@ public class PlayerUI : MonoBehaviour
         }
         Debug.Log($"PlayerUI - Player 찾음: {player.gameObject.name}");
 
-        //Player.cs의 OnDataLoaded 이벤트가 실행될 때까지 대기
+        //Player.cs의 OnDataLoaded 이벤트가 호출될 때까지 대기
         yield return new WaitUntil(() => player != null && player.Hp > 0 && player.MaxHp > 0);
 
         Debug.Log("Player 데이터 로드 완료! UI 초기화 시작...");
@@ -78,7 +78,7 @@ public class PlayerUI : MonoBehaviour
     }
 
 
-        //Hp 또는 Mp Udate
+    //Hp 또는 Mp Udate
     private void UpdateUI(Image[] images, float currentValue, float maxValue, Color fullColor, Color emptyColor, string label) //확인용 label (나중에 지우기)
     {
         Debug.Log($"UI 업데이트({label}) => 최대 : {maxValue}, 현재  : {currentValue}");
@@ -88,7 +88,7 @@ public class PlayerUI : MonoBehaviour
             if (i < maxValue) // 최대 체력/마나만큼 활성화
             {
                 images[i].enabled = true;
-                images[i].color = (i < currentValue) ? fullColor : emptyColor;
+                images[i].color = (i < currentValue) ? fullColor : emptyColor; //현재Hp/Mp에 따라 색상 변환 
             }
             else
             {

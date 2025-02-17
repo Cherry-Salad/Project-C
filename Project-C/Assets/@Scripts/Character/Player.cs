@@ -74,7 +74,7 @@ public class Player : Creature
         return true;
     }
 
-       // Addressables에서 데이터 로드 (비동기)
+    // Addressables에서 데이터 로드 (비동기)
     private IEnumerator LoadPlayerData()
     {
         yield return new WaitUntil(() => Managers.Resource != null && Managers.Data != null);
@@ -96,8 +96,8 @@ public class Player : Creature
                 //맵 및 카메라 설정
                 SetMapAndCamera();
 
-                //UI 업데이트 이벤트 호출
-                OnDataLoaded?.Invoke();
+                //UI 업데이트 이벤트 호출 (확인용 + 확장용 나중에 안쓰면 걍 지우기)
+                TriggerOnDataLoaded();
             }
         });
     }
@@ -158,6 +158,10 @@ public class Player : Creature
         if (camera != null)
             camera.Target = this;
     }
+
+    public void TriggerOnHpChanged() { OnHpChanged?.Invoke(); } // HP 업데이트 이벤트 트리거
+    public void TriggerOnMpChanged() { OnMpChanged?.Invoke(); } // MP 업데이트 이벤트 트리거
+    public void TriggerOnDataLoaded() { OnDataLoaded?.Invoke(); } // 데이터 로드 완료 이벤트 트리거
 
     #region 입력 감지
     void Update()

@@ -175,17 +175,23 @@ public class SkillBase : InitBase
     protected IEnumerator CoDoCastingSkill(Action callback)
     {
         float elapsedTime = 0f;
+        Debug.Log("코루틴 시작됨.");
         while (elapsedTime < CastingTime)
         {
-            // 피격 받으면 캐스팅 취소
             if (Owner.State == ECreatureState.Hurt)
+            {
+                Debug.Log("피격 상태로 인해 캐스팅 취소됨.");
                 yield break;
-
+            }
             elapsedTime += Time.deltaTime;
+            Debug.Log($"elapsedTime: {elapsedTime}, CastingTime: {CastingTime}");
             yield return null;
+            Debug.Log("while문 나감");
         }
-
+        Debug.Log("CastingTime 경과, callback 호출 전.");
+        Debug.Log($"{callback}호출 직전");
         callback?.Invoke();
+        Debug.Log("callback 호출 후, 코루틴 종료됨.");
     }
 
     protected IEnumerator CoSkillCooldown()
