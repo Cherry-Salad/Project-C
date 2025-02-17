@@ -58,8 +58,7 @@ public class SelfHealing : PlayerSkillBase
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
         _coCasting = StartCoroutine(CoDoCastingSkill(OnHeal));
-        Debug.Log("힐 정상 작동 중...");
-        
+
         return true;
     }
 
@@ -80,14 +79,14 @@ public class SelfHealing : PlayerSkillBase
 
     void OnHeal()
     {
-        Debug.Log($"Heal이 시작될 예정");
         _coCasting = null;
         Owner.Animator.Play($"{AnimationName}Complete");
-        Debug.Log($"Heal이 될 예정");
 
         // 최대 체력을 초과해서 힐링할 수 없다
         Owner.Hp = Mathf.Clamp(Owner.Hp + HealingValue, 0, Owner.MaxHp);
         (Owner as Player)?.TriggerOnHpChanged();
+
+        ConsumeMp(MpCost); //체력 회복 후 마나 소모
         Debug.Log($"Heal {Owner.Hp}");
     }
 }

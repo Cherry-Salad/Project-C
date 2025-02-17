@@ -56,24 +56,22 @@ public class PlayerSkillBase : SkillBase
         if (base.DoSkill() == false)
             return false;
 
-        if (!ConsumeMp(MpCost)) //마나 부족시 false
-            return false;
+        if (!(this is SelfHealing)) //힐 스킬은 에외처리
+        {
+            if (!ConsumeMp(MpCost)) // 마나 부족 시 false 반환
+                return false;
+        }
 
         return true;
     }
 
     public bool ConsumeMp(int MpCost)
     {
-        Player OwnerisPlayer = Owner as Player; //Owner가 player일 때(캐스팅)
+        Player OwnerisPlayer = Owner as Player; //Owner가 player일 때(캐스팅) 
         
         if(OwnerisPlayer == null)
         {
             return false;
-        }
-
-        if(OwnerisPlayer.Mp < MpCost)
-        {
-            Debug.Log($"마나가 부족합니다. 현재 마나 : {OwnerisPlayer.Mp}, 필요 마나 : {MpCost}");
         }
 
         OwnerisPlayer.Mp -= MpCost;
