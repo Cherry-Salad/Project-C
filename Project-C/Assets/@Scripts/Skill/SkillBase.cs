@@ -224,15 +224,15 @@ public class SkillBase : InitBase
         float elapsedTime = 0f;
         while (elapsedTime < CastingTime)
         {
-            // 피격 받으면 캐스팅 취소
             if (Owner.State == ECreatureState.Hurt)
+            {
                 yield break;
-
+            }
             elapsedTime += Time.deltaTime;
+            Debug.Log($"elapsedTime: {elapsedTime}, CastingTime: {CastingTime}");
             yield return null;
         }
-
-        // 캐스팅 준비 완료, 이벤트 호출(ex: 스킬 캐스팅)
+        Debug.Log($"{callback}호출 직전");
         callback?.Invoke();
     }
 

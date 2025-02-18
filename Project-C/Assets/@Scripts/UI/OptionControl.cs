@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 public enum KeyInput
 {
@@ -30,6 +32,8 @@ public static class KeySetting
 public class OptionControl : MonoBehaviour
 {
     public static event Action OnKeyChanged; // 키 변경 이벤트 추가
+    [SerializeField] private GameObject alertPanel;
+    [SerializeField] private TMP_Text alertText;
 
     private KeyCode[] defaultKeys = new KeyCode[]
     {
@@ -43,8 +47,9 @@ public class OptionControl : MonoBehaviour
 
     void Awake()
     {
-        KeySetting.keys.Clear();
+        KeySetting.keys.Clear(); //키 딕셔너리 초기화
         LoadKeyMappings(); // 저장된 키 로드
+        alertPanel.SetActive(false);
     }
 
     private void Update()
@@ -61,10 +66,27 @@ public class OptionControl : MonoBehaviour
         {
             if (Input.GetKeyDown(keyCode))
             {
+                // ESC 키 변경 불가
+                if (keyCode == KeyCode.Escape)
+                {
+                    ShowAlert("ESC can't change");
+                    key = -1;
+                    return;
+                }
+
+                //이미 사용중인 키 확인
+                if (KeySetting.keys.ContainsValue(keyCode))
+                {
+                    ShowAlert($"'{keyCode}' is already use");
+                    key = -1;
+                    return;
+                }
+
+                ShowAlert($"Key Changed: {keyCode}");
                 KeySetting.keys[(KeyInput)key] = keyCode;
                 key = -1;
-                SaveKeyMappings(); // 키 설정 저장
-                OnKeyChanged?.Invoke(); // UI 업데이트 트리거
+                SaveKeyMappings(); //변경 즉시 저장
+                OnKeyChanged?.Invoke();
                 return;
             }
         }
@@ -72,7 +94,13 @@ public class OptionControl : MonoBehaviour
 
     public void ChangeKey(int num)
     {
-        Debug.Log($"키 변경 대기 상태: {num} ({(KeyInput)num})");
+        if ((KeyInput)num == KeyInput.MENU) // ESC 키 변경 방지
+        {
+            ShowAlert("ESC can't change");
+            return;
+        }
+
+        Debug.Log(($"키 변경 대기 상태: {num} ({(KeyInput)num})"));
         key = num;
     }
 
@@ -106,4 +134,16 @@ public class OptionControl : MonoBehaviour
         Debug.Log("키 설정이 로드되었습니다.");
     }
 
+    private void ShowAlert(string message)
+    {
+        alertText.text = message;
+        alertPanel.SetActive(true);
+        StartCoroutine(ShowAlertDelay(2f)); //2초간 보여주기
+    }
+
+    private IEnumerator ShowAlertDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        alertPanel.SetActive(false);
+    }
 }

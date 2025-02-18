@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Object = UnityEngine.Object; //원래 오류가 안떳는데 갑자기 떠서 넣음
 using static Define;
 
 public class Player : Creature
@@ -36,6 +37,11 @@ public class Player : Creature
     // 스킬
     KeyCode _pressedSkillKey = KeyCode.None;
     float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
+
+    //UI를 위한 이벤트 추가
+    public event Action OnHpChanged;
+    public event Action OnMpChanged;
+    public event Action OnDataLoaded; //데이터 로드 완료 이벤트 추가
 
     public override bool Init()
     {
@@ -75,13 +81,19 @@ public class Player : Creature
         MoveSpeed = Data.Speed;
         AccessorySlot = Data.AccessorySlot;
 
-        // 플레이어 스킬
+        LoadSkills();
+        #endregion
+
+        return true;
+    }
+
+    //플레이어 스킬 로드
+    private void LoadSkills()
+    {
         foreach (int skillId in Data.SkillIdList)
         {
             if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
                 continue;
-
-            //Debug.Log($"{data.CodeName}: {skillId}");
 
             var type = Type.GetType(data.CodeName);
             if (type == null)
@@ -95,10 +107,11 @@ public class Player : Creature
             skill.SetInfo(this, data);
             Skills.Add(skill.Key, skill);
         }
-        #endregion
-        
-        return true;
     }
+
+    public void TriggerOnHpChanged() { OnHpChanged?.Invoke(); } // HP 업데이트 이벤트 트리거
+    public void TriggerOnMpChanged() { OnMpChanged?.Invoke(); } // MP 업데이트 이벤트 트리거
+    public void TriggerOnDataLoaded() { OnDataLoaded?.Invoke(); } // 데이터 로드 완료 이벤트 트리거
 
     #region 입력 감지
     void Update()
@@ -119,7 +132,7 @@ public class Player : Creature
 
         if ((State != ECreatureState.WallJump && IsDashInput()) || IsSkillInput())
             return;
-        
+
         IsJumpInput();
 
         _moveDirKeyPressed = IsMoveDirInput();
@@ -150,7 +163,7 @@ public class Player : Creature
         }
 
         // 키를 꾹 누르고 있을 때
-        if (_jumpKeyPressed)    
+        if (_jumpKeyPressed)
         {
             float pressedTime = Time.time - _jumpKeyPressedTime;
             if (pressedTime >= 0.1f && pressedTime < _jumpDuration)
@@ -211,7 +224,7 @@ public class Player : Creature
     bool IsSkillInput()
     {
         // 꾹 눌러야 하는 키
-        if (_pressedSkillKey != KeyCode.None) 
+        if (_pressedSkillKey != KeyCode.None)
         {
             if (Input.GetKeyUp(_pressedSkillKey))
             {
@@ -233,7 +246,7 @@ public class Player : Creature
                 return true;
             }
         }
-        
+
         // 스킬키 입력
         foreach (KeyCode keyCode in Skills.Keys)
         {
@@ -278,7 +291,7 @@ public class Player : Creature
     protected override void UpdateAnimation()
     {
         base.UpdateAnimation();
-        
+
         switch (State)
         {
             case ECreatureState.Jump:
@@ -383,7 +396,7 @@ public class Player : Creature
                 State = ECreatureState.Jump;    // 정지 상태였다면 바로 낙하
             else
                 OnWallJump();   // 벽 점프
-            
+
             return;
         }
 
@@ -470,14 +483,16 @@ public class Player : Creature
         if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
             return;
 
-        Hp -= damage;   // HP 감소
+        // HP 감소
+        Hp -= damage;
+        OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
 
         // 무적 상태
         State = ECreatureState.Hurt;
         StartCoroutine(CoHandleInvincibility());
 
         Rigidbody.velocity = Vector2.zero;
-        
+
         if (attacker == null)
             return;
 
