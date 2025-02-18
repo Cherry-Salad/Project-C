@@ -163,6 +163,7 @@ namespace Data
         public string Type;
         public bool IsBodyHitBox;
         public float RecoveryTime;
+        public float WindUpTime;
 
         public float AttackRange;
         public float RetentionTime;

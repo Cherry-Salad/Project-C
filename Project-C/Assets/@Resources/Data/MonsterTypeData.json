@@ -26,6 +26,7 @@
             "Type": "Melee", // 공격 유형
             "IsBodyHitBox": true, // 몬스터에 히트 박스 생성 여부
             "RecoveryTime": 0.8, // 시전후 회복 시간
+            "WindUpTime": 0.2, //공격 선 딜레이 시간
 
             "AttackRange": 1.0, // 공격 범위
             "RetentionTime": 0.1, // 공격 유지 시간
@@ -34,7 +35,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "", // 투사체 이름
-            "ProjectileID": 0,  // 투사체 ID
+            "ProjectileID": 0, // 투사체 ID
             "NumberOfShots": 0, // 투사체 발사 횟수
             "DelayBetweenShots": 0 // 투사체 발사간 간격 시간
           }
@@ -68,6 +69,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 5,
             "RetentionTime": 0,
@@ -110,6 +112,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -152,6 +155,7 @@
             "Type": "BodySlam",
             "IsBodyHitBox": true,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 2.5,
             "RetentionTime": 0,
@@ -194,6 +198,7 @@
             "Type": "BodySlam",
             "IsBodyHitBox": true,
             "RecoveryTime": 2,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -211,6 +216,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -228,6 +234,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,

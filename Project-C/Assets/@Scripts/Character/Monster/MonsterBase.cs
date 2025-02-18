@@ -370,8 +370,8 @@ public class MonsterBase : Creature
     {
         if(TypeRecorder.Scan.ViewAngle <= 0) return false;
 
-        //int layerMask = ~LayerMask.GetMask("Monster");
-        int layerMask = LayerMask.GetMask("Player");
+        int layerMask = ~LayerMask.GetMask("Monster");
+        //int layerMask = LayerMask.GetMask("Player");
         float angle = TypeRecorder.Scan.MinScanAngle;
 
         while(angle <= TypeRecorder.Scan.MaxScanAngle)
@@ -569,10 +569,12 @@ public class MonsterBase : Creature
 
     protected IEnumerator HurtCoroutine()  // 데미지를 받았을 때 
     {
-
         Coroutine vibrationCoroutine = null;
-        ECreatureState originState = (State == ECreatureState.Skill ? ECreatureState.Idle: State);
 
+        Animator.Play("Idle");
+        DeactivateHitBox();
+
+        ECreatureState originState = (State == ECreatureState.Skill ? ECreatureState.Idle : State);
         State = ECreatureState.Hurt;
 
         float originGravity = Rigidbody.gravityScale;
@@ -595,8 +597,10 @@ public class MonsterBase : Creature
             Rigidbody.gravityScale = originGravity;
             MoveSpeed = originSpeed;
             this.SpriteRenderer.color = originColor;
-
+            Rigidbody.velocity = Vector2.zero;
+                
             State = originState;
+            HitEnd();
         }
     }
 
@@ -638,7 +642,6 @@ public class MonsterBase : Creature
         else
         {
             StartCoroutine(HurtCoroutine());
-            HitEnd();
         }
     }
 
@@ -648,8 +651,12 @@ public class MonsterBase : Creature
     }
 
     protected virtual void HitEnd() // 공격 받은후 뒷처리 
-    {
-
+    {   
+        if (BehaviorPattern != EBehaviorPattern.Battle)
+        {
+            _behaviorPattern = EBehaviorPattern.Battle;
+            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
+        }
     }
 
     protected void shufflingSkill(List<Tuple<int, IEnumerator>> shuffleList) // 스킬 셔플

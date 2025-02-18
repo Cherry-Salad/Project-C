@@ -56,6 +56,7 @@ public class GoblinBoomerangThrower : MonsterBase
 
     protected override void HitEnd()
     {
+        base.HitEnd();
         _isThrow = false;
     }
 

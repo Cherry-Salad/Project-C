@@ -220,12 +220,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _state: 0
   MonsterID: 300001
+  _INIT_STAIT: 0
   _qMark: {fileID: 7828532685781875637}
   _eMark: {fileID: 3943590647091390833}
   hitBoxList:
   - {fileID: 1948076384959008187}
   - {fileID: 2432842092352054254}
-  _INIT_STAIT: 0
 --- !u!1 &1948076384959008187
 GameObject:
   m_ObjectHideFlags: 0
