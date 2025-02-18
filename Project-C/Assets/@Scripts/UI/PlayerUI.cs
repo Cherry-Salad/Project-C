@@ -21,7 +21,6 @@ public class PlayerUI : MonoBehaviour
     private Color fullMpColor = new Color(0f, 0.28f, 1f);     // 파랑 (Full MP) - #0047FF
     private Color emptyMpColor = new Color(0.43f, 0.5f, 0.58f); // 회색 파랑 (Empty MP) - #6E7F95
 
-
     private void Start()
     {
         StartCoroutine(WaitForPlayerDataLoad());
