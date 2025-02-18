@@ -17,11 +17,13 @@ public enum KeyInput
     HEAL,       // 7
     NEXT,       // 8
     SKILL1,     // 9
-    MENU,       // 10
-    MAP,        // 11
-    INVENTORY,  // 12
-    SKILL,      // 13
-    KEYCOUNT    // 14 (키 개수 카운트)
+    SKILL2,     // 10
+    SKILL3,     // 11
+    MENU,       // 12
+    MAP,        // 13
+    INVENTORY,  // 14
+    SKILL,      // 15
+    KEYCOUNT    // 16 (키 개수 카운트)
 }
 
 public static class KeySetting
@@ -39,7 +41,7 @@ public class OptionControl : MonoBehaviour
     {
         KeyCode.W, KeyCode.S, KeyCode.A, KeyCode.D,
         KeyCode.LeftControl, KeyCode.LeftShift, KeyCode.Z, KeyCode.X,
-        KeyCode.Space, KeyCode.Alpha1, KeyCode.Tab, KeyCode.M,
+        KeyCode.Space, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Tab, KeyCode.M,
         KeyCode.I, KeyCode.K
     };
 
