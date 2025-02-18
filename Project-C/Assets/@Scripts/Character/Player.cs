@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UObj = UnityEngine.Object; //원래 오류가 안떳는데 갑자기 떠서 넣음
 using static Define;
-using Object = UnityEngine.Object;
 
 public class Player : Creature
 {
@@ -56,18 +56,30 @@ public class Player : Creature
             BodyHitBox.isTrigger = true;
             // 플레이어 BodyHitBox에 태그를 Player로 하지 않으면, 몬스터가 플레이어 제대로 못 찾는다
 
-            LayerMask includeLayers = 0;
-            includeLayers.AddLayer(ELayer.Monster);
-            BodyHitBox.includeLayers = includeLayers;
+            LayerMask excludeLayers = 0;
+            excludeLayers.AddLayer(ELayer.Default);
+            excludeLayers.AddLayer(ELayer.Wall);
+            excludeLayers.AddLayer(ELayer.Ground);
+            excludeLayers.AddLayer(ELayer.Player);
+            BodyHitBox.excludeLayers = excludeLayers;
         }
 
         JumpForce = 6f;
         DoubleJumpForce = 1f;
 
-        // 기본 공격
-        BasicAttack basicAttack = gameObject.GetOrAddComponent<BasicAttack>();
-        basicAttack.SetInfo(this, null);
-        Skills.Add(basicAttack.Key, basicAttack);
+        #region 데이터 로드
+        // 플레이어 스탯
+        Data = Managers.Data.PlayerDataDic[PLAYER_ID];
+        Hp = Data.Hp;
+        MaxHp = Data.MaxHp;
+        HpLevel = Data.HpLevel;
+        Mp = Data.Mp;
+        MaxMp = Data.MaxMp;
+        MpLevel = Data.MpLevel;
+        Atk = Data.Atk;
+        AtkLevel = Data.AtkLevel;
+        MoveSpeed = Data.Speed;
+        AccessorySlot = Data.AccessorySlot;
 
         StartCoroutine(LoadPlayerData());
 
@@ -81,7 +93,7 @@ public class Player : Creature
 
         Debug.Log("Addressables 데이터 로드 시작...");
 
-        Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
+        Managers.Resource.LoadAllAsync<UObj>("PreLoad", (key, loadCount, totalCount) =>
         {
             if (loadCount == totalCount)
             {
@@ -102,7 +114,7 @@ public class Player : Creature
         });
     }
 
-     //Addressables 데이터 로드 후 플레이어 데이터 적용
+    //Addressables 데이터 로드 후 플레이어 데이터 적용
     private void ApplyPlayerData()
     {
         Data = Managers.Data.PlayerDataDic[PLAYER_ID];
@@ -121,7 +133,7 @@ public class Player : Creature
         Debug.Log($"데이터 로드 완료! Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
     }
 
-     //플레이어 스킬 로드
+    //플레이어 스킬 로드
     private void LoadSkills()
     {
         Debug.Log("플레이어 스킬 로드 시작...");
@@ -147,7 +159,7 @@ public class Player : Creature
         }
     }
 
-     //맵 및 카메라 설정
+    //맵 및 카메라 설정
     private void SetMapAndCamera()
     {
         // 맵 불러오기
@@ -182,7 +194,7 @@ public class Player : Creature
 
         if ((State != ECreatureState.WallJump && IsDashInput()) || IsSkillInput())
             return;
-        
+
         IsJumpInput();
 
         _moveDirKeyPressed = IsMoveDirInput();
@@ -213,7 +225,7 @@ public class Player : Creature
         }
 
         // 키를 꾹 누르고 있을 때
-        if (_jumpKeyPressed)    
+        if (_jumpKeyPressed)
         {
             float pressedTime = Time.time - _jumpKeyPressedTime;
             if (pressedTime >= 0.1f && pressedTime < _jumpDuration)
@@ -274,7 +286,7 @@ public class Player : Creature
     bool IsSkillInput()
     {
         // 꾹 눌러야 하는 키
-        if (_pressedSkillKey != KeyCode.None) 
+        if (_pressedSkillKey != KeyCode.None)
         {
             if (Input.GetKeyUp(_pressedSkillKey))
             {
@@ -296,7 +308,7 @@ public class Player : Creature
                 return true;
             }
         }
-        
+
         // 스킬키 입력
         foreach (KeyCode keyCode in Skills.Keys)
         {
@@ -341,25 +353,34 @@ public class Player : Creature
     protected override void UpdateAnimation()
     {
         base.UpdateAnimation();
-        
-        // 임시로 플레이어만 먼지 효과를 연출한다
+
         switch (State)
         {
+            case ECreatureState.Jump:
+                Animator.Play("Jump");
+                break;
+            case ECreatureState.DoubleJump:
+                Animator.Play("DoubleJump");
+                break;
             case ECreatureState.Dash:
                 OnSpawnDust();
                 break;
             case ECreatureState.WallCling:
+                Animator.Play("WallSlide");
                 OnSpawnDust();
                 break;
-            //case ECreatureState.Dead: // 애니메이션 이벤트로 호출한다
-            //    OnSpawnDust();
-            //    break;
+            case ECreatureState.WallClimbing:
+                Animator.Play("WallSlide");
+                break;
+            case ECreatureState.Dead:
+                Animator.Play("Dead");
+                //OnSpawnDust();  // 애니메이션 이벤트로 호출한다
+                break;
         }
     }
 
     protected override void UpdateController()
     {
-        // 물리 상태를 업데이트 한 뒤에 입력 처리
         base.UpdateController();
     }
 
@@ -397,7 +418,7 @@ public class Player : Creature
             // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
             float distance = Collider.bounds.extents.x + 0.1f;
             bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
-            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도를 0으로 설정
+            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
             // 점프, 낙하
             Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
@@ -436,7 +457,7 @@ public class Player : Creature
                 State = ECreatureState.Jump;    // 정지 상태였다면 바로 낙하
             else
                 OnWallJump();   // 벽 점프
-            
+
             return;
         }
 
@@ -447,6 +468,8 @@ public class Player : Creature
 
     protected override void UpdateWallClimbing()
     {
+        // 방향키를 눌러야 벽 타기
+        // 만약 누르지 않는다면, 벽에 매달린 상태로 전환
         if (_moveDirKeyPressed == false)
         {
             State = ECreatureState.WallCling;
@@ -462,6 +485,7 @@ public class Player : Creature
             return;
         }
 
+        // 벽 타기 속도
         float wallClimbingSpeed = MoveSpeed / 3f;
         Rigidbody.velocity = Vector2.up * wallClimbingSpeed;
     }
@@ -469,8 +493,7 @@ public class Player : Creature
     protected override void OnJump()
     {
         // 벽을 감지하면 벽 점프로 전환
-        bool isWall = CheckWall();
-        if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || isWall)
+        if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || CheckWall())
         {
             OnWallJump();
             return;
@@ -491,8 +514,12 @@ public class Player : Creature
     /// </summary>
     void OnJumpHold()
     {
-        // 벽 점프하고 기본(1단) 점프로 전환될 때까지 추가 점프 힘을 적용하지 않는다
-        if (State == ECreatureState.Jump && _isWallJump == false && _hasDoubleJumped == false)
+        // 벽 점프나 이단 점프를 했다면 추가 점프 힘을 적용하지 않는다
+        if (_isWallJump || _hasDoubleJumped)
+            return;
+
+        // 1단 점프일 때 추가 점프 힘 적용
+        if (State == ECreatureState.Jump)
         {
             //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
@@ -511,22 +538,26 @@ public class Player : Creature
         StartCoroutine(CoDashCooldown());
     }
 
-    public override void OnDamaged(float damage = 1f, Creature attacker = null)
+    public override void OnDamaged(float damage = 1f, bool ignoreInvincibility = false, Creature attacker = null)
     {
-        // 이미 피격 당하여 무적 상태라면 대미지를 입지 않는다
-        if (State == ECreatureState.Dead || State == ECreatureState.Hurt)
+        // 무적 상태라면 대미지를 입지 않는다
+        if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
             return;
 
         // HP 감소
         Hp -= damage;
         OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
 
-        // 무적 상태, TODO: 특정 장애물과 충돌하면 무적이 아니라 체크 포인트로 바로 이동
+        // 무적 상태
         State = ECreatureState.Hurt;
         StartCoroutine(CoHandleInvincibility());
 
-        // 살짝 위로 튀어오르듯이
         Rigidbody.velocity = Vector2.zero;
+
+        if (attacker == null)
+            return;
+
+        // 살짝 위로 튀어오르듯이
         float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
         Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0);
 
@@ -540,11 +571,19 @@ public class Player : Creature
         base.OnDied();
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 체크포인트와 상호작용
+        if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            Debug.Log("체크포인트 활성화");
+            Vector3 worldPos = collision.bounds.center;
+            Managers.Map.CurrentCheckpoint = worldPos;
+        }
+    }
+
     void OnTriggerStay2D(Collider2D collision)
     {
-        // 트리거가 활성화된 오브젝트들이 활성화(SetActive(true))가 되어야 플레이어와 충돌을 감지한다.
-        // 그러므로, 기본적으로 바디 히트 박스가 활성화되어야 한다.
-
         // 사망했다면 충돌 감지를 할 필요없다
         if (State == ECreatureState.Hurt || State == ECreatureState.Dead)
             return;
@@ -557,7 +596,13 @@ public class Player : Creature
             OnDamaged(attacker: this);
         }
 
-        // TODO: 장애물과 충돌 시 피격
+        // 장애물 충돌
+        if (collision.gameObject.CompareTag("Trap"))
+        {
+            Debug.Log($"{collision.name} 충돌");
+            OnDamaged(ignoreInvincibility: true);
+            Managers.Map.RespawnAtCheckpoint();
+        }
     }
 
     IEnumerator CoDashCooldown()
@@ -599,3 +644,4 @@ public class Player : Creature
         State = ECreatureState.Dead;
     }
 }
+#endregion

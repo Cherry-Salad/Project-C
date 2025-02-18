@@ -38,7 +38,13 @@ public class BaseObject : InitBase
         return true;
     }
 
-    public virtual void OnDamaged(float damage, Creature attacker = null)
+    /// <summary>
+    /// 피격 판정한다.
+    /// </summary>
+    /// <param name="damage">대미지 값</param>
+    /// <param name="ignoreInvincibility">무적 상태를 무시하고 피격 받을지 확인한다. 주로 함정에 당했을 때 사용한다.</param>
+    /// <param name="attacker">가해자(이런 번역 맞나..?)</param>
+    public virtual void OnDamaged(float damage, bool ignoreInvincibility = false, Creature attacker = null)
     {
         Debug.Log("OnDamaged");
     }

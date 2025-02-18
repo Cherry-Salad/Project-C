@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Define
 {
+    public enum EScene
+    {
+        None,
+        MainScene,
+        TutorialScene,
+    }
+
     public enum EObjectType
     {
         None,
@@ -12,6 +19,7 @@ public class Define
         Npc,
         Projectile,
         Env,    // Environment, 환경(ex: 나무, 돌)
+        Checkpoint,
     }
 
     public enum ELayer
@@ -26,7 +34,8 @@ public class Define
         Monster,
         HitBox,
         Player,
-        Projectile
+        Projectile,
+        Trap
     }
 
     public enum ECreatureState

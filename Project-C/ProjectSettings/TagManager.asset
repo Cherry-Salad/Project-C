@@ -6,6 +6,8 @@ TagManager:
   tags:
   - EnemyHitBox
   - Audio
+  - Checkpoint
+  - Trap
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - HitBox
   - Player
   - Projectile
-  - 
+  - Trap
   - 
   - 
   - 

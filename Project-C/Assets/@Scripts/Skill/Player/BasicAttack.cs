@@ -61,8 +61,7 @@ public class BasicAttack : PlayerSkillBase
     /// </summary>
     void OnDespawnHitBox()
     {
-        if (HitBox != null)
-            HitBox.gameObject.SetActive(false);
+        DespawnHitBox(true);
     }
 
     IEnumerator CoDoSkill()
@@ -81,7 +80,7 @@ public class BasicAttack : PlayerSkillBase
         // 스킬 애니메이션 재생 중
         while (elapsedTime < duration)
         {
-            // 피격 시 스킬 취소
+            // 피격 받으면 스킬 취소
             if (Owner.State == ECreatureState.Hurt || stateInfo.IsName(AnimationName) == false)
             {
                 OnDespawnHitBox();
