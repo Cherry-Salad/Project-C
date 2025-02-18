@@ -38,12 +38,17 @@ public class IceBreak : PlayerSkillBase
             return false;
 
         //Owner.Mp -= MpCost;
-
+        
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
         StartCoroutine(CoDoSkill());
 
         return true;
+    }
+
+    public override void UpdateSkillEvent()
+    {
+        base.UpdateSkillEvent();
     }
 
     public override void EndSkill()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,8 @@ public class Creature : BaseObject
     /// 이단 점프 재사용을 방지하기 위해 공중에서 이미 이단 점프를 했는지 확인한다. 
     /// </summary>
     protected bool _hasDoubleJumped = false;
+
+    public event Action UpdateSkillEvent = null;
 
     public override bool Init()
     {
@@ -172,7 +175,10 @@ public class Creature : BaseObject
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
     }
 
-    protected virtual void UpdateSkill() {}
+    protected virtual void UpdateSkill() 
+    {
+        UpdateSkillEvent?.Invoke();
+    }
 
     protected virtual void UpdateWallCling() {}
 
@@ -309,7 +315,7 @@ public class Creature : BaseObject
 
             // 벽 타기로 넘어가야 하는 상황인지 확인한다
             OnGround = CheckGround();
-            bool shouldWallCling = (State == ECreatureState.Dash) && (OnGround == false && CheckWall());
+            bool shouldWallCling = (ObjectType == EObjectType.Player && State == ECreatureState.Dash) && (OnGround == false && CheckWall());
 
             // 대시가 아닌 다른 상태로 전환
             if (State != ECreatureState.Dash || shouldWallCling)

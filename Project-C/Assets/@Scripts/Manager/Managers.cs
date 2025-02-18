@@ -13,10 +13,12 @@ public class Managers : MonoBehaviour
     ResourceManager _resource = new ResourceManager();
     DataManager _data = new DataManager();
     MapManager _map = new MapManager();
+    CameraManager _camera = new CameraManager();
     
     public static ResourceManager Resource { get { return Instance._resource; } }
     public static DataManager Data { get { return Instance._data; } }
     public static MapManager Map { get { return Instance._map; } }
+    public static CameraManager Camera { get { return Instance._camera; } }
 
     public static void Init()
     {
@@ -41,5 +43,6 @@ public class Managers : MonoBehaviour
     public static void Clear()
     {
         Resource.Clear();
+        Camera.Clear();
     }
 }

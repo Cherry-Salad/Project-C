@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UObj = UnityEngine.Object; //원래 오류가 안떳는데 갑자기 떠서 넣음
+using Object = UnityEngine.Object; //원래 오류가 안떳는데 갑자기 떠서 넣음
 using static Define;
 
 public class Player : Creature
@@ -50,7 +50,7 @@ public class Player : Creature
 
         ObjectType = EObjectType.Player;
 
-        // 충돌 필터링
+        // 트리거 필터링
         if (BodyHitBox != null)
         {
             BodyHitBox.isTrigger = true;
@@ -81,69 +81,19 @@ public class Player : Creature
         MoveSpeed = Data.Speed;
         AccessorySlot = Data.AccessorySlot;
 
-        StartCoroutine(LoadPlayerData());
+        LoadSkills();
+        #endregion
 
         return true;
-    }
-
-    // Addressables에서 데이터 로드 (비동기)
-    private IEnumerator LoadPlayerData()
-    {
-        yield return new WaitUntil(() => Managers.Resource != null && Managers.Data != null);
-
-        Debug.Log("Addressables 데이터 로드 시작...");
-
-        Managers.Resource.LoadAllAsync<UObj>("PreLoad", (key, loadCount, totalCount) =>
-        {
-            if (loadCount == totalCount)
-            {
-                Managers.Data.Init();
-
-                //플레이어 데이터 적용
-                ApplyPlayerData();
-
-                //플레이어 스킬 로드
-                LoadSkills();
-
-                //맵 및 카메라 설정
-                SetMapAndCamera();
-
-                //UI 업데이트 이벤트 호출 (확인용 + 확장용 나중에 안쓰면 걍 지우기)
-                TriggerOnDataLoaded();
-            }
-        });
-    }
-
-    //Addressables 데이터 로드 후 플레이어 데이터 적용
-    private void ApplyPlayerData()
-    {
-        Data = Managers.Data.PlayerDataDic[PLAYER_ID];
-
-        Hp = Data.Hp;
-        MaxHp = Data.MaxHp;
-        HpLevel = Data.HpLevel;
-        Mp = Data.Mp;
-        MaxMp = Data.MaxMp;
-        MpLevel = Data.MpLevel;
-        Atk = Data.Atk;
-        AtkLevel = Data.AtkLevel;
-        MoveSpeed = Data.Speed;
-        AccessorySlot = Data.AccessorySlot;
-
-        Debug.Log($"데이터 로드 완료! Hp: {Hp}, MaxHp: {MaxHp}, HpLevel: {HpLevel}");
     }
 
     //플레이어 스킬 로드
     private void LoadSkills()
     {
-        Debug.Log("플레이어 스킬 로드 시작...");
-
         foreach (int skillId in Data.SkillIdList)
         {
-            if (!Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data))
+            if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
                 continue;
-
-            Debug.Log($"스킬 로드: {data.CodeName} (ID: {skillId})");
 
             var type = Type.GetType(data.CodeName);
             if (type == null)
@@ -157,18 +107,6 @@ public class Player : Creature
             skill.SetInfo(this, data);
             Skills.Add(skill.Key, skill);
         }
-    }
-
-    //맵 및 카메라 설정
-    private void SetMapAndCamera()
-    {
-        // 맵 불러오기
-        Managers.Map.LoadMap("TestMap");
-
-        // 카메라 설정
-        CameraController camera = Camera.main.GetComponent<CameraController>();
-        if (camera != null)
-            camera.Target = this;
     }
 
     public void TriggerOnHpChanged() { OnHpChanged?.Invoke(); } // HP 업데이트 이벤트 트리거
@@ -413,21 +351,22 @@ public class Player : Creature
 
     protected override void UpdateSkill()
     {
-        if (CheckGround() == false)
-        {
-            // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
-            float distance = Collider.bounds.extents.x + 0.1f;
-            bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
-            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
+        base.UpdateSkill();
+        //if (CheckGround() == false)
+        //{
+        //    // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
+        //    float distance = Collider.bounds.extents.x + 0.1f;
+        //    bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+        //    float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
-            // 점프, 낙하
-            Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
-        }
-        else
-        {
-            // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
-            Rigidbody.velocity = Vector2.zero;
-        }
+        //    // 점프, 낙하
+        //    Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
+        //}
+        //else
+        //{
+        //    // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
+        //    Rigidbody.velocity = Vector2.zero;
+        //}
     }
 
     protected override void UpdateWallCling()
@@ -580,6 +519,10 @@ public class Player : Creature
             Vector3 worldPos = collision.bounds.center;
             Managers.Map.CurrentCheckpoint = worldPos;
         }
+
+        // TODO: 카메라 변화 시점을 감지하는 방법 개선
+        if (collision.gameObject.CompareTag("CameraBoundary") && collision.TryGetComponent<PolygonCollider2D>(out var collider))
+            Managers.Camera.SetCurrentCamera(collider);
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -601,7 +544,7 @@ public class Player : Creature
         {
             Debug.Log($"{collision.name} 충돌");
             OnDamaged(ignoreInvincibility: true);
-            Managers.Map.RespawnAtCheckpoint();
+            Managers.Map.RespawnAtCheckpoint(this);
         }
     }
 
@@ -620,8 +563,7 @@ public class Player : Creature
         if (Hp > 0)
             State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;  // 캐릭터가 공중에 있으면 점프로 전환
         else
-            // 사망 판정
-            StartCoroutine(CoUpdateDead());
+            StartCoroutine(CoUpdateDead()); // 사망 판정
     }
 
     IEnumerator CoUpdateDead()
@@ -644,4 +586,3 @@ public class Player : Creature
         State = ECreatureState.Dead;
     }
 }
-#endregion

@@ -13,15 +13,21 @@ public class GoblinWarrior : MonsterBase
     private const int _HITBOX_NUM_SWORD_ATTACK = 1;
 
     private const int _SWORD_ATTACK_SKILL_NUMBER = 0;
+    private bool _isReady = true;
 
     protected override void UpdateAnimation()
     {
-        base.UpdateAnimation();
-
+        if (State != ECreatureState.Skill)
+            base.UpdateAnimation();
+        
         switch (State)
-        {
+        {            
             case ECreatureState.Skill:
-                Animator.Play("Attack");
+                if (_isReady)
+                    Animator.Play("AttackReady");
+                else
+                    Animator.Play("Attack");
+
                 break;
         }
     }
@@ -48,6 +54,14 @@ public class GoblinWarrior : MonsterBase
     IEnumerator SwordAttack()
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_SWORD_ATTACK_SKILL_NUMBER];
+
+        _isReady = true;
+        UpdateAnimation();
+
+        yield return new WaitForSeconds(skillData.WindUpTime);
+
+        _isReady = false;
+        UpdateAnimation();
 
         float posX = this.transform.position.x + (MoveDir.x * skillData.HitBoxPos);
         hitBoxList[_HITBOX_NUM_SWORD_ATTACK].transform.position = new Vector2(posX, this.transform.position.y);

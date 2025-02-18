@@ -43,6 +43,11 @@ public class BasicAttack : PlayerSkillBase
         return true;
     }
 
+    public override void UpdateSkillEvent()
+    {
+        base.UpdateSkillEvent();
+    }
+
     public override void EndSkill()
     {
         base.EndSkill();

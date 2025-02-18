@@ -39,6 +39,12 @@ public class IceBall : PlayerSkillBase
         return true;
     }
 
+    public override void UpdateSkillEvent()
+    {
+        Owner.Rigidbody.gravityScale = 0f;
+        Owner.Rigidbody.velocity = Vector2.zero;
+    }
+
     void OnSpawnIceBall()
     {
         Vector3 offset = (Owner.LookLeft) ? new Vector3(-0.5f, -0.05f, 0) : new Vector3(0.5f, -0.05f, 0);
@@ -48,5 +54,6 @@ public class IceBall : PlayerSkillBase
     void OnEndSkill()
     {
         EndSkill();
+        Owner.Rigidbody.gravityScale = Owner.DefaultGravityScale;
     }
 }
