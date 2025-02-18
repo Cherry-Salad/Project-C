@@ -26,14 +26,16 @@
             "Type": "Melee", // 공격 유형
             "IsBodyHitBox": true, // 몬스터에 히트 박스 생성 여부
             "RecoveryTime": 0.8, // 시전후 회복 시간
+            "WindUpTime": 0.2, //공격 선 딜레이 시간
 
             "AttackRange": 1.0, // 공격 범위
             "RetentionTime": 0.1, // 공격 유지 시간
             "MovementMultiplier": 1.0, // 속도 변환값
             "InitialAngle": 0, // 공격 각도
-            "HitBoxPos":  0.7,
+            "HitBoxPos": 0.7,
 
             "ProjectileName": "", // 투사체 이름
+            "ProjectileID": 0, // 투사체 ID
             "NumberOfShots": 0, // 투사체 발사 횟수
             "DelayBetweenShots": 0 // 투사체 발사간 간격 시간
           }
@@ -67,14 +69,16 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 5,
             "RetentionTime": 0,
             "MovementMultiplier": 1.0,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
-            "ProjectileName": "GoblinBoomerang",
+            "ProjectileName": "GoblinsBoomerang",
+            "ProjectileID": 390003,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }
@@ -108,6 +112,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -116,6 +121,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinMagic",
+            "ProjectileID": 0,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }
@@ -123,26 +129,25 @@
       }
     },
 
-
     {
       "Type": "GoblinFly",
 
       "Base": {
         "Role": "MeleeAttacker",
-        "MovementSpeed": 1.0,
+        "MovementSpeed": 2.5,
         "BelligerenceLevel": 2,
         "DefaultGravity": 0
       },
 
       "Scan": {
-        "Distance": 10.0,
+        "Distance": 5.0,
         "MaxScanAngle": 45.0,
         "MinScanAngle": -45.0,
         "ViewAngle": 15.0
       },
 
       "Battle": {
-        "BattleEndTime": 15,
+        "BattleEndTime": 1,
         "MovementMultiplier": 1.2,
         "Attack": [
           {
@@ -150,14 +155,16 @@
             "Type": "BodySlam",
             "IsBodyHitBox": true,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 2.5,
             "RetentionTime": 0,
-            "MovementMultiplier": 1.8,
+            "MovementMultiplier": 15,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "",
+            "ProjectileID": 0,
             "NumberOfShots": 0,
             "DelayBetweenShots": 0
           }
@@ -191,6 +198,7 @@
             "Type": "BodySlam",
             "IsBodyHitBox": true,
             "RecoveryTime": 2,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -199,6 +207,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "",
+            "ProjectileID": 0,
             "NumberOfShots": 0,
             "DelayBetweenShots": 0
           },
@@ -207,6 +216,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -215,6 +225,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinAxe",
+            "ProjectileID": 0,
             "NumberOfShots": 3,
             "DelayBetweenShots": 0.1
           },
@@ -223,6 +234,7 @@
             "Type": "Projectile",
             "IsBodyHitBox": false,
             "RecoveryTime": 0.5,
+            "WindUpTime": 0.5,
 
             "AttackRange": 0,
             "RetentionTime": 0,
@@ -231,6 +243,7 @@
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinEyeLaser",
+            "ProjectileID": 0,
             "NumberOfShots": 1,
             "DelayBetweenShots": 0
           }

@@ -9,6 +9,7 @@ TagManager:
   - Checkpoint
   - Trap
   - CameraBoundary
+  - Monster
   layers:
   - Default
   - TransparentFX

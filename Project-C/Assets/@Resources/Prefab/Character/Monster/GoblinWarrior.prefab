@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 4903235851591303742}
   m_Layer: 8
   m_Name: GoblinWarrior
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -220,12 +220,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _state: 0
   MonsterID: 300001
+  _INIT_STAIT: 0
   _qMark: {fileID: 7828532685781875637}
   _eMark: {fileID: 3943590647091390833}
   hitBoxList:
   - {fileID: 1948076384959008187}
   - {fileID: 2432842092352054254}
-  _INIT_STAIT: 0
 --- !u!1 &1948076384959008187
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,9 +463,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1133632842077702564}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: HitBoxs
-  m_TagString: Untagged
+  m_TagString: EnemyHitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
