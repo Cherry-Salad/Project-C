@@ -57,14 +57,10 @@ public class SelfHealing : PlayerSkillBase
 
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        StartCoroutine(CoUpdateSkill());
         _coCasting = StartCoroutine(CoDoCastingSkill(OnHeal));
 
         return true;
-    }
-
-    public override void UpdateSkillEvent()
-    {
-        base.UpdateSkillEvent();
     }
 
     /// <summary>

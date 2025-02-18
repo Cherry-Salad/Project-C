@@ -58,8 +58,6 @@ public class Creature : BaseObject
     /// </summary>
     protected bool _hasDoubleJumped = false;
 
-    public event Action UpdateSkillEvent = null;
-
     public override bool Init()
     {
         if (base.Init() == false)
@@ -175,10 +173,7 @@ public class Creature : BaseObject
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
     }
 
-    protected virtual void UpdateSkill() 
-    {
-        UpdateSkillEvent?.Invoke();
-    }
+    protected virtual void UpdateSkill() {}
 
     protected virtual void UpdateWallCling() {}
 
@@ -258,7 +253,7 @@ public class Creature : BaseObject
         }
     }
 
-    public override void OnDamaged(float damage, bool ignoreInvincibility = false, Creature attacker = null) 
+    public override void OnDamaged(float damage, bool ignoreInvincibility = false, Collider2D attacker = null) 
     {
         // 무적 상태라면 대미지를 입지 않는다
         if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))

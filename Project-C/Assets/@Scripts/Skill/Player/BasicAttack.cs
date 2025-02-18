@@ -38,14 +38,10 @@ public class BasicAttack : PlayerSkillBase
 
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        StartCoroutine(CoUpdateSkill());
         StartCoroutine(CoDoSkill());
 
         return true;
-    }
-
-    public override void UpdateSkillEvent()
-    {
-        base.UpdateSkillEvent();
     }
 
     public override void EndSkill()

@@ -2,9 +2,7 @@ using Data;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using Object = UnityEngine.Object; //원래 오류가 안떳는데 갑자기 떠서 넣음
 using static Define;
 
 public class Player : Creature
@@ -477,7 +475,7 @@ public class Player : Creature
         StartCoroutine(CoDashCooldown());
     }
 
-    public override void OnDamaged(float damage = 1f, bool ignoreInvincibility = false, Creature attacker = null)
+    public override void OnDamaged(float damage = 1f, bool ignoreInvincibility = false, Collider2D attacker = null)
     {
         // 무적 상태라면 대미지를 입지 않는다
         if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
@@ -497,7 +495,7 @@ public class Player : Creature
             return;
 
         // 살짝 위로 튀어오르듯이
-        float dirX = Mathf.Sign(Rigidbody.position.x - attacker.Rigidbody.position.x);  // x값은 -1 또는 1로 고정
+        float dirX = Mathf.Sign(Rigidbody.position.x - attacker.transform.position.x);  // x값은 -1 또는 1로 고정
         Vector2 knockbackDir = (Vector2.up * 1.5f) + new Vector2(dirX, 0);
 
         // 넉백
@@ -536,7 +534,7 @@ public class Player : Creature
         if (State != ECreatureState.Dash && collision.gameObject.CompareTag("EnemyHitBox"))
         {
             Debug.Log($"{collision.name} 충돌");
-            OnDamaged(attacker: this);
+            OnDamaged(attacker: collision);
         }
 
         // 장애물 충돌

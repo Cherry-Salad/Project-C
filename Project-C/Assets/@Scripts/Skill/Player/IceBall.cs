@@ -35,14 +35,21 @@ public class IceBall : PlayerSkillBase
         
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        StartCoroutine(CoUpdateSkill(() => Owner.Rigidbody.gravityScale = Owner.DefaultGravityScale));
         //Owner.Mp -= MpCost;   // 테스트를 위하여 마나 소비는 껐다
         return true;
     }
 
-    public override void UpdateSkillEvent()
+    public override void UpdateSkill()
     {
         Owner.Rigidbody.gravityScale = 0f;
         Owner.Rigidbody.velocity = Vector2.zero;
+    }
+
+    public override void EndSkill()
+    {
+        base.EndSkill();
+        Owner.Rigidbody.gravityScale = Owner.DefaultGravityScale;
     }
 
     void OnSpawnIceBall()
@@ -54,6 +61,5 @@ public class IceBall : PlayerSkillBase
     void OnEndSkill()
     {
         EndSkill();
-        Owner.Rigidbody.gravityScale = Owner.DefaultGravityScale;
     }
 }

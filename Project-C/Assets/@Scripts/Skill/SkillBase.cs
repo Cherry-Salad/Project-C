@@ -80,14 +80,25 @@ public class SkillBase : InitBase
             return false;
 
         Debug.Log($"DoSkill: {Name}");
-
-        Owner.UpdateSkillEvent -= UpdateSkillEvent;
-        Owner.UpdateSkillEvent += UpdateSkillEvent;
-        
         return true;
     }
 
-    public virtual void UpdateSkillEvent()
+    protected IEnumerator CoUpdateSkill(Action callback = null)
+    {
+        while (true)
+        {
+            yield return new WaitForFixedUpdate();
+            
+            if (Owner.State != ECreatureState.Skill)
+                break;
+
+            UpdateSkill();
+        }
+
+        callback?.Invoke();
+    }
+
+    public virtual void UpdateSkill()
     {
         if (Owner.CheckGround() == false)
         {
@@ -110,14 +121,7 @@ public class SkillBase : InitBase
     {
         //Debug.Log("EndSkill");
         // 캐릭터가 공중에 있으면 점프로 전환
-        Owner.UpdateSkillEvent -= UpdateSkillEvent;
         Owner.State = Owner.CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
-    }
-
-    public void UpdateSkill2()
-    {
-        Owner.Rigidbody.gravityScale = 0f;
-        Owner.Rigidbody.velocity = Vector2.zero;
     }
 
     /// <summary>
