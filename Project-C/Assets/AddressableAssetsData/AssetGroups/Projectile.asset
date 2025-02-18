@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aaab5e7fedf9384448c795cf5197a138
+    m_Address: GoblinsBoomerang
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterDataSet
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a2ab188775b8a604db585412ad367431, type: 2}
   m_SchemaSet:
