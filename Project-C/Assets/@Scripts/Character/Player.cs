@@ -505,6 +505,7 @@ public class Player : Creature
             Managers.Map.CurrentCheckpoint = worldPos;
         }
 
+        // TODO: 카메라 변화 시점을 감지하는 방법 개선
         if (collision.gameObject.CompareTag("CameraBoundary") && collision.TryGetComponent<PolygonCollider2D>(out var collider))
             Managers.Camera.SetCurrentCamera(collider);
     }

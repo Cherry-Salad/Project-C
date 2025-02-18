@@ -79,6 +79,7 @@ public class MapManager
         if (Map != null)
             Managers.Resource.Destroy(Map);
 
+        Managers.Camera.Clear();
         // TODO: 다른 상호작용 오브젝트 디스폰, 오브젝트 풀링 사용
         //foreach (Transform checkpoint in CheckpointRoot)
         //    Managers.Resource.Destroy(checkpoint.gameObject);
@@ -125,7 +126,8 @@ public class MapManager
             if (boundary.TryGetComponent<PolygonCollider2D>(out var collider) == false)
                 continue;
 
-            Managers.Camera.Spawn(player, collider);
+            var ca = Managers.Camera.Spawn(player, collider);
+            ca.name = boundary.name;
         }
     }
 

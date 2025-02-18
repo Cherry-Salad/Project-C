@@ -850,8 +850,8 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 31, y: 8}
-      - {x: -10, y: 8}
+    - - {x: 31, y: 9}
+      - {x: -10, y: 9}
       - {x: -10, y: -6}
       - {x: 31, y: -6}
   m_UseDelaunayMesh: 0
