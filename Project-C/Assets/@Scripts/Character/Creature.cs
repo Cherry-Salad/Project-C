@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,8 @@ public class Creature : BaseObject
     /// 이단 점프 재사용을 방지하기 위해 공중에서 이미 이단 점프를 했는지 확인한다. 
     /// </summary>
     protected bool _hasDoubleJumped = false;
+
+    public event Action UpdateSkillEvent = null;
 
     public override bool Init()
     {
@@ -172,7 +175,10 @@ public class Creature : BaseObject
         Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
     }
 
-    protected virtual void UpdateSkill() {}
+    protected virtual void UpdateSkill() 
+    {
+        UpdateSkillEvent?.Invoke();
+    }
 
     protected virtual void UpdateWallCling() {}
 

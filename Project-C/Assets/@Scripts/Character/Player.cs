@@ -81,7 +81,7 @@ public class Player : Creature
             if (Managers.Data.PlayerSkillDataDic.TryGetValue(skillId, out var data) == false)
                 continue;
 
-            Debug.Log($"{data.CodeName}: {skillId}");
+            //Debug.Log($"{data.CodeName}: {skillId}");
 
             var type = Type.GetType(data.CodeName);
             if (type == null)
@@ -338,21 +338,22 @@ public class Player : Creature
 
     protected override void UpdateSkill()
     {
-        if (CheckGround() == false)
-        {
-            // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
-            float distance = Collider.bounds.extents.x + 0.1f;
-            bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
-            float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
+        base.UpdateSkill();
+        //if (CheckGround() == false)
+        //{
+        //    // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
+        //    float distance = Collider.bounds.extents.x + 0.1f;
+        //    bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+        //    float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
-            // 점프, 낙하
-            Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
-        }
-        else
-        {
-            // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
-            Rigidbody.velocity = Vector2.zero;
-        }
+        //    // 점프, 낙하
+        //    Rigidbody.velocity = new Vector2(velocityX, Rigidbody.velocity.y);
+        //}
+        //else
+        //{
+        //    // 스킬 사용 중일 때 바닥에 있다면 움직이지 않는다
+        //    Rigidbody.velocity = Vector2.zero;
+        //}
     }
 
     protected override void UpdateWallCling()

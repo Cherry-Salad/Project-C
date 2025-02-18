@@ -62,6 +62,11 @@ public class SelfHealing : PlayerSkillBase
         return true;
     }
 
+    public override void UpdateSkillEvent()
+    {
+        base.UpdateSkillEvent();
+    }
+
     /// <summary>
     /// 애니메이션 이벤트로 호출한다.
     /// </summary>
