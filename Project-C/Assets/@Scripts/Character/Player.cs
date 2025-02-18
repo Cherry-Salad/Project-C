@@ -44,7 +44,7 @@ public class Player : Creature
 
         ObjectType = EObjectType.Player;
 
-        // 충돌 필터링
+        // 트리거 필터링
         if (BodyHitBox != null)
         {
             BodyHitBox.isTrigger = true;
@@ -503,6 +503,9 @@ public class Player : Creature
             Vector3 worldPos = collision.bounds.center;
             Managers.Map.CurrentCheckpoint = worldPos;
         }
+
+        if (collision.gameObject.CompareTag("CameraBoundary") && collision.TryGetComponent<PolygonCollider2D>(out var collider))
+            Managers.Camera.SetCurrentCamera(collider);
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -524,7 +527,7 @@ public class Player : Creature
         {
             Debug.Log($"{collision.name} 충돌");
             OnDamaged(ignoreInvincibility: true);
-            Managers.Map.RespawnAtCheckpoint();
+            Managers.Map.RespawnAtCheckpoint(this);
         }
     }
 
@@ -543,8 +546,7 @@ public class Player : Creature
         if (Hp > 0)
             State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;  // 캐릭터가 공중에 있으면 점프로 전환
         else
-            // 사망 판정
-            StartCoroutine(CoUpdateDead());
+            StartCoroutine(CoUpdateDead()); // 사망 판정
     }
 
     IEnumerator CoUpdateDead()

@@ -309,7 +309,7 @@ public class Creature : BaseObject
 
             // 벽 타기로 넘어가야 하는 상황인지 확인한다
             OnGround = CheckGround();
-            bool shouldWallCling = (State == ECreatureState.Dash) && (OnGround == false && CheckWall());
+            bool shouldWallCling = (ObjectType == EObjectType.Player && State == ECreatureState.Dash) && (OnGround == false && CheckWall());
 
             // 대시가 아닌 다른 상태로 전환
             if (State != ECreatureState.Dash || shouldWallCling)

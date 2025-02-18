@@ -8,6 +8,7 @@ TagManager:
   - Audio
   - Checkpoint
   - Trap
+  - CameraBoundary
   layers:
   - Default
   - TransparentFX
