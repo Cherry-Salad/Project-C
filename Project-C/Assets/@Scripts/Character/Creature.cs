@@ -57,6 +57,7 @@ public class Creature : BaseObject
     /// 이단 점프 재사용을 방지하기 위해 공중에서 이미 이단 점프를 했는지 확인한다. 
     /// </summary>
     protected bool _hasDoubleJumped = false;
+    protected bool _isInvincibility = false;  // 무적 상태
 
     public override bool Init()
     {
@@ -189,16 +190,15 @@ public class Creature : BaseObject
             // 경사진 바닥에서도 점프를 할 수 있도록 수평 속도(velocity.x)를 0으로 설정
             Rigidbody.velocity = new Vector2(0f, JumpForce);
         }
+    }
 
-        // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
-        else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
-        {
-            State = ECreatureState.DoubleJump;
+    protected virtual void OnDoubleJump()
+    {
+        State = ECreatureState.DoubleJump;
 
-            // 이단 점프
-            _hasDoubleJumped = true;
-            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + DoubleJumpForce);
-        }
+        // 이단 점프
+        _hasDoubleJumped = true;
+        Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + DoubleJumpForce);
     }
 
     protected virtual void OnWallJump(float duration)
@@ -219,7 +219,8 @@ public class Creature : BaseObject
     /// <param name="speedMultiplier">속도 배율</param>
     /// <param name="ignorePhysics">물리적인 제약을 무시(중력과 충돌 제외)한다.</param>
     /// <param name="ignoreObstacle">장애물을 무시한다.</param>
-    protected virtual void OnDash(float distance, float speedMultiplier, bool ignorePhysics = true, bool ignoreObstacle = false)
+    /// <param name="callback">대시에 성공했을 때 이벤트</param>
+    protected virtual bool OnDash(float distance, float speedMultiplier, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
         // 벽에 매달린 상태에서 방향키를 누르지 않고 대시하면 반대 방향으로 대시한다
         if (State == ECreatureState.WallCling)
@@ -250,13 +251,19 @@ public class Creature : BaseObject
             
             // 대시 시작
             StartCoroutine(CoDash(dir, destPos, MoveSpeed * speedMultiplier, ignorePhysics));
+            return true;
         }
+
+        return false;
     }
 
     public override void OnDamaged(float damage, bool ignoreInvincibility = false, Collider2D attacker = null) 
     {
+        if (State == ECreatureState.Dead)
+            return;
+
         // 무적 상태라면 대미지를 입지 않는다
-        if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
+        if (ignoreInvincibility == false && _isInvincibility)
             return;
 
         base.OnDamaged(damage, attacker);
@@ -296,7 +303,7 @@ public class Creature : BaseObject
         State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;
     }
 
-    protected IEnumerator CoDash(Vector2 moveDir, Vector2 destPos, float dashSpeed, bool ignorePhysics)
+    protected IEnumerator CoDash(Vector2 moveDir, Vector2 destPos, float dashSpeed, bool ignorePhysics = true)
     {
         // 바닥 감지
         bool OnGround = CheckGround();
@@ -328,7 +335,7 @@ public class Creature : BaseObject
                 // 벽 타기로 전환
                 if (shouldWallCling)
                     State = ECreatureState.WallCling;
-                
+
                 yield break;
             }
 

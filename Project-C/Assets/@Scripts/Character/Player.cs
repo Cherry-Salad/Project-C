@@ -18,6 +18,7 @@ public class Player : Creature
 
     public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
 
+
     // 이동
     bool _moveDirKeyPressed = false;
 
@@ -436,6 +437,13 @@ public class Player : Creature
             return;
         }
 
+        // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
+        else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
+        {
+            OnDoubleJump();
+            return;
+        }
+
         base.OnJump();
     }
 
@@ -461,33 +469,40 @@ public class Player : Creature
             //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
             Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
             State = ECreatureState.Jump;
-            return;
         }
     }
 
-    protected override void OnDash(float distance = 3f, float speedMultiplier = 3f, bool ignorePhysics = true, bool ignoreObstacle = false)
+    protected override bool OnDash(float distance = 3f, float speedMultiplier = 3f, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
         // 대시 쿨타임 완료 여부
         if (_completeDashCooldown == false)
-            return;
+            return false;
 
-        base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle);
-        StartCoroutine(CoDashCooldown());
+        if (base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle))
+        {
+            StartCoroutine(CoDashCooldown());
+            StartCoroutine(CoHandleDashInvincibility());
+            return true;
+        }
+
+        return false;
     }
 
     public override void OnDamaged(float damage = 1f, bool ignoreInvincibility = false, Collider2D attacker = null)
     {
+        if (State == ECreatureState.Dead)
+            return;
+
         // 무적 상태라면 대미지를 입지 않는다
-        if (ignoreInvincibility == false && (State == ECreatureState.Dead || State == ECreatureState.Hurt))
+        if (ignoreInvincibility == false && _isInvincibility)
             return;
 
         // HP 감소
         Hp -= damage;
         OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
 
-        // 무적 상태
         State = ECreatureState.Hurt;
-        StartCoroutine(CoHandleInvincibility());
+        StartCoroutine(CoDamaged());    // 무적 상태
 
         Rigidbody.velocity = Vector2.zero;
 
@@ -510,6 +525,9 @@ public class Player : Creature
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (State == ECreatureState.Dead)
+            return;
+
         // 체크포인트와 상호작용
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
@@ -525,13 +543,12 @@ public class Player : Creature
 
     void OnTriggerStay2D(Collider2D collision)
     {
-        // 사망했다면 충돌 감지를 할 필요없다
-        if (State == ECreatureState.Hurt || State == ECreatureState.Dead)
+        if (State == ECreatureState.Dead)
             return;
 
-        // 대시 중일 때 몬스터와 충돌하면 안된다
+        // 무적 상태일 때 몬스터와 충돌하면 안된다
         // MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
-        if (State != ECreatureState.Dash && collision.gameObject.CompareTag("EnemyHitBox"))
+        if (_isInvincibility == false && collision.gameObject.CompareTag("EnemyHitBox"))
         {
             Debug.Log($"{collision.name} 충돌");
             OnDamaged(attacker: collision);
@@ -553,15 +570,33 @@ public class Player : Creature
         _completeDashCooldown = true;
     }
 
-    IEnumerator CoHandleInvincibility(float duration = 0.5f)
+    IEnumerator CoHandleDashInvincibility()
+    {
+        _isInvincibility = true;
+        
+        while (State == ECreatureState.Dash)
+            yield return new WaitForFixedUpdate();
+
+        _isInvincibility = false;
+    }
+
+    IEnumerator CoDamaged(float duration = 0.5f, float bonusDuration = 0.7f)
     {
         // 지속 시간만큼 무적 상태이다
+        _isInvincibility = true;
         yield return new WaitForSeconds(duration);
 
         if (Hp > 0)
             State = CheckGround() ? ECreatureState.Idle : ECreatureState.Jump;  // 캐릭터가 공중에 있으면 점프로 전환
         else
+        {
             StartCoroutine(CoUpdateDead()); // 사망 판정
+            yield break;
+        }
+        
+        // 추가 무적 시간
+        yield return new WaitForSeconds(bonusDuration);
+        _isInvincibility = false;
     }
 
     IEnumerator CoUpdateDead()
