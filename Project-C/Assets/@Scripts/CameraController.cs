@@ -72,6 +72,7 @@ public class CameraController : InitBase
 
         VirtualCamera = GetComponent<CinemachineVirtualCamera>();
         Confiner = GetComponent<CinemachineConfiner2D>();
+        VirtualCamera.m_Lens.OrthographicSize = 5.625f; // (180 / 16) * 0.5 = 5.625
         return true;
     }
 
@@ -83,7 +84,5 @@ public class CameraController : InitBase
         Target = target;
         Boundary = boundary;
         Priority = priority;
-
-        VirtualCamera.m_Lens.OrthographicSize = 4.5f;
     }
 }
