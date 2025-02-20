@@ -535,7 +535,7 @@ MonoBehaviour:
   m_UpdateMethod: 0
   m_BlendUpdateMethod: 0
   m_DefaultBlend:
-    m_Style: 2
+    m_Style: 0
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2

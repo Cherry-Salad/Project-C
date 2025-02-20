@@ -8,6 +8,7 @@ public class CameraManager
 {
     public CinemachineBrain Brain;
     public CameraController CurrentCamera { get; private set; }
+
     //public int CurrentCameraIndex { get; private set; } = -1;
 
     public List<CameraController> Cameras = new List<CameraController>();
@@ -26,11 +27,14 @@ public class CameraManager
     int _defaultPriority = 10;
     int _activePriority = 20;
 
+    public void LoadMainCamera()
+    {
+        Clear();
+        Brain = Camera.main.GetComponent<CinemachineBrain>();
+    }
+
     public CameraController Spawn<T>(T target, PolygonCollider2D boundary, int priority = 10) where T : BaseObject
     {
-        if (Brain == null)
-            Brain = Camera.main.GetComponent<CinemachineBrain>();
-
         // TODO: 오브젝트 풀링
         GameObject go = Managers.Resource.Instantiate("VirtualCamera", CameraRoot);
         CameraController camera = go.GetComponent<CameraController>();
@@ -45,16 +49,13 @@ public class CameraManager
         CurrentCamera = null;
         //CurrentCameraIndex = -1;
         Cameras.Clear();
-        
-        foreach (CameraController ca in Cameras)
-            Managers.Resource.Destroy(ca.gameObject);
     }
 
     //public void SetCurrentCamera(int idx)
     //{
     //    if (idx <= -1 || Cameras.Count <= idx || CurrentCameraIndex == idx)
     //        return;
-        
+
     //    if (CurrentCamera != null)
     //    {
     //        // 이전 카메라는 기본 우선순위로 설정
@@ -74,12 +75,12 @@ public class CameraManager
         if (CurrentCamera == camera)
             return;
 
+        Debug.Log("SetCurrentCamera");
         if (CurrentCamera != null)
         {
             // 이전 카메라는 기본 우선순위로 설정
             CurrentCamera.Priority = _defaultPriority;
         }
-        // TODO: 맵을 로드하고 처음으로 설정한 카메라는 블렌드 효과가 필요없다
 
         CurrentCamera = camera;
         //CurrentCameraIndex = Cameras.IndexOf(camera);
@@ -92,7 +93,8 @@ public class CameraManager
     {
         if (CurrentCamera != null && CurrentCamera.Boundary == boundary)
             return;
-
+        
+        Debug.Log("SetCurrentCamera");
         foreach (CameraController camera in Cameras)
         {
             bool find = string.IsNullOrEmpty(name) && camera.Boundary == boundary;
@@ -105,8 +107,6 @@ public class CameraManager
                     // 이전 카메라는 기본 우선순위로 설정
                     CurrentCamera.Priority = _defaultPriority;
                 }
-
-                // TODO: 맵을 로드하고 처음으로 설정한 카메라는 블렌드 효과가 필요없다
 
                 CurrentCamera = camera;
                 //CurrentCameraIndex = Cameras.IndexOf(camera);

@@ -41,7 +41,6 @@ public class Player : Creature
     //UI를 위한 이벤트 추가
     public event Action OnHpChanged;
     public event Action OnMpChanged;
-    public event Action OnDataLoaded; //데이터 로드 완료 이벤트 추가
 
     public override bool Init()
     {
@@ -111,7 +110,6 @@ public class Player : Creature
 
     public void TriggerOnHpChanged() { OnHpChanged?.Invoke(); } // HP 업데이트 이벤트 트리거
     public void TriggerOnMpChanged() { OnMpChanged?.Invoke(); } // MP 업데이트 이벤트 트리거
-    public void TriggerOnDataLoaded() { OnDataLoaded?.Invoke(); } // 데이터 로드 완료 이벤트 트리거
 
     #region 입력 감지
     void Update()
@@ -530,14 +528,6 @@ public class Player : Creature
         if (State == ECreatureState.Dead)
             return;
 
-        // 체크포인트와 상호작용
-        if (collision.gameObject.CompareTag("Checkpoint"))
-        {
-            Debug.Log("체크포인트 활성화");
-            Vector3 worldPos = collision.bounds.center;
-            Managers.Map.CurrentCheckpoint = worldPos;
-        }
-
         // TODO: 카메라 변화 시점을 감지하는 방법 개선
         if (collision.gameObject.CompareTag("CameraBoundary") && collision.TryGetComponent<PolygonCollider2D>(out var collider))
             Managers.Camera.SetCurrentCamera(collider);
@@ -549,7 +539,6 @@ public class Player : Creature
             return;
 
         // 무적 상태일 때 몬스터와 충돌하면 안된다
-        // MonsterBase monster = collision.gameObject.GetComponent<MonsterBase>();
         if (_isInvincibility == false && collision.gameObject.CompareTag("EnemyHitBox"))
         {
             Debug.Log($"{collision.name} 충돌");
@@ -564,6 +553,17 @@ public class Player : Creature
             OnDamaged(ignoreInvincibility: true);
             Managers.Map.RespawnAtCheckpoint(this);
             return;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        // 체크포인트와 상호작용
+        if (collision.gameObject.CompareTag("Checkpoint"))
+        {
+            Debug.Log("체크포인트 활성화");
+            Vector3 worldPos = collision.bounds.center;
+            Managers.Map.CurrentCheckpoint = worldPos;
         }
     }
 

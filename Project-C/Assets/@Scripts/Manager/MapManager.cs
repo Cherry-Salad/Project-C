@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Define;
@@ -130,8 +131,33 @@ public class MapManager
     /// </summary>
     public void RespawnAtCheckpoint(BaseObject go)
     {
-        if (SpawnObject == null || CurrentCheckpoint == Vector3.zero)
+        if (CheckpointRoot == null || CheckpointRoot.childCount <= 0)
             return;
+
+        // 활성화된 체크포인트가 없다면 가장 가까운 체크포인트로 이동
+        if (CurrentCheckpoint == Vector3.zero)
+        {
+            Vector3 closest = Vector3.zero; // 가장 가까운 체크포인트 위치
+            float minDistance = float.MaxValue;
+
+            foreach (Transform checkpoint in CheckpointRoot)
+            {
+                float distance = Vector3.Distance(go.transform.position, checkpoint.position);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closest = checkpoint.position;
+                }
+            }
+
+            if (closest == Vector3.zero)    // 가까운 체크포인트를 못 찾았다면 버그다
+            {
+                Debug.LogError("와 샌즈");
+                return;
+            }
+
+            CurrentCheckpoint = closest;
+        }
 
         // TODO: 체크포인트로 이동하는 연출
 
