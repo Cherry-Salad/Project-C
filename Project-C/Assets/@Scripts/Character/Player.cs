@@ -38,6 +38,8 @@ public class Player : Creature
 
     bool _isTouchingTrap = false;   // 함정 충돌 여부
 
+    Coroutine _CoDamaged = null;    // 피격 판정 중복 방지
+
     //UI를 위한 이벤트 추가
     public event Action OnHpChanged;
     public event Action OnMpChanged;
@@ -498,11 +500,17 @@ public class Player : Creature
 
         // HP 감소
         Hp -= damage;
-
         OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
 
         State = ECreatureState.Hurt;
-        StartCoroutine(CoDamaged());    // 무적 상태
+        if (_CoDamaged != null)
+        {
+            StopCoroutine(_CoDamaged);
+            _CoDamaged = null;
+            SpriteRenderer.enabled = true;
+        }
+        
+        _CoDamaged = StartCoroutine(CoDamaged());   // 무적 상태
 
         Rigidbody.velocity = Vector2.zero;
 
@@ -595,13 +603,23 @@ public class Player : Creature
         else
         {
             StartCoroutine(CoUpdateDead()); // 사망 판정
+            _CoDamaged = null;
             yield break;
         }
-        
+
         // 추가 무적 시간
-        yield return new WaitForSeconds(bonusDuration);
+        float elapsedTime = 0f;
+        while (elapsedTime < bonusDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            SpriteRenderer.enabled = !SpriteRenderer.enabled;   // 스프라이트 깜빡 효과
+            yield return null;
+        }
+
+        SpriteRenderer.enabled = true;
         _isInvincibility = false;
         _isTouchingTrap = false;
+        _CoDamaged = null;
     }
 
     IEnumerator CoUpdateDead()
