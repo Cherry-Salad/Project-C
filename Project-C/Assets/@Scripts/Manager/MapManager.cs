@@ -4,19 +4,11 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Define;
 
-public struct ObjectSpawnInfo
+[CreateAssetMenu]
+public class MapObject : Tile
 {
-    public ObjectSpawnInfo(string name, Vector3Int cellPos, Vector3 worldPos, EObjectType type)
-    {
-        Name = name;
-        CellPos = cellPos;
-        WorldPos = worldPos;
-        ObjectType = type;
-    }
-
+    public int DataId;
     public string Name;
-    public Vector3Int CellPos;
-    public Vector3 WorldPos;
     public EObjectType ObjectType;
 }
 
@@ -25,9 +17,7 @@ public class MapManager
     public GameObject Map { get; private set; }
     public string MapName { get; private set; }
     public Grid CellGrid { get; private set; }
-    public Tilemap Checkpoint { get; private set; }
-
-    public List<ObjectSpawnInfo> Checkpoints = new List<ObjectSpawnInfo>(); // TODO: 맵에 소환된 오브젝트들
+    public Tilemap SpawnObject { get; private set; }
     
     /// <summary>
     /// 현재 활성화된 체크포인트 위치
@@ -68,10 +58,10 @@ public class MapManager
         Map = map;
         MapName = mapName;
         CellGrid = map.GetComponent<Grid>();
-        Checkpoint = Util.FindChild<Tilemap>(map, "Checkpoint");
-
+        SpawnObject = Util.FindChild<Tilemap>(map, "SpawnObject");
+        
         CurrentCheckpoint = Vector3.zero;
-        SpawnCheckpoints();
+        SpawnObjects();
     }
 
     public void DestroyMap()
@@ -80,37 +70,41 @@ public class MapManager
             Managers.Resource.Destroy(Map);
 
         Managers.Camera.Clear();
-        // TODO: 다른 상호작용 오브젝트 디스폰, 오브젝트 풀링 사용
-        //foreach (Transform checkpoint in CheckpointRoot)
-        //    Managers.Resource.Destroy(checkpoint.gameObject);
     }
 
-    void SpawnCheckpoints() // TODO: 체크 포인트 말고 다른 상호작용 오브젝트도 소환, 오브젝트 풀링 사용
+    void SpawnObjects() // TODO: 오브젝트 풀링 사용
     {
-        if (Checkpoint == null)
+        if (SpawnObject == null)
             return;
 
-        for (int y = Checkpoint.cellBounds.yMax; y >= Checkpoint.cellBounds.yMin; y--)
+        for (int y = SpawnObject.cellBounds.yMax; y >= SpawnObject.cellBounds.yMin; y--)
         {
-            for (int x = Checkpoint.cellBounds.xMin; x <= Checkpoint.cellBounds.xMax; x++)
+            for (int x = SpawnObject.cellBounds.xMin; x <= SpawnObject.cellBounds.xMax; x++)
             {
                 Vector3Int cellPos = new Vector3Int(x, y, 0);
-                if (Checkpoint.HasTile(cellPos))
+                MapObject tile = SpawnObject.GetTile(cellPos) as MapObject;
+
+                if (tile != null)
                 {
                     // 타일 크기를 고려하여 타일 중심으로 조정
                     Vector3 worldPos = CellGrid.CellToWorld(cellPos);
                     Vector3 tileOffset = CellGrid.cellSize * 0.5f;  // 타일 크기의 절반
                     worldPos += tileOffset;
 
-                    GameObject checkpoint = Managers.Resource.Instantiate("Checkpoint");
-                    checkpoint.transform.position = worldPos;
-                    checkpoint.transform.parent = CheckpointRoot;
+                    GameObject obj = Managers.Resource.Instantiate(tile.name);
+                    obj.transform.position = worldPos;
 
-                    ObjectSpawnInfo info = new ObjectSpawnInfo("Checkpoint", cellPos, worldPos, EObjectType.Checkpoint);
-                    Checkpoints.Add(info);
+                    switch (tile.ObjectType)
+                    {
+                        case EObjectType.Checkpoint:
+                            obj.transform.parent = CheckpointRoot;
+                            break;
+                    }
                 }
             }
         }
+
+        SpawnObject.GetComponent<TilemapRenderer>().enabled = false;
     }
 
     /// <summary>
@@ -136,7 +130,7 @@ public class MapManager
     /// </summary>
     public void RespawnAtCheckpoint(BaseObject go)
     {
-        if (Checkpoint == null || CurrentCheckpoint == Vector3.zero)
+        if (SpawnObject == null || CurrentCheckpoint == Vector3.zero)
             return;
 
         // TODO: 체크포인트로 이동하는 연출
