@@ -18,7 +18,6 @@ public class Player : Creature
 
     public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
 
-
     // 이동
     bool _moveDirKeyPressed = false;
 
@@ -36,6 +35,8 @@ public class Player : Creature
     // 스킬
     KeyCode _pressedSkillKey = KeyCode.None;
     float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
+
+    bool _isTouchingTrap = false;   // 함정 충돌 여부
 
     //UI를 위한 이벤트 추가
     public event Action OnHpChanged;
@@ -499,6 +500,7 @@ public class Player : Creature
 
         // HP 감소
         Hp -= damage;
+
         OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
 
         State = ECreatureState.Hurt;
@@ -555,11 +557,13 @@ public class Player : Creature
         }
 
         // 장애물 충돌
-        if (collision.gameObject.CompareTag("Trap"))
+        if (_isTouchingTrap == false && collision.gameObject.CompareTag("Trap"))
         {
             Debug.Log($"{collision.name} 충돌");
+            _isTouchingTrap = true;
             OnDamaged(ignoreInvincibility: true);
             Managers.Map.RespawnAtCheckpoint(this);
+            return;
         }
     }
 
@@ -597,6 +601,7 @@ public class Player : Creature
         // 추가 무적 시간
         yield return new WaitForSeconds(bonusDuration);
         _isInvincibility = false;
+        _isTouchingTrap = false;
     }
 
     IEnumerator CoUpdateDead()
