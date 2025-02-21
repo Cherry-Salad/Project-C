@@ -19,17 +19,13 @@ public class TutorialScene : BaseScene
             if (loadCount == totalCount)
             {
                 Managers.Data.Init();
-                Managers.Camera.LoadMainCamera();
-
                 Managers.Map.LoadMap("TutorialMap");
 
                 // 플레이어 소환, TODO: 맵마다 플레이어 스폰 위치를 다르게 설정
                 GameObject player = Managers.Resource.Instantiate("Player");
                 player.transform.position = Vector3.zero;   // TODO: 맵에서 플레이어 소환 위치 설정
 
-                Managers.Map.SpawnRoomCameras();
-                //CameraController camera = Camera.main.GetComponent<CameraController>();
-                //camera.Target = player.GetComponent<Player>();
+                Managers.Camera.Load();
             }
         });
         #endregion

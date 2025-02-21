@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Define;
@@ -19,30 +19,34 @@ public class MapManager
     public string MapName { get; private set; }
     public Grid CellGrid { get; private set; }
     public Tilemap SpawnObject { get; private set; }
-    
+    public HashSet<Room> Rooms { get; private set; } = new HashSet<Room>();
+
+    Room _room = null;
+    public Room CurrentRoom 
+    {
+        get { return _room; }
+        set
+        {
+            if (_room != value)
+            {
+                _room = value;
+                Managers.Camera.SetCurrentCamera(_room.CameraBoundary);
+            }
+        }
+    }
+
     /// <summary>
     /// 현재 활성화된 체크포인트 위치
     /// </summary>
     public Vector3 CurrentCheckpoint { get; set; }
 
     public Transform CheckpointRoot
-    { 
-        get 
+    {
+        get
         {
             GameObject root = GameObject.Find("@Checkpoints");
             if (root == null)
                 root = new GameObject { name = "@Checkpoints" };
-
-            return root.transform;
-        }
-    }
-    public Transform CameraBoundaryRoot
-    {
-        get
-        {
-            GameObject root = GameObject.Find("@CameraBoundarys");
-            if (root == null)
-                root = new GameObject { name = "@CameraBoundarys" };
 
             return root.transform;
         }
@@ -60,7 +64,17 @@ public class MapManager
         MapName = mapName;
         CellGrid = map.GetComponent<Grid>();
         SpawnObject = Util.FindChild<Tilemap>(map, "SpawnObject");
-        
+
+        Transform rooms = Util.FindChild<Transform>(map, "@Rooms");
+        foreach (Transform child in rooms)
+        {
+            if (child.TryGetComponent<Room>(out var room) == false)
+                continue;
+
+            Rooms.Add(room);
+            room.GetComponent<TilemapRenderer>().enabled = false;
+        }
+
         CurrentCheckpoint = Vector3.zero;
         SpawnObjects();
     }
@@ -108,21 +122,19 @@ public class MapManager
         SpawnObject.GetComponent<TilemapRenderer>().enabled = false;
     }
 
-    /// <summary>
-    /// 룸 기반으로 카메라를 배치하고 각 룸에 설정된 카메라 경계를 가져온다.
-    /// </summary>
-    public void SpawnRoomCameras()  // 사실 동적으로 생성하는 것보다 맵 프리팹에서 직접 생성하는게 더 효율적일지도..
+    public void ChangeCurrentRoom(Vector3 pos)
     {
-        GameObject p = GameObject.Find("Player");  // TODO: 게임 매니저에서 플레이어를 찾는다
-        Player player = p.GetComponent<Player>();
-
-        foreach (Transform boundary in CameraBoundaryRoot)
+        foreach (Room room in Rooms)
         {
-            if (boundary.TryGetComponent<PolygonCollider2D>(out var collider) == false)
+            if (room.Tilemap == null) 
                 continue;
 
-            var ca = Managers.Camera.Spawn(player, collider);
-            ca.name = boundary.name;
+            Vector3Int cellPos = CellGrid.WorldToCell(pos);
+            if (room.Tilemap.HasTile(cellPos))
+            {
+                CurrentRoom = room;
+                break;
+            }
         }
     }
 

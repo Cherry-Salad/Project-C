@@ -9,9 +9,7 @@ public class CameraManager
     public CinemachineBrain Brain;
     public CameraController CurrentCamera { get; private set; }
 
-    //public int CurrentCameraIndex { get; private set; } = -1;
-
-    public List<CameraController> Cameras = new List<CameraController>();
+    public HashSet<CameraController> Cameras = new HashSet<CameraController>();
     public Transform CameraRoot
     {
         get
@@ -27,10 +25,24 @@ public class CameraManager
     int _defaultPriority = 10;
     int _activePriority = 20;
 
-    public void LoadMainCamera()
+    public void Load()
     {
         Clear();
+
+        GameObject p = GameObject.Find("Player");  // TODO: 게임 매니저에서 플레이어를 찾는다
+        Player player = p.GetComponent<Player>();
+
         Brain = Camera.main.GetComponent<CinemachineBrain>();
+        
+        // 룸 기반 카메라
+        foreach (Room room in Managers.Map.Rooms)
+        {
+            if (room.CameraBoundary == null)
+                continue;
+
+            CameraController camera = Spawn(player, room.CameraBoundary);
+            camera.name = room.name;
+        }
     }
 
     public CameraController Spawn<T>(T target, PolygonCollider2D boundary, int priority = 10) where T : BaseObject
@@ -47,45 +59,22 @@ public class CameraManager
     public void Clear()
     {
         CurrentCamera = null;
-        //CurrentCameraIndex = -1;
         Cameras.Clear();
     }
-
-    //public void SetCurrentCamera(int idx)
-    //{
-    //    if (idx <= -1 || Cameras.Count <= idx || CurrentCameraIndex == idx)
-    //        return;
-
-    //    if (CurrentCamera != null)
-    //    {
-    //        // 이전 카메라는 기본 우선순위로 설정
-    //        CurrentCamera.Priority = _defaultPriority;
-    //    }
-    //    // TODO: 맵을 로드하고 처음으로 설정한 카메라는 블렌드 효과가 필요없다
-
-    //    CurrentCamera = Cameras[idx];
-    //    CurrentCameraIndex = idx;
-
-    //    // 카메라 활성화
-    //    CurrentCamera.Priority = _activePriority;
-    //}
 
     public void SetCurrentCamera(CameraController camera)
     {
         if (CurrentCamera == camera)
             return;
 
-        Debug.Log("SetCurrentCamera");
         if (CurrentCamera != null)
         {
             // 이전 카메라는 기본 우선순위로 설정
             CurrentCamera.Priority = _defaultPriority;
         }
 
-        CurrentCamera = camera;
-        //CurrentCameraIndex = Cameras.IndexOf(camera);
-
         // 카메라 활성화
+        CurrentCamera = camera;
         CurrentCamera.Priority = _activePriority;
     }
 
@@ -94,7 +83,6 @@ public class CameraManager
         if (CurrentCamera != null && CurrentCamera.Boundary == boundary)
             return;
         
-        Debug.Log("SetCurrentCamera");
         foreach (CameraController camera in Cameras)
         {
             bool find = string.IsNullOrEmpty(name) && camera.Boundary == boundary;
@@ -108,10 +96,8 @@ public class CameraManager
                     CurrentCamera.Priority = _defaultPriority;
                 }
 
-                CurrentCamera = camera;
-                //CurrentCameraIndex = Cameras.IndexOf(camera);
-
                 // 카메라 활성화
+                CurrentCamera = camera;
                 CurrentCamera.Priority = _activePriority;
                 break;
             }

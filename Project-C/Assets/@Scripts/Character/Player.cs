@@ -319,6 +319,12 @@ public class Player : Creature
 
     protected override void UpdateController()
     {
+        if (Managers.Map.CurrentRoom == null || Managers.Map.CurrentRoom.IsInRoom(transform.position) == false)
+        {
+            Debug.Log("ChangeCurrentRoom");
+            Managers.Map.ChangeCurrentRoom(transform.position);
+        }
+
         base.UpdateController();
     }
 
@@ -526,19 +532,12 @@ public class Player : Creature
         Rigidbody.AddForce(knockbackDir * knockbackForce, ForceMode2D.Impulse);
     }
 
+    /// <summary>
+    /// 애니메이션 이벤트로 호출한다.
+    /// </summary>
     public override void OnDied()
     {
         base.OnDied();
-    }
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (State == ECreatureState.Dead)
-            return;
-
-        // TODO: 카메라 변화 시점을 감지하는 방법 개선
-        if (collision.gameObject.CompareTag("CameraBoundary") && collision.TryGetComponent<PolygonCollider2D>(out var collider))
-            Managers.Camera.SetCurrentCamera(collider);
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -566,6 +565,9 @@ public class Player : Creature
 
     void OnTriggerExit2D(Collider2D collision)
     {
+        if (State == ECreatureState.Dead)
+            return;
+
         // 체크포인트와 상호작용
         if (collision.gameObject.CompareTag("Checkpoint"))
         {
@@ -634,7 +636,7 @@ public class Player : Creature
             if (elapsedTime >= 1.5f)
                 yield break;
 
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         // 사망

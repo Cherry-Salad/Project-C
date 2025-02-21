@@ -546,7 +546,7 @@ public class Creature : BaseObject
     /// <param name="ignorePhysics">물리적 제약 무시 여부</param>
     /// <param name="ignoreObstacle">장애물 무시 여부</param>
     /// <returns></returns>
-    Vector2 FindDashDestPos(Vector2 moveDir, float distance, bool ignorePhysics, bool ignoreObstacle = false)
+    protected Vector2 FindDashDestPos(Vector2 moveDir, float distance, bool ignorePhysics, bool ignoreObstacle = false)
     {
         // 장애물 무시
         if (ignoreObstacle)

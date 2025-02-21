@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class CameraController : InitBase
 {
-    public CinemachineVirtualCamera VirtualCamera { get; set; }
-    public CinemachineConfiner2D Confiner { get; set; }
+    public CinemachineVirtualCamera VirtualCamera { get; private set; }
+    public CinemachineConfiner2D Confiner { get; private set; }
 
     BaseObject _target;
     /// <summary>
@@ -31,11 +31,11 @@ public class CameraController : InitBase
     { 
         get
         {
-            if (Confiner.m_BoundingShape2D == null)
+            if (Confiner == null || Confiner.m_BoundingShape2D == null)
                 return null;
             return _boundary;
         }
-        set
+        private set
         {
             if (_boundary != value)
             {
@@ -48,13 +48,7 @@ public class CameraController : InitBase
     int _priority;
     public int Priority
     {
-        get
-        {
-            if (VirtualCamera == null)
-                return -1;
-            else
-                return _priority;
-        }
+        get { return _priority; }
         set
         {
             if (_priority != value)
