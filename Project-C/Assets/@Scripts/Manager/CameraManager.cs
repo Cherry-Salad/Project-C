@@ -25,6 +25,9 @@ public class CameraManager
     int _defaultPriority = 10;
     int _activePriority = 20;
 
+    /// <summary>
+    /// 메인 카메라를 가져오고, 룸 기반으로 카메라를 스폰한다.
+    /// </summary>
     public void Load()
     {
         Clear();
@@ -33,7 +36,7 @@ public class CameraManager
         Player player = p.GetComponent<Player>();
 
         Brain = Camera.main.GetComponent<CinemachineBrain>();
-        
+
         // 룸 기반 카메라
         foreach (Room room in Managers.Map.Rooms)
         {
@@ -43,6 +46,12 @@ public class CameraManager
             CameraController camera = Spawn(player, room.CameraBoundary);
             camera.name = room.name;
         }
+
+
+        // 블렌드 효과를 임시로 비활성화
+        // Brain.m_CustomBlends를 임시로 null하면 카메라가 잠깐 깜빡거려서 Brain 자체를 비활성화하였다
+        // Hoxy... 더 좋은 방법이 있다면 알려주세용
+        Brain.enabled = false;  // 문제가 생길줄 알았는데, 이게 되네..?
     }
 
     public CameraController Spawn<T>(T target, PolygonCollider2D boundary, int priority = 10) where T : BaseObject
@@ -72,6 +81,8 @@ public class CameraManager
             // 이전 카메라는 기본 우선순위로 설정
             CurrentCamera.Priority = _defaultPriority;
         }
+        else
+            Brain.enabled = true;   // 블렌드 효과 활성화
 
         // 카메라 활성화
         CurrentCamera = camera;
@@ -82,7 +93,7 @@ public class CameraManager
     {
         if (CurrentCamera != null && CurrentCamera.Boundary == boundary)
             return;
-        
+
         foreach (CameraController camera in Cameras)
         {
             bool find = string.IsNullOrEmpty(name) && camera.Boundary == boundary;
@@ -95,6 +106,8 @@ public class CameraManager
                     // 이전 카메라는 기본 우선순위로 설정
                     CurrentCamera.Priority = _defaultPriority;
                 }
+                else
+                    Brain.enabled = true;   // 블렌드 효과 활성화
 
                 // 카메라 활성화
                 CurrentCamera = camera;
