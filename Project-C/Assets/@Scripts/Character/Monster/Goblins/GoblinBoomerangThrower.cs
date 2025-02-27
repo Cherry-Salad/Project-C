@@ -15,16 +15,22 @@ public class GoblinBoomerangThrower : MonsterBase
     private MonsterProjectile throwBoomerang;
 
     private bool _isThrow = false;
+    private bool _isReady = true;
     private int MAX_BOOMERANG_COUNT = 3;
 
     protected override void UpdateAnimation()
     {
-        base.UpdateAnimation();
+        if (State != ECreatureState.Skill)
+            base.UpdateAnimation();
 
         switch (State)
         {
             case ECreatureState.Skill:
-                Animator.Play("Attack");
+                if (_isReady)
+                    Animator.Play("AttackReady");
+                else
+                    Animator.Play("Attack");
+
                 break;
         }
     }
@@ -63,6 +69,17 @@ public class GoblinBoomerangThrower : MonsterBase
     IEnumerator ThrowBoomerang()
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_THROW_BOOMERANG_SKILL_NUMBER];
+
+        _isReady = true;
+        UpdateAnimation();
+
+        yield return new WaitForSeconds(skillData.WindUpTime);
+
+        if (State != ECreatureState.Skill) yield break;
+
+        _isReady = false;
+        UpdateAnimation();
+
         ShootingProjectile();
         
         while(throwBoomerang.Object.activeSelf)

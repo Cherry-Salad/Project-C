@@ -200,34 +200,34 @@
             "RecoveryTime": 2,
             "WindUpTime": 0.5,
 
-            "AttackRange": 0,
-            "RetentionTime": 0,
-            "MovementMultiplier": 2.0,
+            "AttackRange": 3,
+            "RetentionTime": 5,
+            "MovementMultiplier": 15,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "",
             "ProjectileID": 0,
-            "NumberOfShots": 0,
+            "NumberOfShots": 5,
             "DelayBetweenShots": 0
           },
           {
             "Name": "ThrowingAxe",
             "Type": "Projectile",
             "IsBodyHitBox": false,
-            "RecoveryTime": 0.5,
+            "RecoveryTime": 2,
             "WindUpTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 10,
             "RetentionTime": 0,
             "MovementMultiplier": 1.2,
             "InitialAngle": 80,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinAxe",
-            "ProjectileID": 0,
-            "NumberOfShots": 3,
-            "DelayBetweenShots": 0.1
+            "ProjectileID": 390005,
+            "NumberOfShots": 5,
+            "DelayBetweenShots": 1
           },
           {
             "Name": "EyeLaserAttack",
@@ -236,16 +236,16 @@
             "RecoveryTime": 0.5,
             "WindUpTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 10,
             "RetentionTime": 0,
             "MovementMultiplier": 1.2,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinEyeLaser",
-            "ProjectileID": 0,
-            "NumberOfShots": 1,
-            "DelayBetweenShots": 0
+            "ProjectileID": 390004,
+            "NumberOfShots": 15,
+            "DelayBetweenShots": 0.5
           }
         ]
       }
