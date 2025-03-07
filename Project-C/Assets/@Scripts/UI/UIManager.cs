@@ -18,7 +18,7 @@ public class UIManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(1); //GameScene불러오기
     }
 
     public void OpenOption()
