@@ -56,9 +56,9 @@ public class MapManager
     {
         DestroyMap();
 
-        GameObject map = Managers.Resource.Instantiate(mapName);
+        //GameObject map = Managers.Resource.Instantiate(mapName);
+        GameObject map = GameObject.Find(mapName);
         map.transform.position = Vector3.zero;
-        map.name = $"@Map_{mapName}";
 
         Map = map;
         MapName = mapName;
