@@ -17,6 +17,12 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 0977e3b3d6fbccd4485327bb1722cdb3
   m_SerializeEntries:
+  - m_GUID: 61d727ca88ea46f49bc3a50dbdf28b29
+    m_Address: BreakableWall
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c517610e9aad53049b100aa8336bae86
     m_Address: Checkpoint
     m_ReadOnly: 0

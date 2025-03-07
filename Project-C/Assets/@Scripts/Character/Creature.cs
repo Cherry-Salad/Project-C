@@ -562,6 +562,7 @@ public class Creature : BaseObject
         LayerMask includeLayers = 0;
         includeLayers.AddLayer(ELayer.Wall);
         includeLayers.AddLayer(ELayer.Ground);
+        includeLayers.AddLayer(ELayer.Env);
         
         filter.SetLayerMask(includeLayers);
         filter.useTriggers = false;

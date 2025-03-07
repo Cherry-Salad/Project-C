@@ -100,7 +100,7 @@ public class Projectile : BaseObject
             if (monster != null)
                 monster.Hit((int)damage);
             else
-                target.OnDamaged(damage, Owner);
+                target.OnDamaged(damage, attacker: Owner.Collider);
         }
 
         StopCoroutine(_coLaunch);
