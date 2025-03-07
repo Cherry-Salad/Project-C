@@ -32,7 +32,6 @@ public class BaseObject : InitBase
         Collider = GetComponent<CapsuleCollider2D>();
         Animator = GetComponent<Animator>();
 
-        DefaultGravityScale = 2f;   // 중력을 1로 설정하니까 낙하할 때 시원찮더라~
         Rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;  // Z축 고정
 
         return true;

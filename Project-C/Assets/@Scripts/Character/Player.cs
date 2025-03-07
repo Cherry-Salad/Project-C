@@ -130,6 +130,10 @@ public class Player : Creature
 
         // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
+        // 테스트용 코드, 마나 회복
+        if (Input.GetKeyDown(KeyCode.Q))
+            Mp = Mathf.Clamp(Mp + 1f, 1f, MaxMp);
+
         if ((State != ECreatureState.WallJump && IsDashInput()) || IsSkillInput())
             return;
 

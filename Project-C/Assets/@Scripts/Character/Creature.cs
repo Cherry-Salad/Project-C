@@ -63,6 +63,8 @@ public class Creature : BaseObject
     {
         if (base.Init() == false)
             return false;
+        
+        DefaultGravityScale = 2f;   // 중력을 1로 설정하니까 낙하할 때 시원찮더라~
 
         State = ECreatureState.Idle;
         BodyHitBox = Util.FindChild<CapsuleCollider2D>(gameObject, "BodyHitBox", true);
