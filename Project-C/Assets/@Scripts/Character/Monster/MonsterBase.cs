@@ -61,11 +61,12 @@ public class MonsterBase : Creature
     [SerializeReference] private GameObject _qMark; // 상태전환 확인용 오브젝트 (?)
     [SerializeReference] private GameObject _eMark; // 상태전환 확인용 오브젝트 (!)
     [SerializeReference] protected List<GameObject> hitBoxList; // 히트 박스 보관 리스트 
+    [SerializeReference] protected List<GameObject> effectList; // 이펙트 보관 리스트
 
-    protected GameObject TargetGameObject;       // 타겟 오브젝트
-    private Coroutine _battleTimerCoroutine;    // 전투 종료 타이머 코루틴
-    private Coroutine _surveillanceCoroutine;   // 방향 전환 코루틴
-    private Coroutine _skillRoutine;             // 스킬 사용 관리 코루틴
+    protected GameObject TargetGameObject;        // 타겟 오브젝트
+    private Coroutine _battleTimerCoroutine;      // 전투 종료 타이머 코루틴
+    private Coroutine _surveillanceCoroutine;     // 방향 전환 코루틴
+    private Coroutine _skillRoutine;              // 스킬 사용 관리 코루틴
     
     protected bool isCompleteLoad = false;
 
@@ -253,8 +254,6 @@ public class MonsterBase : Creature
             StopSurveillance();
         else
             StartSurveillance();
-
-
     }
 
     protected void UpdateBattle() // 전투상태일 때의 동작
@@ -296,7 +295,7 @@ public class MonsterBase : Creature
         if (SearchingTargetInScanState())
         {
             _behaviorPattern = EBehaviorPattern.Battle;
-            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
+            PopupEMark();
             return true;
         }
         else 
@@ -580,16 +579,26 @@ public class MonsterBase : Creature
     {
         yield return new WaitForSeconds(TypeRecorder.Battle.BattleEndTime);
 
-        StartCoroutine(PopUpStateTransitionIconCoroutine(_qMark));
+        PopupQMark();
         isCanAttack = false;
         _behaviorPattern = EBehaviorPattern.Return;
     }
 
-    private IEnumerator PopUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
+    private IEnumerator popUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
     {
         mark.SetActive(true);
         yield return new WaitForSeconds(_MARK_POPUP_TIME);
         mark.SetActive(false);
+    }
+
+    public void PopupEMark()
+    {
+        StartCoroutine(popUpStateTransitionIconCoroutine(_eMark));
+    }
+
+    public void PopupQMark()
+    {
+        StartCoroutine(popUpStateTransitionIconCoroutine(_qMark));
     }
 
     protected IEnumerator HurtCoroutine(ECreatureState originState)  // 데미지를 받았을 때 
@@ -693,7 +702,7 @@ public class MonsterBase : Creature
         if (BehaviorPattern != EBehaviorPattern.Battle)
         {
             _behaviorPattern = EBehaviorPattern.Battle;
-            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
+            PopupEMark();
         }
     }
 
@@ -746,21 +755,38 @@ public class MonsterBase : Creature
     protected void ActiveHitBox(int hitBoxNum) // 히트 박스 활성화
     {
         if (!canActivateHitBox) return;
-        if (hitBoxList == null) return;
-        if (hitBoxNum < 0 || hitBoxList.Count <= hitBoxNum) return;
-        
-        if(hitBoxList[hitBoxNum] != null)
-            hitBoxList[hitBoxNum].SetActive(true);
+        activeList(hitBoxList, hitBoxNum);
     }
 
     public void DeactivateHitBox() // 히트 박스 비활성화 
     {
-        if(hitBoxList == null ||  hitBoxList.Count == 0) return;
+        deactivateList(hitBoxList);
+    }
 
-        foreach (GameObject hitBox in hitBoxList)
-        {
-            if(hitBox != null) 
-                hitBox.SetActive(false);
-        }
+    protected virtual void ActiveEffect(int effectNum) // 이펙트 활성화
+    {
+        activeList(effectList, effectNum);
+    }
+
+    public virtual void DeactivateEffect() // 이펙트 비활성화 
+    {
+        deactivateList(effectList);
+    }
+
+    private void activeList(List<GameObject> list,int listNum) // 오브젝트 리스트 번호 기반 활성화 
+    {
+        if (list == null) return;
+        if (listNum < 0 || list.Count <= listNum) return;
+
+        if (list[listNum] != null)
+            list[listNum].SetActive(true);
+    }
+
+    private void deactivateList(List<GameObject> list) // 오브젝트 리스트 비활성화 
+    {
+        if (list == null || list.Count == 0) return;
+
+        foreach (GameObject member in list)
+            member?.SetActive(false);
     }
 }

@@ -10,12 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 4509277425758077047}
   - component: {fileID: 3991861893952693465}
-  - component: {fileID: -2571174425571379309}
+  - component: {fileID: 4225336159671200706}
   - component: {fileID: 3288841896837720070}
   - component: {fileID: 1633535159633796158}
-  - component: {fileID: -921860912538318622}
+  - component: {fileID: 4986832540469593974}
   m_Layer: 9
-  m_Name: GoblinEyeLaser
+  m_Name: GoblinPunchExplosion
   m_TagString: EnemyHitBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -77,8 +77,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 400
-  m_Sprite: {fileID: 21300000, guid: dfb3448c4629c994186aa3cd5beb1806, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 57559b7fe6762f9409efca30ce117773, type: 3}
+  m_Color: {r: 0, g: 1, b: 0.16101694, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -88,7 +88,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &-2571174425571379309
+--- !u!95 &4225336159671200706
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 8112840104774255496}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cd1e88aab038f934882cdb2f0c0b0897, type: 2}
+  m_Controller: {fileID: 9100000, guid: 2b5acd49b1951f84e9bc2ab56e8d69b3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -168,20 +168,20 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.02, y: 0}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.24, y: 0.6}
+    oldSize: {x: 5.12, y: 5.12}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.2}
+  m_Size: {x: 4, y: 4}
   m_EdgeRadius: 0
---- !u!114 &-921860912538318622
+--- !u!114 &4986832540469593974
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,8 +190,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8112840104774255496}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5642e9ab49e1764e9579a034d304c94, type: 3}
+  m_Script: {fileID: 11500000, guid: 71df93faa8a8bf846b1a8e0e7f45b5b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _isActive: 0
-  _isLoad: 0

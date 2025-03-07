@@ -177,7 +177,7 @@
 
       "Base": {
         "Role": "HybridAttacker",
-        "MovementSpeed": 1.0,
+        "MovementSpeed": 3.0,
         "BelligerenceLevel": 3,
         "DefaultGravity": 2.0
       },
@@ -197,10 +197,10 @@
             "Name": "GoblinTornado",
             "Type": "BodySlam",
             "IsBodyHitBox": true,
-            "RecoveryTime": 2,
+            "RecoveryTime": 3.5,
             "WindUpTime": 0.5,
 
-            "AttackRange": 3,
+            "AttackRange": 10,
             "RetentionTime": 5,
             "MovementMultiplier": 15,
             "InitialAngle": 0,
@@ -233,8 +233,8 @@
             "Name": "EyeLaserAttack",
             "Type": "Projectile",
             "IsBodyHitBox": false,
-            "RecoveryTime": 0.5,
-            "WindUpTime": 0.5,
+            "RecoveryTime": 2,
+            "WindUpTime": 0.7,
 
             "AttackRange": 10,
             "RetentionTime": 0,
@@ -244,8 +244,26 @@
 
             "ProjectileName": "GoblinEyeLaser",
             "ProjectileID": 390004,
-            "NumberOfShots": 15,
+            "NumberOfShots": 10,
             "DelayBetweenShots": 0.5
+          },
+          {
+            "Name": "ExplosionPunch",
+            "Type": "Melee",
+            "IsBodyHitBox": false,
+            "RecoveryTime": 2,
+            "WindUpTime": 0.5,
+
+            "AttackRange": 2,
+            "RetentionTime": 0,
+            "MovementMultiplier": 2,
+            "InitialAngle": 0,
+            "HitBoxPos": 0,
+
+            "ProjectileName": "",
+            "ProjectileID": 0,
+            "NumberOfShots": 3,
+            "DelayBetweenShots": 0.1
           }
         ]
       }

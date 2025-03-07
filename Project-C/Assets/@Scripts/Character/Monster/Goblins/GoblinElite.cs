@@ -5,25 +5,30 @@ using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Define;
 
 public class GoblinElite : BossMonsterBase
 {
     private const int _HITBOX_NUM_BODY = 0;
     private const int _HITBOX_NUM_TORNADO = 1;
+    private const int _HITBOX_NUM_PUNCH = 2;
+
+    private const int _EFFECT_NUM_PUNCH = 0;
 
     private const int _TORNADO_SKILL_NUMBER = 0;
     private const int _THROWING_AXE_SKILL_NUMBER = 1;
     private const int _EYE_LASER_ATTACK_SKILL_NUMBER = 2;
-    
-    private const float TORNADO_SPAWN_POINT_X = 0.3f;
+    private const int _EXPLOSION_PUNCH_SKILL_NUMBER = 3;
 
     private const int _MAX_AXE_COUNT = 20;
     private const int _MAX_LASER_COUNT = 20;
 
+    private const float _JUMP_POWER = 10;
+
     private float[] _THROW_AXES_POINT_X = {0.5f, 1f, 1.5f, 2.0f, 2.5f};
-    private float _THROW_AXES_HIGHT_MAX = 2f;
-    private float _SHOOTING_AXE_CORRECTION = 0.25f;
+    private const float _THROW_AXES_HIGHT_MAX = 2f;
+    private const float _SHOOTING_AXE_CORRECTION = 0.25f;
     private int _shootingAxeCount;
 
     private bool _isSkillEnd;
@@ -44,13 +49,13 @@ public class GoblinElite : BossMonsterBase
 
         RegistrationSkill();
         DeactivateHitBox();
+        DeactivateEffect();
 
         return true;
     }
 
     protected override void SettingProjectile()
     {
-        
         for (int i = 0; i < _MAX_AXE_COUNT; i++)
             _axes.Enqueue(MakeProjectile(_THROWING_AXE_SKILL_NUMBER));
         
@@ -59,22 +64,29 @@ public class GoblinElite : BossMonsterBase
             
     }
 
-    protected override void RegistrationSkill()
+    public override void Phase0RegistrationSkill()
     {
-        skillList.Clear();
+        skillList.Add(new Tuple<int, IEnumerator>(_THROWING_AXE_SKILL_NUMBER, ThrowingAxe()));
+        skillList.Add(new Tuple<int, IEnumerator>(_EYE_LASER_ATTACK_SKILL_NUMBER, EyeLaserAttack()));
+        skillList.Add(new Tuple<int, IEnumerator>(_EXPLOSION_PUNCH_SKILL_NUMBER, ExplosionPunch()));
+    }
 
+    public override void Phase1RegistrationSkill()
+    {
         skillList.Add(new Tuple<int, IEnumerator>(_TORNADO_SKILL_NUMBER, GoblinTornado()));
         skillList.Add(new Tuple<int, IEnumerator>(_THROWING_AXE_SKILL_NUMBER, ThrowingAxe()));
         skillList.Add(new Tuple<int, IEnumerator>(_EYE_LASER_ATTACK_SKILL_NUMBER, EyeLaserAttack()));
-
-        shufflingSkill(skillList);
+        skillList.Add(new Tuple<int, IEnumerator>(_EXPLOSION_PUNCH_SKILL_NUMBER, ExplosionPunch()));
     }
 
     IEnumerator GoblinTornado()
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_TORNADO_SKILL_NUMBER];
+        PopupEMark();
+        yield return new WaitForSeconds(skillData.WindUpTime);
+
         Animator.Play("GoblinTornadoStart");
-            
+        
         yield return new WaitForSeconds(skillData.RetentionTime);
 
         _isSkillEnd = true;
@@ -138,8 +150,19 @@ public class GoblinElite : BossMonsterBase
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_THROWING_AXE_SKILL_NUMBER];
 
-        for(_shootingAxeCount = 0; _shootingAxeCount < skillData.NumberOfShots; _shootingAxeCount++)
+        Vector2 jumpVector = new Vector2(this.MoveDir.x * -1, 1).normalized;
+
+        Rigidbody.velocity = jumpVector * _JUMP_POWER;
+        yield return new WaitForSeconds(skillData.WindUpTime);
+        SimpleStopHorizontalMove();
+
+        while(!CheckGround())
+            yield return null;
+        SimpleStopMove();
+
+        for (_shootingAxeCount = 0; _shootingAxeCount < skillData.NumberOfShots; _shootingAxeCount++)
         {
+            if (TargetGameObject == null) break;
             ViewTarget();
             Animator.Play("ThrowingAxe");
             
@@ -162,9 +185,11 @@ public class GoblinElite : BossMonsterBase
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_EYE_LASER_ATTACK_SKILL_NUMBER];
         Animator.Play("EyeLaserAttack");
+        yield return new WaitForSeconds(skillData.WindUpTime);
 
-        for(int i = 0; i < skillData.NumberOfShots; i++)
+        for (int i = 0; i < skillData.NumberOfShots; i++)
         {
+            if (TargetGameObject == null) break;
             ViewTarget();
             ShootingProjectile(this.MoveDir, _lasers);
             yield return new WaitForSeconds(skillData.DelayBetweenShots);
@@ -188,4 +213,48 @@ public class GoblinElite : BossMonsterBase
         ActiveHitBox(_HITBOX_NUM_TORNADO);
     }
 
+    IEnumerator ExplosionPunch()
+    {
+        Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_EXPLOSION_PUNCH_SKILL_NUMBER];
+
+        for(int i = 0; i < skillData.NumberOfShots; i++)
+        {
+            ActiveEffect(_EFFECT_NUM_PUNCH);
+            yield return new WaitUntil(() => !effectList[_EFFECT_NUM_PUNCH].activeSelf);
+            yield return new WaitForSeconds(skillData.DelayBetweenShots);
+        }
+
+        Animator.Play("ExplosionPunch");
+
+        yield return new WaitForSeconds(skillData.RecoveryTime);
+    }
+
+    public void GoblinExplosionPunchActiveHitBox()
+    {
+        ActiveHitBox(_HITBOX_NUM_PUNCH);
+    }
+
+    protected override IEnumerator Dead() //죽었을 때 처리 
+    {
+        State = ECreatureState.Dead;
+        Color color = this.SpriteRenderer.color;
+
+        try
+        {
+            Animator.Play("die");
+            yield return new WaitForSeconds(1f);
+
+            for (float i = 1f; i >= 0; i -= 0.1f)
+            {
+                color.a = i;
+                SpriteRenderer.color = color;
+                DeadOrganize();
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+        finally
+        {
+            GameObject.Destroy(this.gameObject);
+        }
+    }
 }

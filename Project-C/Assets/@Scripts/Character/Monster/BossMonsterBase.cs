@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -14,7 +15,6 @@ public class BossMonsterBase : MonsterBase
     private Coroutine groggyGaugeDownCoroutine;
 
     protected int phase;
-    protected int maxPhase;
     protected bool isInvincibility = false;
     protected int groggyGauge;
 
@@ -25,6 +25,7 @@ public class BossMonsterBase : MonsterBase
 
         isInvincibility = false;
         groggyGauge = 0;
+        phase = 0;
 
         return true;
     }
@@ -38,6 +39,10 @@ public class BossMonsterBase : MonsterBase
             AwakeMonster();
         }
 
+        if (State == ECreatureState.Dead || State == ECreatureState.Hurt) return;
+
+        DetectingPatternChangeHp();
+
         if (BehaviorPattern == EBehaviorPattern.Battle || DataRecorder.TypeLevel != "Boss")
         {
             base.UpdateController();
@@ -46,6 +51,41 @@ public class BossMonsterBase : MonsterBase
         {
             SimpleStopHorizontalMove();
         }
+    }
+
+    protected override void RegistrationSkill()
+    {
+        skillList.Clear();
+
+        switch(phase)
+        {
+            case 0:
+                Phase0RegistrationSkill();
+                break;
+            case 1:
+                Phase1RegistrationSkill();
+                break;
+            case 2:
+                Phase2RegistrationSkill();
+                break;
+        }
+        
+
+        shufflingSkill(skillList);
+    }
+
+    public virtual void Phase0RegistrationSkill(){
+
+    }
+
+    public virtual void Phase1RegistrationSkill()
+    {
+
+    }
+
+    public virtual void Phase2RegistrationSkill()
+    {
+
     }
 
     protected override void SettingSubData()
@@ -58,9 +98,18 @@ public class BossMonsterBase : MonsterBase
         StartCoroutine(ref groggyGaugeDownCoroutine, GroggyGaugeDownUpdateCoroutine());
     }
 
+    protected void DetectingPatternChangeHp()
+    {
+        if (phase >= DataRecorder.Boss.MaxPhase) return;
+        
+        if(hp <= DataRecorder.Boss.PhaseChangeHP[phase] * DataRecorder.MaxHP)
+            ChangePhase();
+    }
+
     public void ChangePhase()
     {
-        
+        if (phase >= DataRecorder.Boss.MaxPhase) return;
+        phase++;
     }
 
     public override void Hit(int DMG = 1) // 공격 받았을 경우의 처리 
@@ -72,7 +121,7 @@ public class BossMonsterBase : MonsterBase
 
         if (hp <= 0)
         {
-            StopCoroutine(ref groggyGaugeDownCoroutine);    
+            StopAllCoroutines();
             StartCoroutine(Dead());
         }
         else
@@ -100,9 +149,10 @@ public class BossMonsterBase : MonsterBase
     protected void UpdateGroggyGauge(int sumGroggyData)
     {
         groggyGauge += sumGroggyData;
-
+        
         if(State != ECreatureState.Hurt && groggyGauge >= DataRecorder.Groggy.MAXGauge)
         {
+            EndSkill(ECreatureState.Hurt);
             StartCoroutine(OnGroggyCoroutine());
         }
     }
@@ -121,7 +171,7 @@ public class BossMonsterBase : MonsterBase
     protected IEnumerator OnGroggyCoroutine()
     {
         StartCoroutine(ref vibrationCoroutine, ObjectVibrationCoroutine(30f, 0, 0.1f, 0.025f));
-        State = ECreatureState.Hurt;
+        
         isCanAttack = false;
 
         yield return new WaitForSeconds(DataRecorder.Groggy.DurationTime);

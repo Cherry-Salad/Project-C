@@ -232,11 +232,11 @@
       "Resurrection": false,
       "SurveillanceTime": 5.0,
 
-      "MaxHP": 300,
+      "MaxHP": 400,
       "AttackSuccessDropMp": 1,
 
       "Dynamics": {
-        "HP": 300,
+        "HP": 400,
         "GroggyGauge": 0,
         "State": "IDLE",
         "StatusEffects": [],
@@ -258,16 +258,16 @@
 
       "Groggy": {
         "IsPossible": true,
-        "MAXGauge": 20,
+        "MAXGauge": 10,
         "DurationTime": 3,
         "Decrease": 1,
-        "DecreaseCycleSec": 1,
+        "DecreaseCycleSec": 3,
         "DropMP": 1
       },
 
       "Boss": {
-        "MaxPhase": 2,
-        "PhaseChangeHP": [0.5]
+        "MaxPhase": 1,
+        "PhaseChangeHP": [0.6]
       },
 
       "DisplayKR": {

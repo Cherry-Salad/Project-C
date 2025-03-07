@@ -2680,6 +2680,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6374555100399979208, guid: 76fb147e6daa0ac47a952f0697ddf6f9, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6548723580567064298, guid: 76fb147e6daa0ac47a952f0697ddf6f9, type: 3}
       propertyPath: m_FlipX
       value: 0
