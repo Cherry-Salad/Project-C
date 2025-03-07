@@ -41,7 +41,7 @@ public class ResourceManager
     /// <param name="key"></param>
     /// <param name="parent"></param>
     /// <returns></returns>
-    public GameObject Instantiate(string key, Transform parent = null)
+    public GameObject Instantiate(string key, Transform parent = null, bool pooling = false)
     {
         GameObject prefab = Load<GameObject>($"{key}");
         if (prefab == null)
@@ -50,7 +50,8 @@ public class ResourceManager
             return null;
         }
 
-        // TODO: 오브젝트 풀링
+        if (pooling)
+            return Managers.Pool.Pop(prefab);
 
         GameObject go = Object.Instantiate(prefab, parent);
         go.name = prefab.name;

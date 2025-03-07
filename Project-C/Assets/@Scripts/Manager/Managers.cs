@@ -11,11 +11,13 @@ public class Managers : MonoBehaviour
     static Managers Instance { get { Init(); return s_instance; } }
 
     ResourceManager _resource = new ResourceManager();
+    PoolManager _pool = new PoolManager();
     DataManager _data = new DataManager();
     MapManager _map = new MapManager();
     CameraManager _camera = new CameraManager();
     
     public static ResourceManager Resource { get { return Instance._resource; } }
+    public static PoolManager Pool { get { return Instance._pool; } }
     public static DataManager Data { get { return Instance._data; } }
     public static MapManager Map { get { return Instance._map; } }
     public static CameraManager Camera { get { return Instance._camera; } }

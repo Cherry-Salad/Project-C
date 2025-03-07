@@ -106,7 +106,7 @@ public class MapManager
                     Vector3 tileOffset = CellGrid.cellSize * 0.5f;  // 타일 크기의 절반
                     worldPos += tileOffset;
 
-                    GameObject obj = Managers.Resource.Instantiate(tile.name);
+                    GameObject obj = Managers.Resource.Instantiate(tile.name, pooling: true);
                     obj.transform.position = worldPos;
 
                     switch (tile.ObjectType)

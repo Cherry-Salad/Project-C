@@ -56,7 +56,6 @@ public class CameraManager
 
     public CameraController Spawn<T>(T target, PolygonCollider2D boundary, int priority = 10) where T : BaseObject
     {
-        // TODO: 오브젝트 풀링
         GameObject go = Managers.Resource.Instantiate("VirtualCamera", CameraRoot);
         CameraController camera = go.GetComponent<CameraController>();
         camera.SetInfo(target, boundary, priority);
