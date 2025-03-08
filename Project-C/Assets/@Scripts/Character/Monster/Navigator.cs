@@ -228,7 +228,7 @@ public class Navigator : MonoBehaviour
                 isMoverSearching = false;
             }
 
-            positions.Add(new Vector2(pos.x, pos.y)); // test
+            //positions.Add(new Vector2(pos.x, pos.y)); // test
         }
     }
 
@@ -253,7 +253,7 @@ public class Navigator : MonoBehaviour
                 if (_targetNode == null && isInsideGrid(_map[y, x].Pos, target))
                     _targetNode = _map[y, x];
 
-                positions.Add(new Vector2(posX, posY)); // test
+                //positions.Add(new Vector2(posX, posY)); // test
             }
         }
 
@@ -357,12 +357,10 @@ public class Navigator : MonoBehaviour
     }
 
 
-
-
     /*
-     * 테스트 용
-     */
-    
+     *
+     *테스트 용
+     
     public List<Vector2> positions = new List<Vector2>();  // 여러 개의 원의 중심 좌표
     
 
@@ -396,7 +394,6 @@ public class Navigator : MonoBehaviour
             prevPoint = newPoint;
         }
     }
-    
 
-
+    */
 }

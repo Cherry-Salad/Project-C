@@ -28,15 +28,15 @@
       "DataID": 390004,
       "Name": "GoblinEyeLaser",
       "DefaultGravity": 0,
-      "BaseSpeed": 1.0,
+      "BaseSpeed": 5.0,
       "LifeTime": 5,
       "HitBoxSize": 1.0
     },
     {
       "DataID": 390005,
       "Name": "GoblinAxe",
-      "DefaultGravity": 1,
-      "BaseSpeed": 1.5,
+      "DefaultGravity": 0,
+      "BaseSpeed": 2,
       "LifeTime": 5,
       "HitBoxSize": 1.0
     }

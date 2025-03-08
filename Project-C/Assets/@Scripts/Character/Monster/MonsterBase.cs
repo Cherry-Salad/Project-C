@@ -61,23 +61,24 @@ public class MonsterBase : Creature
     [SerializeReference] private GameObject _qMark; // 상태전환 확인용 오브젝트 (?)
     [SerializeReference] private GameObject _eMark; // 상태전환 확인용 오브젝트 (!)
     [SerializeReference] protected List<GameObject> hitBoxList; // 히트 박스 보관 리스트 
+    [SerializeReference] protected List<GameObject> effectList; // 이펙트 보관 리스트
 
+    protected GameObject TargetGameObject;        // 타겟 오브젝트
+    private Coroutine _battleTimerCoroutine;      // 전투 종료 타이머 코루틴
+    private Coroutine _surveillanceCoroutine;     // 방향 전환 코루틴
+    private Coroutine _skillRoutine;              // 스킬 사용 관리 코루틴
     
-
-    protected GameObject TargetGameObject;       // 타겟 오브젝트
-    private Coroutine _battleTimerCoroutine;    // 전투 종료 타이머 코루틴
-    private Coroutine _surveillanceCoroutine;   // 방향 전환 코루틴
-    private Coroutine _skillRoutine;             // 스킬 사용 관리 코루틴
-    private bool _isCompleteLoad = false;
+    protected bool isCompleteLoad = false;
 
     private EBehaviorPattern _originBehaviorPattern;
 
     protected bool isCanAttack = true;          // 공격 가능 여부 확인
     protected int selectSkill = 0;              // 현재 스킬 순서
     protected List<Tuple<int, IEnumerator>> skillList; // 스킬리스트 
+    protected bool canActivateHitBox = true;
 
     private float _attackRange = 1f; // 공격 범위
-    private int _hp;    //남은 HP
+    protected int hp;    //남은 HP
 
     private const float _MARK_POPUP_TIME = 0.3f;    // 마크 표시 시간
     private const float _HURT_TIME = 0.15f;         // 피격 모션 시간
@@ -86,7 +87,7 @@ public class MonsterBase : Creature
 
     protected override void UpdateController()
     {
-        if (!_isCompleteLoad) return;
+        if (!isCompleteLoad) return;
         base.UpdateController();
 
         if(BehaviorPattern != _originBehaviorPattern){
@@ -124,7 +125,7 @@ public class MonsterBase : Creature
         if (base.Init() == false)
             return false;
 
-        _isCompleteLoad = false;
+        isCompleteLoad = false;
 
         ObjectType = EObjectType.Monster;                              // 오브젝트 타입
         skillList = new List<Tuple<int, IEnumerator>>();
@@ -169,8 +170,7 @@ public class MonsterBase : Creature
         if (DataRecorder != null && TypeRecorder != null)
         {
             settingData();
-            SpriteRenderer.color = Color.white;
-            
+            SpriteRenderer.color = Color.white;            
         }
     }
 
@@ -180,7 +180,7 @@ public class MonsterBase : Creature
         TargetGameObject = GameObject.FindGameObjectWithTag(DataRecorder.AttackTarget);
         MoveSpeed = TypeRecorder.Base.MovementSpeed;
         Rigidbody.gravityScale = TypeRecorder.Base.DefaultGravity;
-        _hp = DataRecorder.Dynamics.HP;
+        hp = DataRecorder.Dynamics.HP;
 
         if (DataRecorder.IsSpawnViewRight)
         {
@@ -199,12 +199,18 @@ public class MonsterBase : Creature
 
         SettingProjectile();
         SelectNextSkill();
-        _isCompleteLoad = true;
+        SettingSubData();
+        isCompleteLoad = true;
+    }
+
+    protected virtual void SettingSubData()
+    {
+        
     }
 
     protected override void UpdateIdle()
     {
-        if (!_isCompleteLoad) return;
+        if (!isCompleteLoad) return;
         base.UpdateIdle();
         
         if (isCanAttack && BehaviorPattern == EBehaviorPattern.Battle)
@@ -213,7 +219,7 @@ public class MonsterBase : Creature
 
     protected override void UpdateRun()
     {
-        if (!_isCompleteLoad) return;
+        if (!isCompleteLoad) return;
         base.UpdateRun();
 
         if (!CheckFrontGround() || CheckWall())
@@ -253,6 +259,11 @@ public class MonsterBase : Creature
     protected void UpdateBattle() // 전투상태일 때의 동작
     {
         if (State == ECreatureState.Skill) return;
+        if (TargetGameObject == null)
+        {
+            _behaviorPattern = EBehaviorPattern.Return;
+            return;
+        }
 
         float targetDistance = Vector2.Distance(this.transform.position, TargetGameObject.transform.position);
 
@@ -279,12 +290,12 @@ public class MonsterBase : Creature
         _behaviorPattern = _INIT_STAIT;
     }
                 
-    protected bool CheackTargetSearching() // 타겟이 탐색범위내에 감지되는지 확인 
+    protected virtual bool CheackTargetSearching() // 타겟이 탐색범위내에 감지되는지 확인 
     {
         if (SearchingTargetInScanState())
         {
             _behaviorPattern = EBehaviorPattern.Battle;
-            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
+            PopupEMark();
             return true;
         }
         else 
@@ -370,8 +381,7 @@ public class MonsterBase : Creature
     {
         if(TypeRecorder.Scan.ViewAngle <= 0) return false;
 
-        int layerMask = ~LayerMask.GetMask("Monster");
-        //int layerMask = LayerMask.GetMask("Player");
+        int layerMask = ~LayerMask.GetMask("Monster", "Default");
         float angle = TypeRecorder.Scan.MinScanAngle;
 
         while(angle <= TypeRecorder.Scan.MaxScanAngle)
@@ -379,10 +389,7 @@ public class MonsterBase : Creature
             Vector2 unitVector = GetUnitVectorFromAngle(angle);
             Vector2 scanVector = new Vector2(unitVector.x * MoveDir.x, unitVector.y);
 
-            // 레이캐스트에서 레이어를 제외하는 방식으로 감지하면 명확하게 못 찾는다
-            // 그래서 ~LayerMask.GetMask("Monster") 대신에 LayerMask.GetMask("Player")를 사용하였다.
-            // 기왕이면 AddLayer도 써주라
-            RaycastHit2D hit = Physics2D.Raycast(Rigidbody.position, scanVector, TypeRecorder.Scan.Distance, layerMask);
+            RaycastHit2D hit = Physics2D.Raycast(Rigidbody.position, scanVector, TypeRecorder.Scan.Distance, layerMask);      
             Debug.DrawRay(Rigidbody.position, scanVector * TypeRecorder.Scan.Distance, Color.blue);
 
             angle += TypeRecorder.Scan.ViewAngle;
@@ -394,7 +401,7 @@ public class MonsterBase : Creature
         return false;
     }
 
-    protected bool SearchingTargetInBattleState() // 전투 상태에서 타겟 서칭
+    protected virtual bool SearchingTargetInBattleState() // 전투 상태에서 타겟 서칭
     {
         int layerMask = LayerMask.GetMask("Player");
 
@@ -424,6 +431,17 @@ public class MonsterBase : Creature
     {
         this.Rigidbody.velocity = Vector2.zero;
         State = ECreatureState.Idle;
+    }
+
+    protected void SimpleStopMove() // 오브젝트 정지 (상태전환 없음)
+    {
+        this.Rigidbody.velocity = Vector2.zero;
+    }
+
+    protected void SimpleStopHorizontalMove() // 오브젝트 수평 정지 (상태전환 없음)
+    {
+        this.Rigidbody.velocity = new Vector2(0, this.Rigidbody.velocity.y);
+        
     }
 
     /// <summary>
@@ -544,10 +562,16 @@ public class MonsterBase : Creature
         }
         finally
         {
-            SelectNextSkill();
+            EndSkill(originState);
         }
+    }
 
-        State = originState;
+    protected void EndSkill(ECreatureState returnState)
+    {
+        StopCoroutine(skillList[selectSkill].Item2);
+
+        SelectNextSkill();
+        State =  returnState;
         StopCoroutine(ref _skillRoutine);
     }
 
@@ -555,27 +579,31 @@ public class MonsterBase : Creature
     {
         yield return new WaitForSeconds(TypeRecorder.Battle.BattleEndTime);
 
-        StartCoroutine(PopUpStateTransitionIconCoroutine(_qMark));
+        PopupQMark();
         isCanAttack = false;
         _behaviorPattern = EBehaviorPattern.Return;
     }
 
-    private IEnumerator PopUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
+    private IEnumerator popUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
     {
         mark.SetActive(true);
         yield return new WaitForSeconds(_MARK_POPUP_TIME);
         mark.SetActive(false);
     }
 
-    protected IEnumerator HurtCoroutine()  // 데미지를 받았을 때 
+    public void PopupEMark()
+    {
+        StartCoroutine(popUpStateTransitionIconCoroutine(_eMark));
+    }
+
+    public void PopupQMark()
+    {
+        StartCoroutine(popUpStateTransitionIconCoroutine(_qMark));
+    }
+
+    protected IEnumerator HurtCoroutine(ECreatureState originState)  // 데미지를 받았을 때 
     {
         Coroutine vibrationCoroutine = null;
-
-        Animator.Play("Idle");
-        DeactivateHitBox();
-
-        ECreatureState originState = (State == ECreatureState.Skill ? ECreatureState.Idle : State);
-        State = ECreatureState.Hurt;
 
         float originGravity = Rigidbody.gravityScale;
         float originSpeed = MoveSpeed;
@@ -629,19 +657,35 @@ public class MonsterBase : Creature
         }
     }
 
-    public void Hit(int DMG = 1) // 공격 받았을 경우의 처리 
+    public virtual void Hit(int DMG = 1) // 공격 받았을 경우의 처리 
     {
         if (State == ECreatureState.Dead || State == ECreatureState.Hurt) return;
+        canActivateHitBox = false;
 
-        _hp -= DMG;
+        ECreatureState originState = State;
 
-        if (_hp <= 0)
+        if (originState == ECreatureState.Skill)
+        {
+            originState = ECreatureState.Idle;
+            EndSkill(ECreatureState.Hurt);
+
+        }else{
+            State = ECreatureState.Hurt;
+
+        }
+
+        Animator.Play("Idle");
+        DeactivateHitBox();
+
+        hp -= DMG;
+
+        if (hp <= 0)
         {
             StartCoroutine(Dead());
         }
         else
         {
-            StartCoroutine(HurtCoroutine());
+            StartCoroutine(HurtCoroutine(originState));
         }
     }
 
@@ -651,11 +695,14 @@ public class MonsterBase : Creature
     }
 
     protected virtual void HitEnd() // 공격 받은후 뒷처리 
-    {   
+    {
+        canActivateHitBox = true;
+        Rigidbody.velocity = Vector2.zero;
+
         if (BehaviorPattern != EBehaviorPattern.Battle)
         {
             _behaviorPattern = EBehaviorPattern.Battle;
-            StartCoroutine(PopUpStateTransitionIconCoroutine(_eMark));
+            PopupEMark();
         }
     }
 
@@ -690,7 +737,7 @@ public class MonsterBase : Creature
 
     protected virtual void SettingProjectile() // 총알 세팅 
     {
-
+        
     }
 
     protected virtual MonsterProjectile MakeProjectile(int skillNumber) // 탄막 생성
@@ -707,21 +754,39 @@ public class MonsterBase : Creature
 
     protected void ActiveHitBox(int hitBoxNum) // 히트 박스 활성화
     {
-        if (hitBoxList == null) return;
-        if (hitBoxNum < 0 || hitBoxList.Count <= hitBoxNum) return;
-        
-        if(hitBoxList[hitBoxNum] != null)
-            hitBoxList[hitBoxNum].SetActive(true);
+        if (!canActivateHitBox) return;
+        activeList(hitBoxList, hitBoxNum);
     }
 
     public void DeactivateHitBox() // 히트 박스 비활성화 
     {
-        if(hitBoxList == null ||  hitBoxList.Count == 0) return;
+        deactivateList(hitBoxList);
+    }
 
-        foreach (GameObject hitBox in hitBoxList)
-        {
-            if(hitBox != null) 
-                hitBox.SetActive(false);
-        }
+    protected virtual void ActiveEffect(int effectNum) // 이펙트 활성화
+    {
+        activeList(effectList, effectNum);
+    }
+
+    public virtual void DeactivateEffect() // 이펙트 비활성화 
+    {
+        deactivateList(effectList);
+    }
+
+    private void activeList(List<GameObject> list,int listNum) // 오브젝트 리스트 번호 기반 활성화 
+    {
+        if (list == null) return;
+        if (listNum < 0 || list.Count <= listNum) return;
+
+        if (list[listNum] != null)
+            list[listNum].SetActive(true);
+    }
+
+    private void deactivateList(List<GameObject> list) // 오브젝트 리스트 비활성화 
+    {
+        if (list == null || list.Count == 0) return;
+
+        foreach (GameObject member in list)
+            member?.SetActive(false);
     }
 }

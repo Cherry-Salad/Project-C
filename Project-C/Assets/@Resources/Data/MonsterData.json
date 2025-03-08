@@ -40,7 +40,14 @@
         "IsPossible": false,            // 그로기 여부
         "MAXGauge": 1,                  // 최대 그로기 게이지
         "DurationTime": 0,              // 그로기 시간
+        "Decrease":  0,                 // 그로기 게이지 감소 값
+        "DecreaseCycleSec": 0,          // 그로기 게이지 감소 주기
         "DropMP": 0                     // 그로기시 드롭되는 MP
+      },
+
+      "Boss": {                         // 보스 사용 관련
+        "MaxPhase": 1,                  // 최대 페이즈
+        "PhaseChangeHP": []             // 페이즈 전환 체력
       },
 
       "DisplayKR": {                    // UI 출력 관련 (한글)
@@ -88,7 +95,14 @@
         "IsPossible": false,
         "MAXGauge": 1,
         "DurationTime": 0,
+        "Decrease": 0,
+        "DecreaseCycleSec": 0,
         "DropMP": 0
+      },
+
+      "Boss": { 
+        "MaxPhase": 1, 
+        "PhaseChangeHP": [] 
       },
 
       "DisplayKR": {
@@ -136,7 +150,14 @@
         "IsPossible": false,
         "MAXGauge": 1,
         "DurationTime": 0,
+        "Decrease": 0,
+        "DecreaseCycleSec": 0,
         "DropMP": 0
+      },
+
+      "Boss": {
+        "MaxPhase": 1,
+        "PhaseChangeHP": []
       },
 
       "DisplayKR": {
@@ -184,7 +205,14 @@
         "IsPossible": false,
         "MAXGauge": 1,
         "DurationTime": 0,
+        "Decrease": 0,
+        "DecreaseCycleSec": 0,
         "DropMP": 0
+      },
+
+      "Boss": {
+        "MaxPhase": 1,
+        "PhaseChangeHP": []
       },
 
       "DisplayKR": {
@@ -204,11 +232,11 @@
       "Resurrection": false,
       "SurveillanceTime": 5.0,
 
-      "MaxHP": 300,
+      "MaxHP": 400,
       "AttackSuccessDropMp": 1,
 
       "Dynamics": {
-        "HP": 300,
+        "HP": 400,
         "GroggyGauge": 0,
         "State": "IDLE",
         "StatusEffects": [],
@@ -230,9 +258,16 @@
 
       "Groggy": {
         "IsPossible": true,
-        "MAXGauge": 20,
+        "MAXGauge": 10,
         "DurationTime": 3,
+        "Decrease": 1,
+        "DecreaseCycleSec": 3,
         "DropMP": 1
+      },
+
+      "Boss": {
+        "MaxPhase": 1,
+        "PhaseChangeHP": [0.6]
       },
 
       "DisplayKR": {

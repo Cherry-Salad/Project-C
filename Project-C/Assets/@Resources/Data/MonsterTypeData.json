@@ -177,7 +177,7 @@
 
       "Base": {
         "Role": "HybridAttacker",
-        "MovementSpeed": 1.0,
+        "MovementSpeed": 3.0,
         "BelligerenceLevel": 3,
         "DefaultGravity": 2.0
       },
@@ -197,55 +197,73 @@
             "Name": "GoblinTornado",
             "Type": "BodySlam",
             "IsBodyHitBox": true,
-            "RecoveryTime": 2,
+            "RecoveryTime": 3.5,
             "WindUpTime": 0.5,
 
-            "AttackRange": 0,
-            "RetentionTime": 0,
-            "MovementMultiplier": 2.0,
+            "AttackRange": 10,
+            "RetentionTime": 5,
+            "MovementMultiplier": 15,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "",
             "ProjectileID": 0,
-            "NumberOfShots": 0,
+            "NumberOfShots": 5,
             "DelayBetweenShots": 0
           },
           {
             "Name": "ThrowingAxe",
             "Type": "Projectile",
             "IsBodyHitBox": false,
-            "RecoveryTime": 0.5,
+            "RecoveryTime": 2,
             "WindUpTime": 0.5,
 
-            "AttackRange": 0,
+            "AttackRange": 10,
             "RetentionTime": 0,
             "MovementMultiplier": 1.2,
             "InitialAngle": 80,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinAxe",
-            "ProjectileID": 0,
-            "NumberOfShots": 3,
-            "DelayBetweenShots": 0.1
+            "ProjectileID": 390005,
+            "NumberOfShots": 5,
+            "DelayBetweenShots": 1
           },
           {
             "Name": "EyeLaserAttack",
             "Type": "Projectile",
             "IsBodyHitBox": false,
-            "RecoveryTime": 0.5,
-            "WindUpTime": 0.5,
+            "RecoveryTime": 2,
+            "WindUpTime": 0.7,
 
-            "AttackRange": 0,
+            "AttackRange": 10,
             "RetentionTime": 0,
             "MovementMultiplier": 1.2,
             "InitialAngle": 0,
             "HitBoxPos": 0.7,
 
             "ProjectileName": "GoblinEyeLaser",
+            "ProjectileID": 390004,
+            "NumberOfShots": 10,
+            "DelayBetweenShots": 0.5
+          },
+          {
+            "Name": "ExplosionPunch",
+            "Type": "Melee",
+            "IsBodyHitBox": false,
+            "RecoveryTime": 2,
+            "WindUpTime": 0.5,
+
+            "AttackRange": 2,
+            "RetentionTime": 0,
+            "MovementMultiplier": 2,
+            "InitialAngle": 0,
+            "HitBoxPos": 0,
+
+            "ProjectileName": "",
             "ProjectileID": 0,
-            "NumberOfShots": 1,
-            "DelayBetweenShots": 0
+            "NumberOfShots": 3,
+            "DelayBetweenShots": 0.1
           }
         ]
       }
