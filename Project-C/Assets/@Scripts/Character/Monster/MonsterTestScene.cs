@@ -25,7 +25,7 @@ public class MonsterTestScene : BaseScene
                 player.transform.position = Vector3.zero;   // TODO: 맵에서 플레이어 소환 위치 설정
 
                 // 카메라 설정
-                Managers.Map.SpawnRoomCameras();
+                //Managers.Map.SpawnRoomCameras();
                 //CameraController camera = Camera.main.GetComponent<CameraController>();
                 //camera.Target = player.GetComponent<Player>();
             }
