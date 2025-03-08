@@ -11,28 +11,27 @@ public enum CherryState
 public class CherryFollow : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
-    private Rigidbody2D rigid;
     public Animator animator;
     public Transform player;
-    public float interval = 0.3f;
-    public float followDelay = 5f;
-    public float speed = 4f;
-    public float teleportThreshold = 5f;
+    public float interval = 0.3f; // 큐를 받는 간격(속도)
+    public float followDelay = 5f; // 시작 후 언제부터 따라갈지
+    public float speed = 4f; // 고양이 속도
+    public float tpDistance = 5f; // TP 최소 거리
 
     private Vector2? _nextPoint = null;
     private Queue<Vector2> positionQueue = new Queue<Vector2>();
-    public CherryState curState = CherryState.Idle;
 
     void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
 
         StartCoroutine(LoadPlayer());
         StartCoroutine(RecordPlayerPosition());
 
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Npc"), true);
+        // 플레이어와 고양이 간 충돌 & NPC와 고양이 충돌을 무시
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Cherry"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("NPC"), LayerMask.NameToLayer("Cherry"), true);
     }
 
     IEnumerator LoadPlayer()
@@ -70,9 +69,13 @@ public class CherryFollow : MonoBehaviour
         if (_nextPoint != null)
         {
             Vector2 targetPos = _nextPoint.Value;
+
+            // 플레이어보다 0.1만큼 더 낮은 Y 위치로 설정
+            targetPos.y = player.position.y - 0.1f;
+
             float distance = Vector2.Distance(transform.position, targetPos);
 
-            if (distance > teleportThreshold)
+            if (distance > tpDistance)
             {
                 TeleportToPlayer();
                 return;
@@ -103,10 +106,7 @@ public class CherryFollow : MonoBehaviour
 
     void SetState(CherryState newState)
     {
-        if (curState == newState) return;
-        curState = newState;
-
-        switch (curState)
+        switch (newState)
         {
             case CherryState.Idle:
                 animator.SetBool("isWalking", false);
@@ -122,7 +122,7 @@ public class CherryFollow : MonoBehaviour
         spriteRenderer.flipX = targetPos.x < transform.position.x;
     }
 
-    void TeleportToPlayer()
+    void TeleportToPlayer() // 일정 거리 이상 멀어지면 텔레포트 및 큐 초기화
     {
         transform.position = new Vector2(player.position.x - 1f, player.position.y);
         positionQueue.Clear();
