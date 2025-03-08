@@ -1,0 +1,8 @@
+{
+  "npcName" : "Hunter",
+  "dialogues": [
+    "HIIII",
+    "IM Hunter",
+    "Goodbye"
+  ]
+}
