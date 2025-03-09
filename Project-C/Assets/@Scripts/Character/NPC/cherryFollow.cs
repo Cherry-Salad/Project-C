@@ -109,10 +109,10 @@ public class CherryFollow : MonoBehaviour
         switch (newState)
         {
             case CherryState.Idle:
-                animator.SetBool("isWalking", false);
+                animator.SetBool("isMoving", false);
                 break;
             case CherryState.Walk:
-                animator.SetBool("isWalking", true);
+                animator.SetBool("isMoving", true);
                 break;
         }
     }

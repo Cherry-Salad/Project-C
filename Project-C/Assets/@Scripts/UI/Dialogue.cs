@@ -13,20 +13,24 @@ public class DialogueData
 
 public class Dialogue : MonoBehaviour
 {
-    [SerializeField] private GameObject dialogueCanvas;  // 대화 UI Canvas
+    [SerializeField] private GameObject NPCCanvas;       // NPC UI Canvas
+    [SerializeField] private GameObject StorePanel;      // 상점 UI
+    [SerializeField] private GameObject DialoguePanel;   // 대화문 UI
     [SerializeField] private TMP_Text npcNameText;       // NPC 이름 UI
     [SerializeField] private TMP_Text dialogueText;      // 대화 내용 UI
     [SerializeField] private string dialogueFileName;    // JSON 파일명
 
     private DialogueData dialogueData;
+    private NPCMovement npcMovement;
     private int currentDialogueIndex = 0;
     private bool dialougeActivated;
-    private NPCMovement npcMovement;
+    private bool canStoreOpen = false;
 
     void Start()
     {
         npcMovement = GetComponent<NPCMovement>();
         LoadDialogueData();
+        if (dialogueData.npcName == "RedCap") canStoreOpen = true; //RedCap NPC는 상점 기능 사용 가능
     }
 
     void LoadDialogueData()
@@ -49,9 +53,11 @@ public class Dialogue : MonoBehaviour
     {
         if (dialougeActivated == true && Input.GetButtonDown("Interact"))
         {
-            dialogueCanvas.SetActive(true);
+            NPCCanvas.SetActive(true);
             ShowDialogue();
         }
+
+        if (canStoreOpen && Input.GetKeyDown(KeyCode.B)) ShowStore();
     }
 
     void ShowDialogue()
@@ -73,12 +79,18 @@ public class Dialogue : MonoBehaviour
 
     void EndDialogue()
     {
-        dialogueCanvas.SetActive(false);
+        NPCCanvas.SetActive(false);
         currentDialogueIndex = 0;
         if (npcMovement != null)
         {
             npcMovement.ExitDialogue(); //원래 이동 방향을 바라보기
         }
+    }
+
+    void ShowStore()
+    {
+        StorePanel.SetActive(true);
+        DialoguePanel.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
