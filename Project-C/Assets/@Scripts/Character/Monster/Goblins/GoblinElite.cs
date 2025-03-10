@@ -10,6 +10,8 @@ using static Define;
 
 public class GoblinElite : BossMonsterBase
 {
+    [SerializeReference] private GameObject _fMark;
+
     private const int _HITBOX_NUM_BODY = 0;
     private const int _HITBOX_NUM_TORNADO = 1;
     private const int _HITBOX_NUM_PUNCH = 2;
@@ -51,6 +53,8 @@ public class GoblinElite : BossMonsterBase
         DeactivateHitBox();
         DeactivateEffect();
 
+        _fMark.SetActive(false);
+
         return true;
     }
 
@@ -61,7 +65,6 @@ public class GoblinElite : BossMonsterBase
         
         for (int i = 0; i < _MAX_LASER_COUNT; i++)
             _lasers.Enqueue(MakeProjectile(_EYE_LASER_ATTACK_SKILL_NUMBER));
-            
     }
 
     public override void Phase0RegistrationSkill()
@@ -256,5 +259,25 @@ public class GoblinElite : BossMonsterBase
         {
             GameObject.Destroy(this.gameObject);
         }
+    }
+
+    public override bool ChangePhase()
+    {
+        if(base.ChangePhase()) 
+        {
+            StartCoroutine(popUpStateTransitionIconCoroutine(_fMark));
+            skillList.Add(new Tuple<int, IEnumerator>(_TORNADO_SKILL_NUMBER, GoblinTornado()));
+        }
+        
+        return base.ChangePhase();
+    }
+
+    protected override void DeadOrganize()
+    {
+        foreach (MonsterProjectile axe in _axes)
+            GameObject.Destroy(axe.Object);
+        
+        foreach (MonsterProjectile laser in _lasers)
+            GameObject.Destroy(laser.Object);
     }
 }

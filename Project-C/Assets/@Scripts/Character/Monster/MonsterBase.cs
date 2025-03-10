@@ -62,6 +62,7 @@ public class MonsterBase : Creature
     [SerializeReference] private GameObject _eMark; // 상태전환 확인용 오브젝트 (!)
     [SerializeReference] protected List<GameObject> hitBoxList; // 히트 박스 보관 리스트 
     [SerializeReference] protected List<GameObject> effectList; // 이펙트 보관 리스트
+    [SerializeReference] protected Color originColor = Color.white; // 기본 색
 
     protected GameObject TargetGameObject;        // 타겟 오브젝트
     private Coroutine _battleTimerCoroutine;      // 전투 종료 타이머 코루틴
@@ -170,7 +171,7 @@ public class MonsterBase : Creature
         if (DataRecorder != null && TypeRecorder != null)
         {
             settingData();
-            SpriteRenderer.color = Color.white;            
+            SpriteRenderer.color = originColor;            
         }
     }
 
@@ -584,7 +585,7 @@ public class MonsterBase : Creature
         _behaviorPattern = EBehaviorPattern.Return;
     }
 
-    private IEnumerator popUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
+    protected IEnumerator popUpStateTransitionIconCoroutine(GameObject mark) // 상태전환 아이콘 (!,?) 출력
     {
         mark.SetActive(true);
         yield return new WaitForSeconds(_MARK_POPUP_TIME);
@@ -607,7 +608,6 @@ public class MonsterBase : Creature
 
         float originGravity = Rigidbody.gravityScale;
         float originSpeed = MoveSpeed;
-        Color originColor = this.SpriteRenderer.color;
 
         try
         {
@@ -671,7 +671,6 @@ public class MonsterBase : Creature
 
         }else{
             State = ECreatureState.Hurt;
-
         }
 
         Animator.Play("Idle");
@@ -680,13 +679,9 @@ public class MonsterBase : Creature
         hp -= DMG;
 
         if (hp <= 0)
-        {
             StartCoroutine(Dead());
-        }
         else
-        {
             StartCoroutine(HurtCoroutine(originState));
-        }
     }
 
     protected virtual void DeadOrganize() // 죽은후 뒷처리 
@@ -721,7 +716,7 @@ public class MonsterBase : Creature
     {
         selectSkill++;
 
-        if(selectSkill >= skillList.Count)
+        if (selectSkill >= skillList.Count)
         {
             RegistrationSkill();
             selectSkill = 0;

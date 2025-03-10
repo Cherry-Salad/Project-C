@@ -141,13 +141,13 @@
 
       "Scan": {
         "Distance": 5.0,
-        "MaxScanAngle": 45.0,
-        "MinScanAngle": -45.0,
+        "MaxScanAngle": 30.0,
+        "MinScanAngle": -90.0,
         "ViewAngle": 15.0
       },
 
       "Battle": {
-        "BattleEndTime": 1,
+        "BattleEndTime": 5,
         "MovementMultiplier": 1.2,
         "Attack": [
           {

@@ -44,13 +44,11 @@ public class BossMonsterBase : MonsterBase
         DetectingPatternChangeHp();
 
         if (BehaviorPattern == EBehaviorPattern.Battle || DataRecorder.TypeLevel != "Boss")
-        {
             base.UpdateController();
-        }
+        
         else if(State == ECreatureState.Idle)
-        {
             SimpleStopHorizontalMove();
-        }
+        
     }
 
     protected override void RegistrationSkill()
@@ -106,10 +104,12 @@ public class BossMonsterBase : MonsterBase
             ChangePhase();
     }
 
-    public void ChangePhase()
+    public virtual bool ChangePhase()
     {
-        if (phase >= DataRecorder.Boss.MaxPhase) return;
+        if (phase >= DataRecorder.Boss.MaxPhase) return false;
         phase++;
+
+        return true;
     }
 
     public override void Hit(int DMG = 1) // 공격 받았을 경우의 처리 
@@ -133,8 +133,6 @@ public class BossMonsterBase : MonsterBase
 
     protected IEnumerator HurtCoroutine()  // 데미지를 받았을 때 
     {
-        Color originColor = this.SpriteRenderer.color;
-
         try
         {
             this.SpriteRenderer.color = Color.red;
