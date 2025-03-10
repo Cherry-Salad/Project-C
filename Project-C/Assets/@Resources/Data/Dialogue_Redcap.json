@@ -1,8 +1,8 @@
 {
-  "npcName": "RedCap",
+  "npcName": "빨간모자",
   "dialogues": [
-    "HI???",
-    "IM RedCap",
-    "Goodbye!"
+    "안녕???",
+    "IM RedCap 빨간모자야",
+    "잘가!"
   ]
 }

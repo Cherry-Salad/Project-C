@@ -30,7 +30,7 @@ public class Dialogue : MonoBehaviour
     {
         npcMovement = GetComponent<NPCMovement>();
         LoadDialogueData();
-        if (dialogueData.npcName == "RedCap") canStoreOpen = true; //RedCap NPC는 상점 기능 사용 가능
+        if (dialogueData.npcName == "빨간모자") canStoreOpen = true; //RedCap NPC는 상점 기능 사용 가능
     }
 
     void LoadDialogueData()
