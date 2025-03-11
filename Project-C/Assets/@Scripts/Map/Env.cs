@@ -16,12 +16,28 @@ public class Env : BaseObject
         return true;
     }
 
-    public void SetInfo(int dataId, Vector3 pos, Sprite sprite)
+    public void SetInfo(int dataId, Vector3 pos, bool flipX = false, bool flipY = false)
     {
         Data = Managers.Data.EnvDataDic[dataId];
         Hp = Data.Hp;
         transform.position = pos;
-        SpriteRenderer.sprite = sprite;
+
+        if (flipX)
+        {
+            Debug.Log("?");
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1;
+            transform.localScale = localScale;
+        }
+        
+        if (flipY)
+        {
+            Debug.Log("flipY");
+
+            Vector3 localScale = transform.localScale;
+            localScale.y *= -1;
+            transform.localScale = localScale;
+        }
     }
 
     public override void OnDamaged(float damage, bool ignoreInvincibility = false, Collider2D attacker = null)

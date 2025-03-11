@@ -11,6 +11,8 @@ public class MapObject : Tile
     public int DataId;
     public string Name;
     public EObjectType ObjectType;
+    public bool FlipX = false;
+    public bool FlipY = false;
 }
 
 public class MapManager
@@ -116,7 +118,7 @@ public class MapManager
                         case EObjectType.Env:
                             GameObject obj = Managers.Resource.Instantiate(tile.Name, pooling: true);
                             Env env = obj.GetComponent<Env>();
-                            env.SetInfo(tile.DataId, worldPos, tile.sprite);
+                            env.SetInfo(tile.DataId, worldPos, tile.FlipX, tile.FlipY);
                             break;
                     }
                 }

@@ -35,5 +35,5 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   DataId: 400001
-  Name: BreakableWall
+  Name: SmallCactus
   ObjectType: 5

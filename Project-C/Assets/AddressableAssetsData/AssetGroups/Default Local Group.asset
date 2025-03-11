@@ -17,8 +17,14 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 0977e3b3d6fbccd4485327bb1722cdb3
   m_SerializeEntries:
+  - m_GUID: 32d0c2a42f364bd4b963adeee3fa5cf9
+    m_Address: LongCactus
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 61d727ca88ea46f49bc3a50dbdf28b29
-    m_Address: BreakableWall
+    m_Address: SmallCactus
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
