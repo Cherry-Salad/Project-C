@@ -79,7 +79,7 @@ public class SkillBase : InitBase
         if (IsSkillUsable() == false) 
             return false;
 
-        Debug.Log($"DoSkill: {Name}");
+        //Debug.Log($"DoSkill: {Name}");
         return true;
     }
 
@@ -221,7 +221,7 @@ public class SkillBase : InitBase
                 yield break;
             }
             elapsedTime += Time.deltaTime;
-            Debug.Log($"elapsedTime: {elapsedTime}, CastingTime: {CastingTime}");
+            //Debug.Log($"elapsedTime: {elapsedTime}, CastingTime: {CastingTime}");
             yield return null;
         }
         Debug.Log($"{callback}호출 직전");

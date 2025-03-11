@@ -31,7 +31,7 @@ public class IceBall : PlayerSkillBase
         if (base.DoSkill() == false) 
             return false;
 
-        Debug.Log("DoSkill");
+        //Debug.Log("DoSkill");
         
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);

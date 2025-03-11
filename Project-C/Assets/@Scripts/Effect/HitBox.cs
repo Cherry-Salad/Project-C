@@ -69,7 +69,7 @@ public class HitBox : InitBase
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"{collision.name}");
+        //Debug.Log($"{collision.name}");
 
         // SetInfo에서 충돌 대상을 다 필터링해서, BaseObject만 찾으면 된다.
         // 하지만, 몬스터는 Hit 함수가 따로 있어서 일단 구분하였다.

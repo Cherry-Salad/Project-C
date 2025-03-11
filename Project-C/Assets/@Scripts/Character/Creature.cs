@@ -403,6 +403,7 @@ public class Creature : BaseObject
         LayerMask includeLayers = 0;
         includeLayers.AddLayer(ELayer.Wall);
         includeLayers.AddLayer(ELayer.Ground);
+        includeLayers.AddLayer(ELayer.Env);
 
         RaycastHit2D obstacle = Physics2D.Raycast(Rigidbody.position, dir, distance, includeLayers);
         Debug.DrawRay(Rigidbody.position, dir * distance, Color.green);
@@ -471,7 +472,8 @@ public class Creature : BaseObject
         // 충돌 필터링
         LayerMask includeLayers = 0;
         includeLayers.AddLayer(ELayer.Ground);
-        
+        includeLayers.AddLayer(ELayer.Env);
+
         Debug.DrawRay(Rigidbody.position, Vector2.down * groundCheckDistance, Color.red);
 
         // 캐릭터 밑의 평평한 바닥 감지

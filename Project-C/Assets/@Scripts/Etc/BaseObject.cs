@@ -45,6 +45,6 @@ public class BaseObject : InitBase
     /// <param name="attacker">가해자(이런 번역 맞나..?)</param>
     public virtual void OnDamaged(float damage, bool ignoreInvincibility = false, Collider2D attacker = null)
     {
-        Debug.Log("OnDamaged");
+        //Debug.Log("OnDamaged");
     }
 }

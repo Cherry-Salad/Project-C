@@ -42,10 +42,10 @@ public class Env : BaseObject
         }
     }
 
-    IEnumerator CoShake(float duration = 0.5f)
+    protected IEnumerator CoShake(float duration = 0.2f)
     {
         Vector3 pos = transform.position;
-        float magnitude = 0.1f;
+        float magnitude = 0.05f;
 
         float elapsedTime = 0f;
         while (elapsedTime < duration)
@@ -59,6 +59,6 @@ public class Env : BaseObject
         transform.position = pos; // 원래 위치로 복구
 
         if (Hp <= 0)
-            Managers.Resource.Destroy(gameObject);
+            Managers.Resource.Destroy(gameObject);  // TODO: 부숴지는 연출
     }
 }
