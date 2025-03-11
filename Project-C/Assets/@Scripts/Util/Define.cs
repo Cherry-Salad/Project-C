@@ -37,7 +37,9 @@ public class Define
         Player,
         Projectile,
         Trap,
-        Env
+        Cherry,
+        NPC,
+        Env,
     }
 
     public enum ECreatureState
