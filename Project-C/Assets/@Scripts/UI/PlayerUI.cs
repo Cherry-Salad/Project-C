@@ -80,7 +80,7 @@ public class PlayerUI : MonoBehaviour
     //Hp 또는 Mp Udate
     private void UpdateUI(Image[] images, float currentValue, float maxValue, Color fullColor, Color emptyColor, string label) //확인용 label (나중에 지우기)
     {
-        Debug.Log($"UI 업데이트({label}) => 최대 : {maxValue}, 현재  : {currentValue}");
+        //Debug.Log($"UI 업데이트({label}) => 최대 : {maxValue}, 현재  : {currentValue}");
 
         for (int i = 0; i < images.Length; i++)
         {

@@ -81,7 +81,6 @@ public class MonsterProjectileBase : BaseObject
 
         if(((1 << collider.gameObject.layer) & layerMask) != 0)
         {
-            Debug.Log(collider.gameObject.layer);
             EndOfProjectile();
         }
     }

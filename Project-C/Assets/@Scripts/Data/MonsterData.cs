@@ -11,7 +11,6 @@ using Object = UnityEngine.Object;
 
 namespace Data
 {
-
     #region MonsterData
 
     [Serializable]
@@ -52,6 +51,7 @@ namespace Data
         public MonsterDrop Drop;
         public MonsterEvent Event;
         public MonsterGroggy Groggy;
+        public MonsterBoss Boss;
         public MonsterDisplayKR DisplayKR;
     }
 
@@ -88,7 +88,16 @@ namespace Data
         public bool IsPossible;
         public int MAXGauge;
         public int DurationTime;
+        public int Decrease;
+        public float DecreaseCycleSec;
         public int DropMP;
+    }
+
+    [Serializable]
+    public class MonsterBoss
+    {
+        public int MaxPhase;
+        public List<float> PhaseChangeHP;
     }
 
     [Serializable]
@@ -237,5 +246,3 @@ namespace Data
 
     }
 }
-
-

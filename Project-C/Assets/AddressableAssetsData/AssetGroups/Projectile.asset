@@ -23,6 +23,18 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a6e94ea280bf0347b79064c2cd94d95
+    m_Address: GoblinEyeLaser
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterDataSet
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 99fa1ceacae0328449503d7a84a00d5a
+    m_Address: GoblinAxe
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterDataSet
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aaab5e7fedf9384448c795cf5197a138
     m_Address: GoblinsBoomerang
     m_ReadOnly: 0
