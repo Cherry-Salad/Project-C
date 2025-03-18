@@ -1,8 +1,8 @@
 {
   "npcName" : "Hunter",
   "dialogues": [
-    "HIIII",
-    "IM Hunter",
-    "Goodbye"
+    "여길 어떻게 온거야?",
+    "설마 대장 고블린을 물리친 거야?",
+    "정말 대단한걸!"
   ]
 }

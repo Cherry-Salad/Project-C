@@ -228,7 +228,7 @@
       "TypeLevel": "Boss",
       "AttackTarget": "Player",
       "SpawnPosition": [ 20, 0 ],
-      "IsSpawnViewRight": true,
+      "IsSpawnViewRight": false,
       "Resurrection": false,
       "SurveillanceTime": 5.0,
 

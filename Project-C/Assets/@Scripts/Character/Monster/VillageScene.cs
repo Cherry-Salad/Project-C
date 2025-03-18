@@ -1,9 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class MonsterTestScene : BaseScene
-{
+public class VillageScene : BaseScene
+{    
+    private GameObject player;
+
+    private Vector3 _startPos = new Vector3(-9.2f, -2.5f, 0);
+    
+
     public override bool Init()
     {
         if (base.Init() == false)
@@ -21,13 +27,10 @@ public class MonsterTestScene : BaseScene
                 Managers.Data.Init();
 
                 // 플레이어 소환, TODO: 맵마다 플레이어 스폰 위치를 다르게 설정
-                GameObject player = Managers.Resource.Instantiate("Player");
-                player.transform.position = Vector3.zero;   // TODO: 맵에서 플레이어 소환 위치 설정
+                player = Managers.Resource.Instantiate("Player");
+                player.transform.position = _startPos;   // TODO: 맵에서 플레이어 소환 위치 설정                
 
-                // 카메라 설정
-                //Managers.Map.SpawnRoomCameras();
-                //CameraController camera = Camera.main.GetComponent<CameraController>();
-                //camera.Target = player.GetComponent<Player>();
+                
             }
         });
         #endregion
@@ -39,4 +42,5 @@ public class MonsterTestScene : BaseScene
     {
         base.Clear();
     }
+
 }

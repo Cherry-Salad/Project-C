@@ -34,11 +34,6 @@ public class BossMonsterBase : MonsterBase
     {
         if (!isCompleteLoad) return;
 
-        if(Input.GetKeyUp(KeyCode.W))
-        {
-            AwakeMonster();
-        }
-
         if (State == ECreatureState.Dead || State == ECreatureState.Hurt) return;
 
         DetectingPatternChangeHp();
@@ -129,6 +124,11 @@ public class BossMonsterBase : MonsterBase
             UpdateGroggyGauge(_GROGGY_GAUGE_ADD_VALUE);
             StartCoroutine(HurtCoroutine());
         }
+    }
+
+    public float HpPercent()
+    {
+        return (float)hp / DataRecorder.MaxHP;
     }
 
     protected IEnumerator HurtCoroutine()  // 데미지를 받았을 때 

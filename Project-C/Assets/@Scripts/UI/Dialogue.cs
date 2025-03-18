@@ -17,15 +17,15 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private TMP_Text npcNameText;       // NPC 이름 UI
     [SerializeField] private TMP_Text dialogueText;      // 대화 내용 UI
     [SerializeField] private string dialogueFileName;    // JSON 파일명
+    [SerializeField] private NPCMovement npcMovement;
 
     private DialogueData dialogueData;
     private int currentDialogueIndex = 0;
     private bool dialougeActivated;
-    private NPCMovement npcMovement;
+    
 
     void Start()
     {
-        npcMovement = GetComponent<NPCMovement>();
         LoadDialogueData();
     }
 

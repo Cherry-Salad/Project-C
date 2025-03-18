@@ -10,6 +10,7 @@ TagManager:
   - Trap
   - CameraBoundary
   - Monster
+  - NPC
   layers:
   - Default
   - TransparentFX
