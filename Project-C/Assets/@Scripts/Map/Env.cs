@@ -24,7 +24,7 @@ public class Env : BaseObject
 
         if (flipX)
         {
-            Debug.Log("?");
+            //Debug.Log("flipX");
             Vector3 localScale = transform.localScale;
             localScale.x *= -1;
             transform.localScale = localScale;
@@ -32,8 +32,7 @@ public class Env : BaseObject
         
         if (flipY)
         {
-            Debug.Log("flipY");
-
+            //Debug.Log("flipY");
             Vector3 localScale = transform.localScale;
             localScale.y *= -1;
             transform.localScale = localScale;
