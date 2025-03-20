@@ -97,6 +97,7 @@ public class Dialogue : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("접촉!!!");
             dialougeActivated = true;
             currentDialogueIndex = 0;
         }
@@ -106,6 +107,7 @@ public class Dialogue : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            Debug.Log("!떨어짐");
             dialougeActivated = false;
             EndDialogue();
         }

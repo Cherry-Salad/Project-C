@@ -30,9 +30,9 @@ public class CherryFollow : MonoBehaviour
         StartCoroutine(RecordPlayerPosition());
 
         // 플레이어와 고양이 간 충돌 & NPC와 고양이 충돌을 무시
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Cherry"), true);
-        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("NPC"), LayerMask.NameToLayer("Cherry"), true);
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("NPC"), true);
     }
+
 
     IEnumerator LoadPlayer()
     {
