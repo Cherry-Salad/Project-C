@@ -79,7 +79,7 @@ public class SkillBase : InitBase
         if (IsSkillUsable() == false) 
             return false;
 
-        Debug.Log($"DoSkill: {Name}");
+        //Debug.Log($"DoSkill: {Name}");
         return true;
     }
 
@@ -127,21 +127,9 @@ public class SkillBase : InitBase
     /// <summary>
     /// 히트 박스를 생성한다.
     /// </summary>
-    /// <param name="spawnPos">소환 위치</param>
     /// <param name="canRecycle">생성된 히트 박스를 재활용할 것인가?</param>
     /// <param name="parent"></param>
     public virtual void SpawnHitBox(Vector3 spawnPos, bool canRecycle = false, Transform parent = null)
-    {
-        SpawnHitBox(canRecycle, parent);
-        HitBox.transform.localPosition = spawnPos;  // 소환 위치 설정
-    }
-
-    /// <summary>
-    /// 히트 박스를 생성한다.
-    /// </summary>
-    /// <param name="canRecycle">생성된 히트 박스를 재활용할 것인가?</param>
-    /// <param name="parent"></param>
-    public virtual void SpawnHitBox(bool canRecycle = false, Transform parent = null)
     {
         // 히트 박스 생성
         if (canRecycle == false || (canRecycle && HitBox == null))
@@ -172,7 +160,7 @@ public class SkillBase : InitBase
             }
         }
 
-        HitBox.SetInfo(Owner, this, Owner.LookLeft, excludeLayers);
+        HitBox.SetInfo(spawnPos, Owner, this, Owner.LookLeft, excludeLayers);
     }
 
     public virtual void DespawnHitBox(bool canRecycle = false)
@@ -233,7 +221,7 @@ public class SkillBase : InitBase
                 yield break;
             }
             elapsedTime += Time.deltaTime;
-            Debug.Log($"elapsedTime: {elapsedTime}, CastingTime: {CastingTime}");
+            //Debug.Log($"elapsedTime: {elapsedTime}, CastingTime: {CastingTime}");
             yield return null;
         }
         Debug.Log($"{callback}호출 직전");

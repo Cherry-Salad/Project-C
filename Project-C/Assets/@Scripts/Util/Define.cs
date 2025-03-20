@@ -20,6 +20,7 @@ public class Define
         Projectile,
         Env,    // Environment, 환경(ex: 나무, 돌)
         Checkpoint,
+        SavePoint
     }
 
     public enum ELayer
@@ -35,7 +36,10 @@ public class Define
         HitBox,
         Player,
         Projectile,
-        Trap
+        Trap,
+        Cherry,
+        NPC,
+        Env,
     }
 
     public enum ECreatureState

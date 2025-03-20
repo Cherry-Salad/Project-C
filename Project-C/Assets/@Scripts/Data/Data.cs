@@ -143,4 +143,28 @@ namespace Data
         }
     }
     #endregion
+
+    #region Env
+    [SerializeField]
+    public class EnvData
+    {
+        public int DataId;
+        public string Name;
+        // TODO: 필요하다면 더 추가
+        public float Hp;
+    }
+
+    [Serializable]
+    public class EnvDataLoader : ILoader<int, EnvData>
+    {
+        public List<EnvData> Env = new List<EnvData>();
+        public Dictionary<int, EnvData> MakeDict()
+        {
+            Dictionary<int, EnvData> dict = new Dictionary<int, EnvData>();
+            foreach (EnvData envData in Env)
+                dict.Add(envData.DataId, envData);
+            return dict;
+        }
+    }
+    #endregion
 }

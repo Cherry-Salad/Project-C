@@ -34,7 +34,7 @@ public class Projectile : BaseObject
     /// <param name="dir">발사할 투사체 방향</param>
     public void SetInfo(Creature owner, SkillBase skill, ProjectileData data, LayerMask excludeLayers, Vector2 dir)
     {
-        Debug.Log("Spawn Projectile");
+        //Debug.Log("Spawn Projectile");
 
         Owner = owner;
         Skill = skill;
@@ -92,15 +92,13 @@ public class Projectile : BaseObject
         BaseObject target = collision.GetComponent<BaseObject>();
         if (target != null)
         {
-            Debug.Log("OnTriggerEnter2D");
-
             float damage = Owner.Atk * Skill.DamageMultiplier;  // 오너 공격력 * 스킬 공격력
             MonsterBase monster = target as MonsterBase;
 
             if (monster != null)
                 monster.Hit((int)damage);
             else
-                target.OnDamaged(damage, Owner);
+                target.OnDamaged(damage, attacker: Owner.Collider);
         }
 
         StopCoroutine(_coLaunch);

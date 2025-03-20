@@ -17,6 +17,12 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b7c52fb6b91db7d498b1af16752e6fa4
   m_SerializeEntries:
+  - m_GUID: 0b60fd7b4ef413e4b8a017570b8fe18e
+    m_Address: EnvData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 0de153169857ffe4387cef2b9ff7ee62
     m_Address: PlayerSkillData
     m_ReadOnly: 0
@@ -28,6 +34,7 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 931f3e17e01dfe24486e0edfbc373c0f
     m_Address: MonsterData
     m_ReadOnly: 0

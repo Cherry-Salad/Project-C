@@ -6,6 +6,7 @@ public class HitBox : InitBase
 {
     public Creature Owner { get; private set; }
     public SkillBase Skill { get; private set; }
+    public Rigidbody2D Rigidbody { get; protected set; }    // 트리거 이벤트를 처리하기 위해서는 부모가 Rigidbody가 있거나 본인의 Rigidbody가 반드시 필요
     public BoxCollider2D Collider { get; private set; }
 
     bool _lookLeft;
@@ -35,26 +36,30 @@ public class HitBox : InitBase
         if (base.Init() == false)
             return false;
 
+        Rigidbody = GetComponent<Rigidbody2D>();
         Collider = GetComponent<BoxCollider2D>();
+
+        Rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;  // Z축 고정
         return true;
     }
 
-    public void SetInfo(Creature owner, SkillBase skill, bool lookLeft, LayerMask excludeLayers, bool setActive = true)
+    public void SetInfo(Vector3 spawnPos, Creature owner, SkillBase skill, bool lookLeft, LayerMask excludeLayers)
     {
+        transform.localPosition = spawnPos;
         Owner = owner;
         Skill = skill;
         LookLeft = lookLeft;
         Collider.excludeLayers = excludeLayers;
-
-        if (setActive)
-        {
-            gameObject.SetActive(true);
-
-            // 히트 박스가 비활성화 되어도 Collider 상태를 기억하고 있다.
-            // 그래서 다시 활성화할 때 새로운 충돌로 인식하도록 강제로 충돌 감지 초기화
-            Collider.enabled = false;
-            Collider.enabled = true;
-        }
+        gameObject.SetActive(true);
+        //if (setActive)
+        //{
+        //    gameObject.SetActive(true);
+        //
+        //    // 히트 박스가 비활성화 되어도 Collider 상태를 기억하고 있다.
+        //    // 그래서 다시 활성화할 때 새로운 충돌로 인식하도록 강제로 충돌 감지 초기화
+        //    //Collider.enabled = false;
+        //    //Collider.enabled = true;
+        //}
     }
 
     public void OnDestroy()
@@ -64,7 +69,7 @@ public class HitBox : InitBase
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"HitBox TriggerEnter: {collision.gameObject.name}");
+        //Debug.Log($"{collision.name}");
 
         // SetInfo에서 충돌 대상을 다 필터링해서, BaseObject만 찾으면 된다.
         // 하지만, 몬스터는 Hit 함수가 따로 있어서 일단 구분하였다.
@@ -77,7 +82,7 @@ public class HitBox : InitBase
             if (monster != null)
                 monster.Hit((int)damage);
             else
-                target.OnDamaged(damage, Owner);
+                target.OnDamaged(damage, attacker: Owner.Collider);
         }
     }
 

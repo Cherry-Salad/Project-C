@@ -1,0 +1,9 @@
+{
+  "env": [
+    {
+      "DataId": 400001,
+      "Name": "BreakableWall",
+      "Hp": 3.0
+    }
+  ]
+}
