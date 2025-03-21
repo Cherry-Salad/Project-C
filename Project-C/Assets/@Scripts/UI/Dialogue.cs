@@ -19,6 +19,7 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private TMP_Text npcNameText;       // NPC 이름 UI
     [SerializeField] private TMP_Text dialogueText;      // 대화 내용 UI
     [SerializeField] private string dialogueFileName;    // JSON 파일명
+    [SerializeField] private NPCMovement npcMovement;
 
     private DialogueData dialogueData;
     private NPCMovement npcMovement;
@@ -28,7 +29,6 @@ public class Dialogue : MonoBehaviour
 
     void Start()
     {
-        npcMovement = GetComponent<NPCMovement>();
         LoadDialogueData();
         if (dialogueData.npcName == "빨간모자") canStoreOpen = true; //RedCap NPC는 상점 기능 사용 가능
     }

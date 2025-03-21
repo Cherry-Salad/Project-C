@@ -325,7 +325,7 @@ public class Player : Creature
     {
         if (Managers.Map.CurrentRoom == null || Managers.Map.CurrentRoom.IsInRoom(transform.position) == false)
         {
-            Debug.Log("ChangeCurrentRoom");
+            //Debug.Log("ChangeCurrentRoom");
             Managers.Map.ChangeCurrentRoom(transform.position);
         }
 
