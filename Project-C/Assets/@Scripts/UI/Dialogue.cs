@@ -22,7 +22,7 @@ public class Dialogue : MonoBehaviour
     [SerializeField] private NPCMovement npcMovement;
 
     private DialogueData dialogueData;
-    private NPCMovement npcMovement;
+    //private NPCMovement npcMovement;
     private int currentDialogueIndex = 0;
     private bool dialougeActivated;
     private bool canStoreOpen = false;
@@ -51,6 +51,7 @@ public class Dialogue : MonoBehaviour
 
     void Update()
     {
+        
         if (dialougeActivated == true && Input.GetButtonDown("Interact"))
         {
             NPCCanvas.SetActive(true);
@@ -89,8 +90,19 @@ public class Dialogue : MonoBehaviour
 
     void ShowStore()
     {
-        StorePanel.SetActive(true);
-        DialoguePanel.SetActive(false);
+        if(!StorePanel.activeSelf)
+        {
+            NPCCanvas.SetActive(true);
+            StorePanel.SetActive(true);
+            DialoguePanel.SetActive(false);
+        }
+        else
+        {
+            NPCCanvas.SetActive(false);
+            StorePanel.SetActive(false);
+            DialoguePanel.SetActive(false);
+        }
+        
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
