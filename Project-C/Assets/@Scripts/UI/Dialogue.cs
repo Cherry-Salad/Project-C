@@ -40,7 +40,7 @@ public class Dialogue : MonoBehaviour
         {
             string json = File.ReadAllText(filePath);
             dialogueData = JsonUtility.FromJson<DialogueData>(json);
-            Debug.Log($"JSON 로드 성공: {dialogueData.npcName}");
+            //Debug.Log($"JSON 로드 성공: {dialogueData.npcName}");
         }
         else
         {
@@ -50,8 +50,8 @@ public class Dialogue : MonoBehaviour
 
     void Update()
     {
-        
-        if (dialougeActivated == true && Input.GetButtonDown("Interact"))
+
+        if (dialougeActivated == true && KeySetting.GetKeyDown(KeyInput.NEXT))
         {
             NPCCanvas.SetActive(true);
             ShowDialogue();
@@ -76,7 +76,6 @@ public class Dialogue : MonoBehaviour
             EndDialogue();
         }
     }
-
     void EndDialogue()
     {
         NPCCanvas.SetActive(false);
@@ -107,7 +106,6 @@ public class Dialogue : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("접촉!!!");
             dialougeActivated = true;
             currentDialogueIndex = 0;
         }
@@ -117,7 +115,6 @@ public class Dialogue : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log("!떨어짐");
             dialougeActivated = false;
             EndDialogue();
         }

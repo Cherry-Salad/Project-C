@@ -194,8 +194,8 @@ public class Player : Creature
     bool IsMoveDirInput()
     {
         // 방향키 입력
-        bool leftPressed = Input.GetKey(KeyCode.LeftArrow);
-        bool rightPressed = Input.GetKey(KeyCode.RightArrow);
+        bool leftPressed = KeySetting.GetKey(KeyInput.LEFT);
+        bool rightPressed = KeySetting.GetKey(KeyInput.RIGHT);
 
         int pressedCount = (leftPressed ? 1 : 0) + (rightPressed ? 1 : 0);
 

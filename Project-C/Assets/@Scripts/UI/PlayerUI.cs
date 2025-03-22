@@ -39,7 +39,6 @@ public class PlayerUI : MonoBehaviour
             }
             yield return null;
         }
-        Debug.Log($"PlayerUI - Player 찾음: {player.gameObject.name}");
 
         //Player.cs의 OnDataLoaded 이벤트가 호출될 때까지 대기
         yield return new WaitUntil(() => player != null && player.Hp > 0 && player.MaxHp > 0);
