@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class UIManager : MonoBehaviour
+public class MainUIManager : MonoBehaviour
 {
     public GameObject OptionPanel;
 
@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenOption()
     {
+        Debug.Log("열림");
         OptionPanel.SetActive(true);
     }    
     
