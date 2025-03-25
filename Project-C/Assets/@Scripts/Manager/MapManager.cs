@@ -42,17 +42,12 @@ public class MapManager
     /// </summary>
     public Vector3 CurrentCheckpoint { get; set; }
 
-    public Transform CheckpointRoot
-    {
-        get
-        {
-            GameObject root = GameObject.Find("@Checkpoints");
-            if (root == null)
-                root = new GameObject { name = "@Checkpoints" };
+    /// <summary>
+    /// 현재 활성화된 세이브 포인트
+    /// </summary>
+    public SavePoint SavePoint { get; set; } = null;
 
-            return root.transform;
-        }
-    }
+    public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
 
     public void LoadMap(string mapName)
     {
@@ -77,7 +72,8 @@ public class MapManager
             room.GetComponent<TilemapRenderer>().enabled = false;
         }
 
-        CurrentCheckpoint = Vector3.zero;
+        CurrentCheckpoint = Vector3.zero;   // 체크포인트 초기화
+        
         SpawnObjects();
     }
 
@@ -86,6 +82,7 @@ public class MapManager
         if (Map != null)
             Managers.Resource.Destroy(Map);
 
+        Checkpoints.Clear();
         Managers.Camera.Clear();
     }
 
@@ -108,15 +105,19 @@ public class MapManager
                     Vector3 tileOffset = CellGrid.cellSize * 0.5f;  // 타일 크기의 절반
                     worldPos += tileOffset;
 
+                    GameObject obj = Managers.Resource.Instantiate(tile.Name, pooling: true);
+
                     switch (tile.ObjectType)
                     {
                         case EObjectType.Checkpoint:
-                            GameObject checkpoint = Managers.Resource.Instantiate(tile.Name);
-                            checkpoint.transform.position = worldPos;
-                            checkpoint.transform.parent = CheckpointRoot;
+                            obj.transform.position = worldPos;
+                            Checkpoints.Add(worldPos);
+                            break;
+                        case EObjectType.SavePoint:
+                            SavePoint savePoint = obj.GetComponent<SavePoint>();
+                            savePoint.SetInfo(worldPos, Managers.Scene.CurrentScene);
                             break;
                         case EObjectType.Env:
-                            GameObject obj = Managers.Resource.Instantiate(tile.Name, pooling: true);
                             Env env = obj.GetComponent<Env>();
                             env.SetInfo(tile.DataId, worldPos, tile.FlipX, tile.FlipY);
                             break;
@@ -149,7 +150,7 @@ public class MapManager
     /// </summary>
     public void RespawnAtCheckpoint(BaseObject go)
     {
-        if (CheckpointRoot == null || CheckpointRoot.childCount <= 0)
+        if (Checkpoints.Count <= 0)
             return;
 
         // 활성화된 체크포인트가 없다면 가장 가까운 체크포인트로 이동
@@ -158,13 +159,13 @@ public class MapManager
             Vector3 closest = Vector3.zero; // 가장 가까운 체크포인트 위치
             float minDistance = float.MaxValue;
 
-            foreach (Transform checkpoint in CheckpointRoot)
+            foreach (Vector3 pos in Checkpoints)
             {
-                float distance = Vector3.Distance(go.transform.position, checkpoint.position);
+                float distance = Vector3.Distance(go.transform.position, pos);
                 if (distance < minDistance)
                 {
                     minDistance = distance;
-                    closest = checkpoint.position;
+                    closest = pos;
                 }
             }
 
@@ -181,5 +182,20 @@ public class MapManager
 
         // 플레이어를 체크 포인트로 이동
         go.transform.position = CurrentCheckpoint;
+    }
+
+    public void RespawnAtSavePoint()
+    {
+        if (SavePoint == null)
+        {
+            Debug.LogError("와 파피루스");
+            return;
+        }
+
+        // TODO: 활성화된 세이브 포인트가 현재 씬과 다르면 씬 이동
+        if (Managers.Scene.CurrentScene != SavePoint.Scene)
+        {
+            Managers.Scene.LoadScene(SavePoint.Scene.SceneType);
+        }
     }
 }
