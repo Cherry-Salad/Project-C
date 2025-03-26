@@ -147,7 +147,7 @@ public class Player : Creature
     bool IsDashInput()
     {
         // 대시키 입력
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (KeySetting.GetKeyDown(KeyInput.DASH)) 
         {
             OnDash();
             return true;
@@ -159,7 +159,7 @@ public class Player : Creature
     bool IsJumpInput()
     {
         // TODO: 나중에 기본 키를 바꾸는게 좋겠다.. 점프 키를 컨트롤로 하니까 왼손 새끼 손가락에 무리가 간다.. 아니면 내 손이 문제인가..?
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (KeySetting.GetKeyUp(KeyInput.JUMP))
         {
             _jumpKeyPressed = false;
             _jumpKeyPressedTime = 0f;
@@ -180,7 +180,7 @@ public class Player : Creature
         }
 
         // 점프키 입력
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (KeySetting.GetKeyDown(KeyInput.JUMP))
         {
             _jumpKeyPressed = true;
             _jumpKeyPressedTime = Time.time;
