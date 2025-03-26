@@ -179,12 +179,10 @@ public class MapManager
         }
 
         // TODO: 체크포인트로 이동하는 연출
-
-        // 플레이어를 체크 포인트로 이동
-        go.transform.position = CurrentCheckpoint;
+        go.transform.position = CurrentCheckpoint;  // 플레이어를 체크 포인트로 이동
     }
 
-    public void RespawnAtSavePoint()
+    public void RespawnAtSavePoint(BaseObject go)
     {
         if (SavePoint == null)
         {
@@ -192,10 +190,15 @@ public class MapManager
             return;
         }
 
+        // TODO: 카메라 블렌드 효과 비활성화
+
         // TODO: 활성화된 세이브 포인트가 현재 씬과 다르면 씬 이동
         if (Managers.Scene.CurrentScene != SavePoint.Scene)
         {
             Managers.Scene.LoadScene(SavePoint.Scene.SceneType);
         }
+
+        // TODO: 카메라 블렌드 효과 비활성화
+        go.transform.position = SavePoint.transform.position;
     }
 }

@@ -38,6 +38,8 @@ public class Player : Creature
 
     bool _isTouchingTrap = false;   // 함정 충돌 여부
 
+    SavePoint _savePoint = null;   // 세이브 포인트와 접촉 중인지 확인하기 위한 변수이다.
+
     Coroutine _CoDamaged = null;    // 피격 판정 중복 방지
 
     //UI를 위한 이벤트 추가
@@ -133,6 +135,9 @@ public class Player : Creature
         // 테스트용 코드, 마나 회복
         if (Input.GetKeyDown(KeyCode.Q))
             Mp = Mathf.Clamp(Mp + 1f, 1f, MaxMp);
+
+        if (IsInteractionInput())
+            return;
 
         if ((State != ECreatureState.WallJump && IsDashInput()) || IsSkillInput())
             return;
@@ -290,6 +295,23 @@ public class Player : Creature
 
         return false;
     }
+
+    bool IsInteractionInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (_savePoint != null)
+            {
+                Debug.Log("세이브 포인트 활성화");
+                Managers.Map.SavePoint = _savePoint;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     #endregion
 
     protected override void UpdateAnimation()
@@ -541,7 +563,17 @@ public class Player : Creature
     /// </summary>
     public override void OnDied()
     {
+        //Managers.Map.RespawnAtSavePoint(this);
         base.OnDied();
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent<SavePoint>(out var sp))
+        {
+            //Debug.Log($"{collision.name} 충돌");
+            _savePoint = sp;
+        }
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -552,14 +584,14 @@ public class Player : Creature
         // 무적 상태일 때 몬스터와 충돌하면 안된다
         if (_isInvincibility == false && collision.gameObject.CompareTag("EnemyHitBox"))
         {
-            Debug.Log($"{collision.name} 충돌");
+            //Debug.Log($"{collision.name} 충돌");
             OnDamaged(attacker: collision);
         }
 
         // 장애물 충돌
         if (_isTouchingTrap == false && collision.gameObject.CompareTag("Trap"))
         {
-            Debug.Log($"{collision.name} 충돌");
+            //Debug.Log($"{collision.name} 충돌");
             _isTouchingTrap = true;
             OnDamaged(ignoreInvincibility: true);
             Managers.Map.RespawnAtCheckpoint(this);
@@ -578,6 +610,12 @@ public class Player : Creature
             Debug.Log("체크포인트 활성화");
             Vector3 worldPos = collision.bounds.center;
             Managers.Map.CurrentCheckpoint = worldPos;
+        }
+
+        if (collision.TryGetComponent<SavePoint>(out var sp))
+        {
+            //Debug.Log($"{collision.name} 충돌 안 함");
+            _savePoint = null;
         }
     }
 
