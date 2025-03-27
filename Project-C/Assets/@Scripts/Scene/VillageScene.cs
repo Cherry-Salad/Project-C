@@ -34,7 +34,7 @@ public class VillageScene : BaseScene
             }
         });
         #endregion
-
+        
         return true;
     }
 

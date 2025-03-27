@@ -177,7 +177,7 @@
 
       "Base": {
         "Role": "HybridAttacker",
-        "MovementSpeed": 3.0,
+        "MovementSpeed": 5.0,
         "BelligerenceLevel": 3,
         "DefaultGravity": 2.0
       },
@@ -218,7 +218,7 @@
             "RecoveryTime": 2,
             "WindUpTime": 0.5,
 
-            "AttackRange": 10,
+            "AttackRange": 6,
             "RetentionTime": 0,
             "MovementMultiplier": 1.2,
             "InitialAngle": 80,
