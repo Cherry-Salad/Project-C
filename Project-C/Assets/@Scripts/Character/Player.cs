@@ -16,7 +16,7 @@ public class Player : Creature
     public int AccessorySlot { get; set; }
     #endregion
 
-    public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
+    public List<PlayerSkillBase> Skills = new List<PlayerSkillBase>();
 
     // 이동
     bool _moveDirKeyPressed = false;
@@ -33,7 +33,7 @@ public class Player : Creature
     bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
 
     // 스킬
-    KeyCode _pressedSkillKey = KeyCode.None;
+    KeyInput _pressedSkillKey = KeyInput.NONE;
     float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
 
     bool _isTouchingTrap = false;   // 함정 충돌 여부
@@ -106,7 +106,7 @@ public class Player : Creature
                 skill = gameObject.AddComponent(type) as PlayerSkillBase;
 
             skill.SetInfo(this, data);
-            Skills.Add(skill.Key, skill);
+            Skills.Add(skill);
         }
     }
 
@@ -228,22 +228,33 @@ public class Player : Creature
     bool IsSkillInput()
     {
         // 꾹 눌러야 하는 키
-        if (_pressedSkillKey != KeyCode.None)
+        if (_pressedSkillKey != KeyInput.NONE)
         {
-            if (Input.GetKeyUp(_pressedSkillKey))
+            if (KeySetting.GetKeyUp(_pressedSkillKey))
             {
-                _pressedSkillKey = KeyCode.None;
+                _pressedSkillKey = KeyInput.NONE;
                 _skillKeyPressedTime = 0f;
             }
             else
             {
+                var pressedKey = KeySetting.keys[_pressedSkillKey];
+                PlayerSkillBase psk = null;
+                
+                foreach (PlayerSkillBase skill in Skills)
+                {
+                    if (skill.Key == pressedKey)
+                    {
+                        psk = skill;
+                        break;
+                    }
+                }
+
                 // 키를 누르고 있다
                 float pressedTime = Time.time - _skillKeyPressedTime;
-                if (pressedTime >= Skills[_pressedSkillKey].KeyPressedTime)
+                if (psk != null && pressedTime >= psk.KeyPressedTime)
                 {
-                    Skills[_pressedSkillKey].DoSkill();
-
-                    _pressedSkillKey = KeyCode.None;
+                    psk.DoSkill();
+                    _pressedSkillKey = KeyInput.NONE;
                     _skillKeyPressedTime = 0f;
                 }
 
@@ -252,35 +263,56 @@ public class Player : Creature
         }
 
         // 스킬키 입력
-        foreach (KeyCode keyCode in Skills.Keys)
+        foreach (PlayerSkillBase skill in Skills)
         {
-            if (Input.GetKeyDown(keyCode))
+            if (Input.GetKeyDown(skill.Key))
             {
                 //Debug.Log($"입력된 키: {keyCode}");
-
-                if (Skills[keyCode].KeyPressedTime > 0)
+                if (skill.KeyPressedTime > 0)
                 {
-                    // 꾹 눌러야 하는 키
-                    _pressedSkillKey = keyCode;
+                    // _pressedSkillKey 설정
+                    foreach (var dic in KeySetting.keys)
+                    {
+                        if (skill.Key == dic.Value)
+                        {
+                            _pressedSkillKey = dic.Key;
+                            break;
+                        }
+                    }
+
+                    if (_pressedSkillKey == KeyInput.NONE)
+                        Debug.Log("");
+
                     _skillKeyPressedTime = Time.time;
                 }
                 else
                 {
-                    Skills[keyCode].DoSkill();
-                    _pressedSkillKey = KeyCode.None;
+                    skill.DoSkill();
+                    _pressedSkillKey = KeyInput.NONE;
                     _skillKeyPressedTime = 0f;
                 }
 
                 return true;
             }
 
-            if (Input.GetKey(keyCode))
+            if (Input.GetKey(skill.Key))
             {
                 //Debug.Log($"입력된 키: {keyCode}");
-                if (Skills[keyCode].KeyPressedTime > 0)
+                if (skill.KeyPressedTime > 0)
                 {
-                    // 꾹 눌러야 하는 키
-                    _pressedSkillKey = keyCode;
+                    // _pressedSkillKey 설정
+                    foreach (var dic in KeySetting.keys)
+                    {
+                        if (skill.Key == dic.Value)
+                        {
+                            _pressedSkillKey = dic.Key; // 꾹 눌러야 하는 키
+                            break;
+                        }
+                    }
+
+                    if (_pressedSkillKey == KeyInput.NONE)
+                        Debug.Log("");
+
                     _skillKeyPressedTime = Time.time;
                 }
 

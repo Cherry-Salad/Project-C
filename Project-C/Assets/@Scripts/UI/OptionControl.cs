@@ -6,6 +6,7 @@ using TMPro;
 
 public enum KeyInput
 {
+    NONE = -1,
     UP,         // 0
     DOWN,       // 1
     LEFT,       // 2
@@ -15,13 +16,13 @@ public enum KeyInput
     ATTACK,     // 6
     HEAL,       // 7
     NEXT,       // 8
-    SKILL1,     // 9
-    SKILL2,     // 10
-    SKILL3,     // 11
+    SKILL1,     // 9, 아이스 볼
+    SKILL2,     // 10, 아이스브레이크
+    SKILL3,     // 11, 미정
     MENU,       // 12
     MAP,        // 13
     INVENTORY,  // 14
-    SKILL,      // 15
+    SKILL,      // 15, 스킬 창
     KEYCOUNT    // 16 (키 개수 카운트)
 }
 
@@ -61,7 +62,10 @@ public class OptionControl : MonoBehaviour
         KeyCode.K,          // 15 (SKILL)
     };
 
-    private int key = -1; // 현재 키 변경 대기 상태
+    /// <summary>
+    /// 현재 키 변경 대기 상태
+    /// </summary>
+    private int key = -1; 
 
     void Awake()
     {
@@ -119,6 +123,8 @@ public class OptionControl : MonoBehaviour
                     key = -1;
                     return;
                 }
+
+                // TODO: @최혁도, 테스크용 코드로 플레이어 스킬 키 변경(게임 매니저 생성 이후 변경할 필요가 있음)
 
                 KeySetting.keys[(KeyInput)key] = keyCode; // 해당 KeyInput에 새 키 바인딩
                 key = -1;
