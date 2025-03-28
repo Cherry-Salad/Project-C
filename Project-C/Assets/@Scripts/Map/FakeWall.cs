@@ -6,6 +6,7 @@ using static Define;
 
 public class FakeWall : InitBase
 {
+    Tilemap _tilemap;
     TilemapRenderer _renderer;
     CompositeCollider2D _collider;
 
@@ -14,6 +15,7 @@ public class FakeWall : InitBase
         if (base.Init() == false)
             return false;
 
+        _tilemap = GetComponent<Tilemap>();
         _renderer = GetComponent<TilemapRenderer>();
         _collider = GetComponent<CompositeCollider2D>();
 
@@ -54,6 +56,20 @@ public class FakeWall : InitBase
         {
             Debug.Log($"가짜벽 활성화 {collision.name}");
             _renderer.enabled = true;
+        }
+    }
+
+    IEnumerator CoShow(float duration = 2f)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < duration)
+        {
+            Color color = _tilemap.color;
+            color.a = Mathf.Clamp01(alpha); // 0 ~ 1 사이로 제한
+            _tilemap.color = color;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
         }
     }
 }
