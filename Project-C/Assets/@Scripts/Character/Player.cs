@@ -267,7 +267,7 @@ public class Player : Creature
         {
             if (Input.GetKeyDown(skill.Key))
             {
-                //Debug.Log($"입력된 키: {keyCode}");
+                Debug.Log($"입력된 스킬 키1: {skill.Key}");
                 if (skill.KeyPressedTime > 0)
                 {
                     // _pressedSkillKey 설정
@@ -281,7 +281,7 @@ public class Player : Creature
                     }
 
                     if (_pressedSkillKey == KeyInput.NONE)
-                        Debug.Log("");
+                        Debug.Log("입력된 스킬 키2: {skill.Key}");
 
                     _skillKeyPressedTime = Time.time;
                 }
