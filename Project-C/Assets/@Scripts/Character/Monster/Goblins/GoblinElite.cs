@@ -156,6 +156,7 @@ public class GoblinElite : BossMonsterBase
         Vector2 jumpVector = new Vector2(this.MoveDir.x * -1, 1).normalized;
 
         Rigidbody.velocity = jumpVector * _JUMP_POWER;
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Axe_BackStep); //고블린 엘리트 axe Throw 재생
         yield return new WaitForSeconds(skillData.WindUpTime);
         SimpleStopHorizontalMove();
 
@@ -168,7 +169,6 @@ public class GoblinElite : BossMonsterBase
             if (TargetGameObject == null) break;
             ViewTarget();
             Animator.Play("ThrowingAxe");
-            
             yield return new WaitForSeconds(skillData.DelayBetweenShots);
         }
 
@@ -181,13 +181,17 @@ public class GoblinElite : BossMonsterBase
         float correction = _shootingAxeCount % 2 == 0 ? 0 : _SHOOTING_AXE_CORRECTION;
 
         foreach (float point in _THROW_AXES_POINT_X)
+        {
             ShootingProjectile(new Vector2((point - correction) * dir, _THROW_AXES_HIGHT_MAX), _axes);
+        }
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Axe_Throw); //고블린 엘리트 axe Throw 재생
     }
 
     IEnumerator EyeLaserAttack()
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_EYE_LASER_ATTACK_SKILL_NUMBER];
         Animator.Play("EyeLaserAttack");
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Laser_MaskUP); //고블린 엘리트 Laser MaskUp 재생
         yield return new WaitForSeconds(skillData.WindUpTime);
 
         for (int i = 0; i < skillData.NumberOfShots; i++)
@@ -195,6 +199,7 @@ public class GoblinElite : BossMonsterBase
             if (TargetGameObject == null) break;
             ViewTarget();
             ShootingProjectile(this.MoveDir, _lasers);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Laser_Shot); //고블린 엘리트 Laser Shot재생
             yield return new WaitForSeconds(skillData.DelayBetweenShots);
         }
 
@@ -223,11 +228,14 @@ public class GoblinElite : BossMonsterBase
         for(int i = 0; i < skillData.NumberOfShots; i++)
         {
             ActiveEffect(_EFFECT_NUM_PUNCH);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_ExplosionPunch_Charge); //고블린 엘리트 ExplosionPunch Charge 재생
             yield return new WaitUntil(() => !effectList[_EFFECT_NUM_PUNCH].activeSelf);
             yield return new WaitForSeconds(skillData.DelayBetweenShots);
         }
 
         Animator.Play("ExplosionPunch");
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_ExplosionPunch_Punch); //고블린 엘리트 ExplosionPunch Punch 재생
+        AudioManager.Instance.PlaySFXAfterDelay(AudioManager.Instance.MonsterElite_ExplosionPunch_Explosion, 0.5f); //0.5f초 뒤에 고블린 엘리트 ExplosionPunch Explosion 재생
 
         yield return new WaitForSeconds(skillData.RecoveryTime);
     }
@@ -268,7 +276,8 @@ public class GoblinElite : BossMonsterBase
             StartCoroutine(popUpStateTransitionIconCoroutine(_fMark));
             skillList.Add(new Tuple<int, IEnumerator>(_TORNADO_SKILL_NUMBER, GoblinTornado()));
         }
-        
+
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Phase2); //고블린 엘리트 Phase2 재생
         return base.ChangePhase();
     }
 

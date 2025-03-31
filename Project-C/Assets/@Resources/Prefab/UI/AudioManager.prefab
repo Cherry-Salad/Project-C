@@ -50,7 +50,38 @@ MonoBehaviour:
   BGMSource: {fileID: 4017867509475747361}
   SFXSource: {fileID: 7435420309116417901}
   background: {fileID: 8300000, guid: 911f725f156c26f43931ab180ea2e206, type: 3}
+  BossBackground: {fileID: 0}
   button: {fileID: 8300000, guid: 6362368c7c8e57e4a822420b68cd44b7, type: 3}
+  PlayerWalk: {fileID: 8300000, guid: 523924e8918aa8e47a8e695ff5b7a463, type: 3}
+  PlayerJump: {fileID: 8300000, guid: 09e848b5fe4255440b05daec4b5e0ade, type: 3}
+  PlayerDash: {fileID: 8300000, guid: 6b08e07b2853bb14c93a4c39250aa424, type: 3}
+  PlayerFalldown: {fileID: 8300000, guid: f5c5f438581b89c4b96789e177c6254a, type: 3}
+  PlayerWallSlide: {fileID: 0}
+  PlayerDead: {fileID: 8300000, guid: b4ad528968a42814fb5e2397f52c45b7, type: 3}
+  PlayerAttack: {fileID: 8300000, guid: 39df55611537b484d835df6c49e3ee57, type: 3}
+  PlayerHeal_Charge: {fileID: 8300000, guid: c48a972d3d024c2408a3331750786a29, type: 3}
+  PlayerHeal: {fileID: 8300000, guid: b1b9c1f0ea1fcae439ed1a4d44ff05fd, type: 3}
+  PlayerIceBall_Charge: {fileID: 8300000, guid: 090a133834b03f741a585b9aaca0b990, type: 3}
+  PlayerIceBall_Shoot: {fileID: 8300000, guid: 314fe71168cacfb45a079c97c2748b0f, type: 3}
+  PlayerIceBreak_Charge: {fileID: 8300000, guid: 0d2de4872d9f0214f8b4a6d98883c880, type: 3}
+  PlayerIceBreak_Shoot: {fileID: 8300000, guid: 70f0536454179dd419ecf9a0c14f7984, type: 3}
+  PlayerDamaged1: {fileID: 8300000, guid: f5c5f438581b89c4b96789e177c6254a, type: 3}
+  MonsterWarrior: {fileID: 8300000, guid: 8466c573b88788e438277f863fe2d194, type: 3}
+  MonsterBomerang_Shot: {fileID: 8300000, guid: 18c9569e84553d040bd7c064401c4fcd, type: 3}
+  MonsterBomerang_Flying: {fileID: 8300000, guid: 7b7d80a1d97dc974bb05309903e6b984, type: 3}
+  MonsterFly: {fileID: 0}
+  MonsterElite_Axe_BackStep: {fileID: 8300000, guid: 4d04e47379791e245a26ffb0526af8cc, type: 3}
+  MonsterElite_Axe_Throw: {fileID: 8300000, guid: 6444a7c1d54a5e143aca5262f3346810, type: 3}
+  MonsterElite_Laser_MaskUP: {fileID: 8300000, guid: 9b05bf85194a6994e87a326b55b12087, type: 3}
+  MonsterElite_Laser_Shot: {fileID: 8300000, guid: 4310474905e266640852f43bd609a1a4, type: 3}
+  MonsterElite_ExplosionPunch_Charge: {fileID: 8300000, guid: f91268db0b8afc04bbf2c0b2a458623d, type: 3}
+  MonsterElite_ExplosionPunch_Punch: {fileID: 8300000, guid: cc5379d27a646af4581e683d0efdf176, type: 3}
+  MonsterElite_ExplosionPunch_Explosion: {fileID: 8300000, guid: 824e1f2589a9ec044bb251e6f10a2194, type: 3}
+  MonsterElite_Tornado_Start: {fileID: 0}
+  MonsterElite_Tornado: {fileID: 0}
+  MonsterElite_Tornado_End: {fileID: 0}
+  MonsterElite_Phase2: {fileID: 8300000, guid: 270d5b2a740809b4da3bd6e257b48c43, type: 3}
+  MonsterDamaged: {fileID: 8300000, guid: e8af9035f5758f44da37af4225a02619, type: 3}
 --- !u!1 &3994684417471913004
 GameObject:
   m_ObjectHideFlags: 0

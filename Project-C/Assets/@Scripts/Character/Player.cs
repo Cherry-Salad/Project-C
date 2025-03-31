@@ -140,6 +140,7 @@ public class Player : Creature
         IsJumpInput();
 
         _moveDirKeyPressed = IsMoveDirInput();
+
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
     }
@@ -209,14 +210,11 @@ public class Player : Creature
             return false;
         }
 
-        if (leftPressed)
+
+        if (leftPressed || rightPressed)
         {
-            MoveDir = Vector2.left;
-            return true;
-        }
-        else if (rightPressed)
-        {
-            MoveDir = Vector2.right;
+            MoveDir = leftPressed ? Vector2.left : Vector2.right;
+            //AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerWalk); //사운드 바꿔야함 ㅋㅋ
             return true;
         }
 
@@ -267,7 +265,7 @@ public class Player : Creature
         {
             if (Input.GetKeyDown(skill.Key))
             {
-                Debug.Log($"입력된 스킬 키1: {skill.Key}");
+                Debug.Log($"입력된 스킬 키: {skill.Key}");
                 if (skill.KeyPressedTime > 0)
                 {
                     // _pressedSkillKey 설정
@@ -281,8 +279,6 @@ public class Player : Creature
                     }
 
                     if (_pressedSkillKey == KeyInput.NONE)
-                        Debug.Log("입력된 스킬 키2: {skill.Key}");
-
                     _skillKeyPressedTime = Time.time;
                 }
                 else
@@ -476,6 +472,7 @@ public class Player : Creature
         // 벽을 감지하면 벽 점프로 전환
         if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || CheckWall())
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerJump); //Jump SFX 재생
             OnWallJump();
             return;
         }
@@ -483,10 +480,12 @@ public class Player : Creature
         // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
         else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerJump); //Jump SFX 재생
             OnDoubleJump();
             return;
         }
 
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerJump); //Jump SFX 재생
         base.OnJump();
     }
 
@@ -523,6 +522,7 @@ public class Player : Creature
 
         if (base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDash); //Dash SFX 재생
             StartCoroutine(CoDashCooldown());
             StartCoroutine(CoHandleDashInvincibility());
             return true;
@@ -543,6 +543,7 @@ public class Player : Creature
         // HP 감소
         Hp -= damage;
         OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDamaged1); //Damaged SFX 재생
 
         State = ECreatureState.Hurt;
         if (_CoDamaged != null)
@@ -574,6 +575,7 @@ public class Player : Creature
     public override void OnDied()
     {
         base.OnDied();
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDead); //Dead SFX 재생
     }
 
     void OnTriggerStay2D(Collider2D collision)

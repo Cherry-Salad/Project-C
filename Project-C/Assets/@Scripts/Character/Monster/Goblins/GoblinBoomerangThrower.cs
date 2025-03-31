@@ -72,6 +72,8 @@ public class GoblinBoomerangThrower : MonsterBase
 
         _isReady = true;
         UpdateAnimation();
+        AudioManager.Instance.PlaySFXAfterDelay(AudioManager.Instance.MonsterBomerang_Shot, 0.4f); //고블린 부메랑 Shot SFX 재생
+        AudioManager.Instance.PlaySFXAfterDelay(AudioManager.Instance.MonsterBomerang_Flying, 0.5f); //고블린 부메랑 Flying SFX 재생
 
         yield return new WaitForSeconds(skillData.WindUpTime);
 
