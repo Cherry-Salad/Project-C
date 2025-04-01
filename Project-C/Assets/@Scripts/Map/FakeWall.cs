@@ -40,7 +40,8 @@ public class FakeWall : InitBase
         if (collision.GetComponent<Player>() != null)
         {
             Debug.Log($"가짜벽 비활성화 {collision.name}");
-            _renderer.enabled = false;
+            // TODO: 효과음
+            StartCoroutine(CoHide());
         }
     }
 
@@ -55,21 +56,46 @@ public class FakeWall : InitBase
         if (collision.GetComponent<Player>() != null)
         {
             Debug.Log($"가짜벽 활성화 {collision.name}");
-            _renderer.enabled = true;
+            // TODO: 효과음
+            StartCoroutine(CoShow());
         }
     }
 
-    IEnumerator CoShow(float duration = 2f)
+    IEnumerator CoHide(float duration = 0.3f)
     {
         float elapsedTime = 0f;
+        float startAlpha = _tilemap.color.a;
+        Color color = _tilemap.color;
+
         while (elapsedTime < duration)
         {
-            Color color = _tilemap.color;
-            color.a = Mathf.Clamp01(alpha); // 0 ~ 1 사이로 제한
+            color.a = Mathf.Lerp(startAlpha, 0f, elapsedTime / duration);
             _tilemap.color = color;
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+
+        color.a = 0f;
+        _tilemap.color = color;
+    }
+
+    IEnumerator CoShow(float duration = 0.3f)
+    {
+        float elapsedTime = 0f;
+        float startAlpha = _tilemap.color.a;
+        Color color = _tilemap.color;
+
+        while (elapsedTime < duration)
+        {
+            color.a = Mathf.Lerp(startAlpha, 1f, elapsedTime / duration);
+            _tilemap.color = color;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        color.a = 1f;
+        _tilemap.color = color;
     }
 }
