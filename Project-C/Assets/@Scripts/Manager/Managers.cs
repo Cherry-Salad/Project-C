@@ -14,6 +14,7 @@ public class Managers : MonoBehaviour
     PoolManager _pool = new PoolManager();
     DataManager _data = new DataManager();
     SceneManagerEX _scene = new SceneManagerEX();
+    GameManager _game = new GameManager();
     MapManager _map = new MapManager();
     CameraManager _camera = new CameraManager();
     
@@ -21,6 +22,7 @@ public class Managers : MonoBehaviour
     public static PoolManager Pool { get { return Instance._pool; } }
     public static DataManager Data { get { return Instance._data; } }
     public static SceneManagerEX Scene { get { return Instance._scene; } }
+    public static GameManager Game { get { return Instance._game; } }
     public static MapManager Map { get { return Instance._map; } }
     public static CameraManager Camera { get { return Instance._camera; } }
 

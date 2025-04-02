@@ -19,12 +19,18 @@ public class TutorialScene : BaseScene
             if (loadCount == totalCount)
             {
                 Managers.Data.Init();
+                
+                // Test, 플레이어 소환
+                if (Managers.Game.Load() == false)
+                {
+                    Managers.Game.Init();
+                    
+                    GameObject player = Managers.Resource.Instantiate("Player");
+                    Managers.Game.Player = player.GetComponent<Player>();
+                    player.transform.position = Vector3.zero;   // test 위치 설정
+                }
+
                 Managers.Map.LoadMap("TutorialMap");
-
-                // 플레이어 소환, TODO: 맵마다 플레이어 스폰 위치를 다르게 설정
-                GameObject player = Managers.Resource.Instantiate("Player");
-                player.transform.position = Vector3.zero;   // TODO: 맵에서 플레이어 소환 위치 설정
-
                 Managers.Camera.Load();
             }
         });
@@ -36,5 +42,6 @@ public class TutorialScene : BaseScene
     public override void Clear()
     {
         base.Clear();
+        // TODO: 맵 상태 저장
     }
 }

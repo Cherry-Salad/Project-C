@@ -11,17 +11,18 @@ namespace Data
     {
         public int DataId;
         public string Name; // 플레이어 이름
-        public int Hp;
-        public int MaxHp;
+        public float Hp;
+        public float MaxHp;
         public int HpLevel; // HP 강화 레벨
-        public int Mp;
-        public int MaxMp;
+        public float Mp;
+        public float MaxMp;
         public int MpLevel;   // MP 강화 레벨
         public float Atk;   // 공격력
         public int AtkLevel;   // 공격력 강화 레벨
         public float Speed;
         public int AccessorySlot;
         public List<int> SkillIdList;   // 플레이어 스킬 리스트
+        public Vector3 SavePoint;
     }
 
     [Serializable]

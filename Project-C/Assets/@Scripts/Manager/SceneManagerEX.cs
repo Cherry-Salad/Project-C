@@ -8,7 +8,7 @@ public class SceneManagerEX
 {
     public BaseScene CurrentScene { get { return GameObject.FindObjectOfType<BaseScene>(); } }
 
-    public void LoadScene(EScene type, Transform parents = null)
+    public void LoadScene(EScene type)
     {
         string name = System.Enum.GetName(typeof(EScene), type);
         SceneManager.LoadScene(name);

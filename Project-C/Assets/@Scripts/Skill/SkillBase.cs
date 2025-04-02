@@ -11,6 +11,7 @@ public class SkillBase : InitBase
     public SkillData Data;
 
     #region Info
+    public int DataId { get; private set; }
     public string Name { get; protected set; }
     public string AnimationName { get; protected set; }
     public string PrefabName { get; protected set; }
@@ -43,6 +44,7 @@ public class SkillBase : InitBase
             return;
 
         #region 스킬 정보
+        DataId = Data.DataId;
         Name = Data.CodeName;
         AnimationName = Data.AnimationName;
         PrefabName = Data.PrefabName;
