@@ -32,9 +32,6 @@ public class CameraManager
     {
         Clear();
 
-        GameObject p = GameObject.Find("Player");  // TODO: 게임 매니저에서 플레이어를 찾는다
-        Player player = p.GetComponent<Player>();
-
         Brain = Camera.main.GetComponent<CinemachineBrain>();
 
         // 룸 기반 카메라
@@ -43,10 +40,9 @@ public class CameraManager
             if (room.CameraBoundary == null)
                 continue;
 
-            CameraController camera = Spawn(player, room.CameraBoundary);
+            CameraController camera = Spawn(Managers.Game.Player, room.CameraBoundary);
             camera.name = room.name;
         }
-
 
         // 블렌드 효과를 임시로 비활성화
         // Brain.m_CustomBlends를 임시로 null하면 카메라가 잠깐 깜빡거려서 Brain 자체를 비활성화하였다

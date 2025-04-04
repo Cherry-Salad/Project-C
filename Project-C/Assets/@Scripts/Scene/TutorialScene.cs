@@ -24,11 +24,12 @@ public class TutorialScene : BaseScene
                 if (Managers.Game.Load() == false)
                 {
                     Managers.Game.Init();
-                    
-                    GameObject player = Managers.Resource.Instantiate("Player");
-                    Managers.Game.Player = player.GetComponent<Player>();
-                    player.transform.position = Vector3.zero;   // test 위치 설정
+                    Managers.Game.Save();
                 }
+
+                GameObject player = Managers.Resource.Instantiate("Player");
+                Managers.Game.Player = player.GetComponent<Player>();
+                player.transform.position = Vector3.zero;   // test 위치 설정
 
                 Managers.Map.LoadMap("TutorialMap");
                 Managers.Camera.Load();

@@ -318,6 +318,7 @@ public class Player : Creature
             {
                 Debug.Log("세이브 포인트 활성화");
                 Managers.Map.SavePoint = _savePoint;
+                Managers.Game.Save();
             }
 
             return true;
