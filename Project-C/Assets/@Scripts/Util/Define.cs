@@ -20,7 +20,8 @@ public class Define
         Projectile,
         Env,    // Environment, 환경(ex: 나무, 돌)
         Checkpoint,
-        SavePoint
+        SavePoint,
+        StartPoint
     }
 
     public enum ELayer

@@ -37,3 +37,6 @@ MonoBehaviour:
   DataId: 0
   Name: Checkpoint
   ObjectType: 6
+  FlipX: 0
+  FlipY: 0
+  IsRespawn: 0

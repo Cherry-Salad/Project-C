@@ -38,7 +38,10 @@ public class Player : Creature
 
     bool _isTouchingTrap = false;   // 함정 충돌 여부
 
-    SavePoint _savePoint = null;   // 세이브 포인트와 접촉 중인지 확인하기 위한 변수이다.
+    /// <summary>
+    /// 세이브 포인트와 접촉 중인지 확인
+    /// </summary>
+    SavePoint _savePoint = null;
 
     Coroutine _CoDamaged = null;    // 피격 판정 중복 방지
 
@@ -317,7 +320,7 @@ public class Player : Creature
             if (_savePoint != null)
             {
                 Debug.Log("세이브 포인트 활성화");
-                Managers.Map.SavePoint = _savePoint;
+                Managers.Map.CurrentSavePoint = _savePoint;
                 Managers.Game.Save();
             }
 
@@ -363,7 +366,8 @@ public class Player : Creature
         if (Managers.Map.CurrentRoom == null || Managers.Map.CurrentRoom.IsInRoom(transform.position) == false)
         {
             //Debug.Log("ChangeCurrentRoom");
-            Managers.Map.ChangeCurrentRoom(transform.position);
+            bool disableCameraBlend = (State == ECreatureState.Dead) ? true : false;
+            Managers.Map.ChangeCurrentRoom(transform.position, disableCameraBlend);
         }
 
         base.UpdateController();
@@ -578,8 +582,12 @@ public class Player : Creature
     /// </summary>
     public override void OnDied()
     {
-        //Managers.Map.RespawnAtSavePoint(this);
-        base.OnDied();
+        // 모두 회복
+        Hp = MaxHp;
+        Mp = MaxMp;
+
+        Managers.Game.Save();
+        Managers.Map.RespawnAtSavePoint(gameObject);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -609,7 +617,7 @@ public class Player : Creature
             //Debug.Log($"{collision.name} 충돌");
             _isTouchingTrap = true;
             OnDamaged(ignoreInvincibility: true);
-            Managers.Map.RespawnAtCheckpoint(this);
+            Managers.Map.RespawnAtCheckpoint(gameObject);
             return;
         }
     }

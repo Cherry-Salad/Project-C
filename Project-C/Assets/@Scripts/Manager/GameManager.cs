@@ -9,13 +9,14 @@ using UnityEngine;
 public class GameData
 {
     public Data.PlayerData Player = new Data.PlayerData();
-    public SavePointData SavePoint = new SavePointData();   // TODO
+    public CurrentSavePointData CurrentSavePoint = new CurrentSavePointData();
+    public List<Data.EnvData> Env = new List<Data.EnvData>();   // TODO
 }
 
 [Serializable]
-public class SavePointData  // TODO
+public class CurrentSavePointData
 {
-    public Vector3 Pos;
+    public Vector3 Position;
     public Define.EScene SceneType;
 }
 
@@ -74,11 +75,15 @@ public class GameManager
 
             foreach (var skill in skillList)
                 player.SkillIdList.Add(skill.DataId);
-
-            player.SavePoint = Managers.Map.SavePoint.transform.position;   // TODO
             #endregion
             
             GameData.Player = player;
+        }
+
+        if (Managers.Map.CurrentSavePoint != null)
+        {
+            GameData.CurrentSavePoint.Position = Managers.Map.CurrentSavePoint.transform.position;
+            GameData.CurrentSavePoint.SceneType = Managers.Map.CurrentSavePoint.SceneType;
         }
 
         // Map

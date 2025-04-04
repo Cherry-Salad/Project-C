@@ -13,6 +13,7 @@ public class MapObject : Tile
     public EObjectType ObjectType;
     public bool FlipX = false;
     public bool FlipY = false;
+    public bool IsRespawn = false;  // 파괴되면 더이상 스폰 안 한다.
 }
 
 public class MapManager
@@ -21,7 +22,10 @@ public class MapManager
     public string MapName { get; private set; }
     public Grid CellGrid { get; private set; }
     public Tilemap SpawnObject { get; private set; }
+
     public HashSet<Room> Rooms { get; private set; } = new HashSet<Room>();
+    public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
+    public HashSet<SavePoint> SavePoints = new HashSet<SavePoint>();
 
     Room _room = null;
     public Room CurrentRoom 
@@ -45,9 +49,7 @@ public class MapManager
     /// <summary>
     /// 현재 활성화된 세이브 포인트
     /// </summary>
-    public SavePoint SavePoint { get; set; } = null;
-
-    public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
+    public SavePoint CurrentSavePoint { get; set; } = null;
 
     public void LoadMap(string mapName)
     {
@@ -86,7 +88,7 @@ public class MapManager
         Managers.Camera.Clear();
     }
 
-    void SpawnObjects() // TODO: 오브젝트 풀링 사용
+    void SpawnObjects()
     {
         if (SpawnObject == null)
             return;
@@ -109,13 +111,21 @@ public class MapManager
 
                     switch (tile.ObjectType)
                     {
+                        case EObjectType.StartPoint:
+                            SavePoint startPoint = obj.GetComponent<SavePoint>();
+                            startPoint.SetInfo(worldPos, Managers.Scene.CurrentScene.SceneType);
+                            if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
+                                CurrentSavePoint = startPoint;
+                            SavePoints.Add(startPoint);
+                            break;
                         case EObjectType.Checkpoint:
                             obj.transform.position = worldPos;
                             Checkpoints.Add(worldPos);
                             break;
                         case EObjectType.SavePoint:
                             SavePoint savePoint = obj.GetComponent<SavePoint>();
-                            savePoint.SetInfo(worldPos, Managers.Scene.CurrentScene);
+                            savePoint.SetInfo(worldPos, Managers.Scene.CurrentScene.SceneType);
+                            SavePoints.Add(savePoint);
                             break;
                         case EObjectType.Env:
                             Env env = obj.GetComponent<Env>();
@@ -129,7 +139,7 @@ public class MapManager
         SpawnObject.GetComponent<TilemapRenderer>().enabled = false;
     }
 
-    public void ChangeCurrentRoom(Vector3 pos)
+    public void ChangeCurrentRoom(Vector3 pos, bool DisableCameraBlend = false)
     {
         foreach (Room room in Rooms)
         {
@@ -148,7 +158,7 @@ public class MapManager
     /// <summary>
     /// 플레이어를 체크포인트로 리스폰한다.
     /// </summary>
-    public void RespawnAtCheckpoint(BaseObject go)
+    public void RespawnAtCheckpoint(GameObject go)
     {
         if (Checkpoints.Count <= 0)
             return;
@@ -182,20 +192,17 @@ public class MapManager
         go.transform.position = CurrentCheckpoint;  // 플레이어를 체크 포인트로 이동
     }
 
-    public void RespawnAtSavePoint(BaseObject go)
+    public void RespawnAtSavePoint(GameObject go)
     {
-        if (SavePoint == null)
+        if (CurrentSavePoint == null)
         {
             Debug.LogError("와 파피루스");
             return;
         }
 
-        Managers.Game.Save();
-
         // TODO: 활성화된 세이브 포인트가 현재 씬과 다르면 씬 이동
-        Managers.Scene.LoadScene(SavePoint.SceneType);
+        Managers.Scene.LoadScene(CurrentSavePoint.SceneType);
 
-        // TODO: 카메라 블렌드 효과 비활성화
-        go.transform.position = SavePoint.transform.position;
+        go.transform.position = CurrentSavePoint.transform.position;
     }
 }

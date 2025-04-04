@@ -39,3 +39,4 @@ MonoBehaviour:
   ObjectType: 5
   FlipX: 0
   FlipY: 1
+  IsRespawn: 0

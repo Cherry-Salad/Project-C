@@ -6,7 +6,7 @@ using static Define;
 public class SavePoint : InitBase
 {
     public BoxCollider2D Collider { get; private set; }
-    public BaseScene Scene { get; private set; }
+    public EScene SceneType { get; private set; }
 
     public override bool Init()
     {
@@ -23,9 +23,9 @@ public class SavePoint : InitBase
         return true;
     }
 
-    public void SetInfo(Vector3 pos, BaseScene scene)
+    public void SetInfo(Vector3 pos, EScene type)
     {
         transform.position = pos;
-        Scene = scene;
+        SceneType = type;
     }
 }

@@ -22,7 +22,6 @@ namespace Data
         public float Speed;
         public int AccessorySlot;
         public List<int> SkillIdList;   // 플레이어 스킬 리스트
-        public Vector3 SavePoint;
     }
 
     [Serializable]

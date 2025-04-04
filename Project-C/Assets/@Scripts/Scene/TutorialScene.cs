@@ -20,18 +20,33 @@ public class TutorialScene : BaseScene
             {
                 Managers.Data.Init();
                 
-                // Test, 플레이어 소환
                 if (Managers.Game.Load() == false)
                 {
                     Managers.Game.Init();
                     Managers.Game.Save();
                 }
+                
+                Managers.Map.LoadMap("TutorialMap");
 
+                // 활성화된 세이브 포인트 찾기
+                if (Managers.Game.GameData.CurrentSavePoint.SceneType != Define.EScene.None)
+                {
+                    foreach (var sp in Managers.Map.SavePoints)
+                    {
+                        if (Managers.Game.GameData.CurrentSavePoint.Position == sp.transform.position)
+                        {
+                            Managers.Map.CurrentSavePoint = sp;
+                            break;
+                        }
+                    }
+                }
+
+                // Test, 플레이어 소환
                 GameObject player = Managers.Resource.Instantiate("Player");
                 Managers.Game.Player = player.GetComponent<Player>();
-                player.transform.position = Vector3.zero;   // test 위치 설정
+                player.transform.position = Managers.Map.CurrentSavePoint.transform.position;   // Test, 플레이어 위치 설정
+                // TODO: 플레이어가 지상에 있는데도 점프 상태로 시작하는 버그 수정 필요
 
-                Managers.Map.LoadMap("TutorialMap");
                 Managers.Camera.Load();
             }
         });

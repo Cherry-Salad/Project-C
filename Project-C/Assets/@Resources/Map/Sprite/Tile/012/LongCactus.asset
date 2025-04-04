@@ -37,3 +37,6 @@ MonoBehaviour:
   DataId: 400001
   Name: LongCactus
   ObjectType: 5
+  FlipX: 0
+  FlipY: 0
+  IsRespawn: 0
