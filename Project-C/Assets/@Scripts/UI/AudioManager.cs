@@ -49,16 +49,17 @@ public class AudioManager : MonoBehaviour
     public AudioClip PlayerHeal_Charge;
     public AudioClip PlayerHeal;
     public AudioClip PlayerIceBall_Charge;
-    public AudioClip PlayerIceBall_Shoot;
+    public AudioClip PlayerIceBall_Shot;
     public AudioClip PlayerIceBreak_Charge;
-    public AudioClip PlayerIceBreak_Shoot;
+    public AudioClip PlayerIceBreak_Shot;
     public AudioClip PlayerDamaged1;
 
     [Header("---Audio clip Monster---")]
     public AudioClip MonsterWarrior;
     public AudioClip MonsterBomerang_Shot;
     public AudioClip MonsterBomerang_Flying;
-    public AudioClip MonsterFly;
+    public AudioClip MonsterFly_BodySlam_Ready;
+    public AudioClip MonsterFly_BodySlam_Shot;
     public AudioClip MonsterElite_Axe_BackStep;
     public AudioClip MonsterElite_Axe_Throw;
     public AudioClip MonsterElite_Laser_MaskUP;
@@ -67,9 +68,10 @@ public class AudioManager : MonoBehaviour
     public AudioClip MonsterElite_ExplosionPunch_Punch;
     public AudioClip MonsterElite_ExplosionPunch_Explosion;
     public AudioClip MonsterElite_Tornado_Start;
-    public AudioClip MonsterElite_Tornado;
+    public AudioClip MonsterElite_Tornadoing;
     public AudioClip MonsterElite_Tornado_End;
     public AudioClip MonsterElite_Phase2;
+    public AudioClip MonsterElite_Groggy;
     public AudioClip MonsterDamaged;
 
     // Start에서 배경 음악을 재생합니다.

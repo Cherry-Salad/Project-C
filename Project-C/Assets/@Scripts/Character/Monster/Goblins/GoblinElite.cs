@@ -86,10 +86,12 @@ public class GoblinElite : BossMonsterBase
     {
         Data.MonsterSkillData skillData = TypeRecorder.Battle.Attack[_TORNADO_SKILL_NUMBER];
         PopupEMark();
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Tornado_Start); //고블린 엘리트 Tornado End  SFX 재생
         yield return new WaitForSeconds(skillData.WindUpTime);
 
         Animator.Play("GoblinTornadoStart");
-        
+
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Tornado_End); //고블린 엘리트 Tornado End SFX 재생
         yield return new WaitForSeconds(skillData.RetentionTime);
 
         _isSkillEnd = true;

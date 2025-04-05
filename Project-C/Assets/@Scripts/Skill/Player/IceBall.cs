@@ -35,6 +35,8 @@ public class IceBall : PlayerSkillBase
         
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerIceBall_Charge); //Player 아이스볼 차지 SFX 재생
+        AudioManager.Instance.PlaySFXAfterDelay(AudioManager.Instance.PlayerIceBall_Shot, 0.5f); //Player 아이스볼 슈팅 SFX 재생
         StartCoroutine(CoUpdateSkill(() => Owner.Rigidbody.gravityScale = Owner.DefaultGravityScale));
         //Owner.Mp -= MpCost;   // 테스트를 위하여 마나 소비는 껐다
         return true;

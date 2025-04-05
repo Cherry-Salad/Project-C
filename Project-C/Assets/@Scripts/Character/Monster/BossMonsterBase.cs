@@ -169,7 +169,7 @@ public class BossMonsterBase : MonsterBase
     protected IEnumerator OnGroggyCoroutine()
     {
         StartCoroutine(ref vibrationCoroutine, ObjectVibrationCoroutine(30f, 0, 0.1f, 0.025f));
-        
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterElite_Groggy); //Groggy SFX 재생
         isCanAttack = false;
 
         yield return new WaitForSeconds(DataRecorder.Groggy.DurationTime);

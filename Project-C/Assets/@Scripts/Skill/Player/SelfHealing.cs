@@ -57,6 +57,7 @@ public class SelfHealing : PlayerSkillBase
 
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerHeal_Charge); //Player Heal Charge SFX 재생
         StartCoroutine(CoUpdateSkill());
         _coCasting = StartCoroutine(CoDoCastingSkill(OnHeal));
 
@@ -82,6 +83,7 @@ public class SelfHealing : PlayerSkillBase
     {
         _coCasting = null;
         Owner.Animator.Play($"{AnimationName}Complete");
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerHeal); //Player Heal SFX 재생
 
         // 최대 체력을 초과해서 힐링할 수 없다
         Owner.Hp = Mathf.Clamp(Owner.Hp + HealingValue, 0, Owner.MaxHp);

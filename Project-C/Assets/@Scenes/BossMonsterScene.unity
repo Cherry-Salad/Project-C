@@ -1081,7 +1081,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1060276632780742768, guid: 76fb147e6daa0ac47a952f0697ddf6f9, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6374555100399979208, guid: 76fb147e6daa0ac47a952f0697ddf6f9, type: 3}
       propertyPath: m_ApplyRootMotion
@@ -2044,14 +2044,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
-    - target: {fileID: 4482830999606430583, guid: 47e013568e10c6f4f9d7c4d762c3c2a3, type: 3}
-      propertyPath: MonsterElite_Axe_BackStep
-      value: 
-      objectReference: {fileID: 8300000, guid: 4d04e47379791e245a26ffb0526af8cc, type: 3}
-    - target: {fileID: 4482830999606430583, guid: 47e013568e10c6f4f9d7c4d762c3c2a3, type: 3}
-      propertyPath: MonsterElite_Axe_Backstep
-      value: 
-      objectReference: {fileID: 8300000, guid: 4d04e47379791e245a26ffb0526af8cc, type: 3}
     - target: {fileID: 7045690931150909340, guid: 47e013568e10c6f4f9d7c4d762c3c2a3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

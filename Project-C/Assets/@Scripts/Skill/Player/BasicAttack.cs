@@ -38,6 +38,7 @@ public class BasicAttack : PlayerSkillBase
 
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerAttack); //Player 기본 공격 SFX 재생
         StartCoroutine(CoUpdateSkill());
         StartCoroutine(CoDoSkill());
 

@@ -41,6 +41,8 @@ public class IceBreak : PlayerSkillBase
         
         Owner.State = ECreatureState.Skill;
         Owner.Animator.Play(AnimationName);
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerIceBreak_Charge); //Player 아이스브레이크 차지 SFX 재생
+        AudioManager.Instance.PlaySFXAfterDelay(AudioManager.Instance.PlayerIceBreak_Shot, 0.5f); //Player 아이스브레이크 슈팅 SFX 재생
         StartCoroutine(CoUpdateSkill());
         StartCoroutine(CoDoSkill());
 
