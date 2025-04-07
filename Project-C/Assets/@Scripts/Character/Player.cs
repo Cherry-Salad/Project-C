@@ -407,7 +407,7 @@ public class Player : Creature
         //{
         //    // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
         //    float distance = Collider.bounds.extents.x + 0.1f;
-        //    bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+        //    bool noObstacles = FindObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
         //    float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
         //    // 점프, 낙하
@@ -707,5 +707,11 @@ public class Player : Creature
         // 사망
         Rigidbody.velocity = Vector2.zero;
         State = ECreatureState.Dead;
+    }
+
+    public override bool CheckWall(LayerMask includeLayers = default)
+    {
+        includeLayers.AddLayer(ELayer.Wall);
+        return base.CheckWall(includeLayers);
     }
 }

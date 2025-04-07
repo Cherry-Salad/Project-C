@@ -106,7 +106,7 @@ public class SkillBase : InitBase
         {
             // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
             float distance = Owner.Collider.bounds.extents.x + 0.1f;
-            bool noObstacles = Owner.CheckObstacle(Owner.MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+            bool noObstacles = Owner.FindObstacle(Owner.MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
             float velocityX = (noObstacles) ? Owner.MoveDir.x * Owner.MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
             // 점프, 낙하

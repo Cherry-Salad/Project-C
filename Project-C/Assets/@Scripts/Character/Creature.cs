@@ -169,7 +169,7 @@ public class Creature : BaseObject
 
         // 공중이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
         float distance = Collider.bounds.extents.x + 0.1f;
-        bool noObstacles = CheckObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+        bool noObstacles = FindObstacle(MoveDir, distance, true).collider == null; // 장애물이 없는 지 확인
         float velocityX = (noObstacles) ? MoveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocity.x)를 0으로 설정
 
         // 공중에서 낙하 처리
@@ -291,7 +291,7 @@ public class Creature : BaseObject
 
             // 공중(점프, 낙하)이라면 이동 방향에 장애물이 있을 때 제자리에서 걷는 버그 방지
             float distance = Collider.bounds.extents.x + 0.1f;
-            bool noObstacles = CheckObstacle(moveDir, distance, true).collider == null; // 장애물이 없는 지 확인
+            bool noObstacles = FindObstacle(moveDir, distance, true).collider == null; // 장애물이 없는 지 확인
             float velocityX = (noObstacles) ? moveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocityX)를 0으로 설정
 
             // 벽 점프
@@ -393,7 +393,7 @@ public class Creature : BaseObject
     /// <param name="distance">감지 거리</param>
     /// <param name="isDetailedCheck">더 섬세하게 감지할 것인지</param>
     /// <returns></returns>
-    public RaycastHit2D CheckObstacle(Vector2 dir, float distance, bool isDetailedCheck = false)
+    public RaycastHit2D FindObstacle(Vector2 dir, float distance, bool isDetailedCheck = false)
     {
         // 캐릭터가 정지 상태인지 확인
         if (dir == Vector2.zero)
@@ -447,15 +447,21 @@ public class Creature : BaseObject
     /// <summary>
     /// 캐릭터 앞에 벽이 있는가
     /// </summary>
+    /// <param name="includeLayers">벽으로 간주할 레이어</param>
     /// <returns></returns>
-    public bool CheckWall()
+    public virtual bool CheckWall(LayerMask includeLayers = default)
     {
         // 벽 감지
         float wallCheckDistance = Collider.bounds.extents.x + 0.1f; // 벽 감지 거리, Collider 크기 절반에 여유값 추가
 
         // 충돌 필터링
-        LayerMask includeLayers = 0;
-        includeLayers.AddLayer(ELayer.Wall);
+        if (includeLayers == default)
+        {
+            includeLayers = 0;
+            includeLayers.AddLayer(ELayer.Wall);
+            includeLayers.AddLayer(ELayer.Ground);
+            includeLayers.AddLayer(ELayer.Env);
+        }
 
         Debug.DrawRay(Rigidbody.position, MoveDir * wallCheckDistance, Color.red);
         return Physics2D.Raycast(Rigidbody.position, MoveDir, wallCheckDistance, includeLayers);
