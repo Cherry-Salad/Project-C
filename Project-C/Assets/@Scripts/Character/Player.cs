@@ -287,7 +287,7 @@ public class Player : Creature
         {
             if (Input.GetKeyDown(skill.Key))
             {
-                Debug.Log($"입력된 스킬 키: {skill.Key}");
+                //Debug.Log($"입력된 스킬 키: {skill.Key}");
                 if (skill.KeyPressedTime > 0)
                 {
                     // _pressedSkillKey 설정
@@ -348,6 +348,7 @@ public class Player : Creature
             if (_savePoint != null)
             {
                 Debug.Log("세이브 포인트 활성화");
+                // TODO: 세이브 포인트 활성화 연출 효과가 필요
                 Managers.Map.CurrentSavePoint = _savePoint;
                 Managers.Game.Save();
             }

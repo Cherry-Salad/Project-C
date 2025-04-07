@@ -71,7 +71,7 @@ public class GameManager
             player.AccessorySlot = Player.AccessorySlot;
 
             player.SkillIdList = new List<int>();
-            var skillList = Player.Skills.Values;
+            var skillList = Player.Skills;
 
             foreach (var skill in skillList)
                 player.SkillIdList.Add(skill.DataId);
