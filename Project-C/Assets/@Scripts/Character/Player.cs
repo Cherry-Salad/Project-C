@@ -624,8 +624,16 @@ public class Player : Creature
         Hp = MaxHp;
         Mp = MaxMp;
 
-        Managers.Game.Save();
-        Managers.Map.RespawnAtSavePoint(gameObject);
+        Managers.Game.Save();   // 데이터 저장
+
+        if (Managers.Map.CurrentSavePoint == null)
+        {
+            Debug.LogError("와 파피루스");
+            return;
+        }
+
+        // TODO: 활성화된 세이브 포인트가 현재 씬과 다르면 씬 이동
+        Managers.Scene.LoadScene(Managers.Map.CurrentSavePoint.SceneType);
     }
 
     void OnTriggerEnter2D(Collider2D collision)

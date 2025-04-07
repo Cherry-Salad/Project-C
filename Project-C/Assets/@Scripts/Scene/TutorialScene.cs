@@ -25,7 +25,7 @@ public class TutorialScene : BaseScene
                     Managers.Game.Init();
                     Managers.Game.Save();
                 }
-                
+
                 Managers.Map.LoadMap("TutorialMap");
 
                 // 활성화된 세이브 포인트 찾기
@@ -44,7 +44,7 @@ public class TutorialScene : BaseScene
                 // Test, 플레이어 소환
                 GameObject player = Managers.Resource.Instantiate("Player");
                 Managers.Game.Player = player.GetComponent<Player>();
-                player.transform.position = Managers.Map.CurrentSavePoint.transform.position;
+                player.transform.position = Managers.Map.CurrentSavePoint.transform.position;   // 플레이어 위치 설정
 
                 Managers.Camera.Load();
             }

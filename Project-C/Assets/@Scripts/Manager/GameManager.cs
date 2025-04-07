@@ -80,6 +80,7 @@ public class GameManager
             GameData.Player = player;
         }
 
+        // 현재 활성화된 세이브 포인트를 찾는다
         if (Managers.Map.CurrentSavePoint != null)
         {
             GameData.CurrentSavePoint.Position = Managers.Map.CurrentSavePoint.transform.position;

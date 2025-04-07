@@ -25,7 +25,7 @@ public class MapManager
 
     public HashSet<Room> Rooms { get; private set; } = new HashSet<Room>();
     public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
-    public HashSet<SavePoint> SavePoints = new HashSet<SavePoint>();
+    public HashSet<SavePoint> SavePoints;
 
     Room _room = null;
     public Room CurrentRoom 
@@ -47,7 +47,7 @@ public class MapManager
     public Vector3 CurrentCheckpoint { get; set; }
 
     /// <summary>
-    /// 현재 활성화된 세이브 포인트
+    /// 현재 활성화된 세이브 포인트이다. null이라면 비활성화 되어 있다.
     /// </summary>
     public SavePoint CurrentSavePoint { get; set; } = null;
 
@@ -63,6 +63,7 @@ public class MapManager
         MapName = mapName;
         CellGrid = map.GetComponent<Grid>();
         SpawnObject = Util.FindChild<Tilemap>(map, "SpawnObject");
+        SavePoints = new HashSet<SavePoint>();
 
         Transform rooms = Util.FindChild<Transform>(map, "@Rooms");
         foreach (Transform child in rooms)
@@ -114,8 +115,11 @@ public class MapManager
                         case EObjectType.StartPoint:
                             SavePoint startPoint = obj.GetComponent<SavePoint>();
                             startPoint.SetInfo(worldPos, Managers.Scene.CurrentScene.SceneType);
+
+                            // 활성화된 세이브 포인트가 아무것도 없다면 시작 포인트를 세이브 포인트로 활성화
                             if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
                                 CurrentSavePoint = startPoint;
+
                             SavePoints.Add(startPoint);
                             break;
                         case EObjectType.Checkpoint:
@@ -190,19 +194,5 @@ public class MapManager
 
         // TODO: 체크포인트로 이동하는 연출
         go.transform.position = CurrentCheckpoint;  // 플레이어를 체크 포인트로 이동
-    }
-
-    public void RespawnAtSavePoint(GameObject go)
-    {
-        if (CurrentSavePoint == null)
-        {
-            Debug.LogError("와 파피루스");
-            return;
-        }
-
-        // TODO: 활성화된 세이브 포인트가 현재 씬과 다르면 씬 이동
-        Managers.Scene.LoadScene(CurrentSavePoint.SceneType);
-
-        go.transform.position = CurrentSavePoint.transform.position;
     }
 }
