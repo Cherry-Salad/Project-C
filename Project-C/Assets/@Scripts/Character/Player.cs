@@ -388,6 +388,8 @@ public class Player : Creature
                 //OnSpawnDust();  // 애니메이션 이벤트로 호출한다
                 break;
         }
+
+        Animator.Update(0); // 애니메이션 즉시 전환
     }
 
     protected override void UpdateController()
