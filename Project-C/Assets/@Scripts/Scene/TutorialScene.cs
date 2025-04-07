@@ -44,8 +44,7 @@ public class TutorialScene : BaseScene
                 // Test, 플레이어 소환
                 GameObject player = Managers.Resource.Instantiate("Player");
                 Managers.Game.Player = player.GetComponent<Player>();
-                player.transform.position = Managers.Map.CurrentSavePoint.transform.position;   // Test, 플레이어 위치 설정
-                // TODO: 플레이어가 지상에 있는데도 점프 상태로 시작하는 버그 수정 필요
+                player.transform.position = Managers.Map.CurrentSavePoint.transform.position;
 
                 Managers.Camera.Load();
             }

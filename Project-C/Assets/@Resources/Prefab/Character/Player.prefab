@@ -167,7 +167,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 69f254359d257524388d8fac4f343d09, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -203,6 +203,7 @@ MonoBehaviour:
     Speed: 0
     AccessorySlot: 0
     SkillIdList: 
+  Skills: []
 --- !u!114 &2539579250733559445
 MonoBehaviour:
   m_ObjectHideFlags: 0
