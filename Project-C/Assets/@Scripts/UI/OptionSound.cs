@@ -35,7 +35,7 @@ public class OptionSound : MonoBehaviour
         float MasterVolume = MasterSlider.value;
         audioMixer.SetFloat("MasterVolume", Mathf.Log10(MasterVolume) * 20);
         PlayerPrefs.SetFloat("MasterSound", MasterVolume);
-        Debug.Log($"[SetMasterVolume] MasterVolume: {MasterVolume}");
+        //Debug.Log($"[SetMasterVolume] MasterVolume: {MasterVolume}");
     }
 
     // BGM 볼륨 설정
@@ -44,7 +44,7 @@ public class OptionSound : MonoBehaviour
         float BGMVolume = BGMSlider.value;
         audioMixer.SetFloat("BGMVolume", Mathf.Log10(BGMVolume) * 20);
         PlayerPrefs.SetFloat("BGMSound", BGMVolume);
-        Debug.Log($"[SetBGMVolume] BGMVolume: {BGMVolume}");
+        //Debug.Log($"[SetBGMVolume] BGMVolume: {BGMVolume}");
     }
 
     // 이펙트 볼륨 설정
@@ -53,7 +53,7 @@ public class OptionSound : MonoBehaviour
         float EffectVolume = EffectSlider.value;
         audioMixer.SetFloat("SFXVolume", Mathf.Log10(EffectVolume) * 20);
         PlayerPrefs.SetFloat("EffectSound", EffectVolume);
-        Debug.Log($"[SetEffectVolume] EffectVolume: {EffectVolume}");
+        //Debug.Log($"[SetEffectVolume] EffectVolume: {EffectVolume}");
     }
 
     // 모든 볼륨 로드

@@ -62,7 +62,7 @@ public class GoblinWarrior : MonsterBase
 
         _isReady = false;
         UpdateAnimation();
-
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterWarrior); //고블린 워리어 기본공격 SFX
         float posX = this.transform.position.x + (MoveDir.x * skillData.HitBoxPos);
         hitBoxList[_HITBOX_NUM_SWORD_ATTACK].transform.position = new Vector2(posX, this.transform.position.y);
         

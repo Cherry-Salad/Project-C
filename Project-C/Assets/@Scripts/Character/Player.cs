@@ -16,7 +16,7 @@ public class Player : Creature
     public int AccessorySlot { get; set; }
     #endregion
 
-    public Dictionary<KeyCode, PlayerSkillBase> Skills = new Dictionary<KeyCode, PlayerSkillBase>();
+    public List<PlayerSkillBase> Skills = new List<PlayerSkillBase>();
 
     // 이동
     bool _moveDirKeyPressed = false;
@@ -33,7 +33,7 @@ public class Player : Creature
     bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
 
     // 스킬
-    KeyCode _pressedSkillKey = KeyCode.None;
+    KeyInput _pressedSkillKey = KeyInput.NONE;
     float _skillKeyPressedTime = 0f;    // 스킬 키를 누르고 있는 시간
 
     bool _isTouchingTrap = false;   // 함정 충돌 여부
@@ -125,7 +125,7 @@ public class Player : Creature
                 skill = gameObject.AddComponent(type) as PlayerSkillBase;
 
             skill.SetInfo(this, data);
-            Skills.Add(skill.Key, skill);
+            Skills.Add(skill);
         }
     }
 
@@ -162,6 +162,7 @@ public class Player : Creature
         IsJumpInput();
 
         _moveDirKeyPressed = IsMoveDirInput();
+
         if (_moveDirKeyPressed)
             LookLeft = MoveDir.x < 0;
     }
@@ -169,7 +170,7 @@ public class Player : Creature
     bool IsDashInput()
     {
         // 대시키 입력
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (KeySetting.GetKeyDown(KeyInput.DASH)) 
         {
             OnDash();
             return true;
@@ -181,7 +182,7 @@ public class Player : Creature
     bool IsJumpInput()
     {
         // TODO: 나중에 기본 키를 바꾸는게 좋겠다.. 점프 키를 컨트롤로 하니까 왼손 새끼 손가락에 무리가 간다.. 아니면 내 손이 문제인가..?
-        if (Input.GetKeyUp(KeyCode.LeftControl))
+        if (KeySetting.GetKeyUp(KeyInput.JUMP))
         {
             _jumpKeyPressed = false;
             _jumpKeyPressedTime = 0f;
@@ -202,7 +203,7 @@ public class Player : Creature
         }
 
         // 점프키 입력
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (KeySetting.GetKeyDown(KeyInput.JUMP))
         {
             _jumpKeyPressed = true;
             _jumpKeyPressedTime = Time.time;
@@ -216,8 +217,8 @@ public class Player : Creature
     bool IsMoveDirInput()
     {
         // 방향키 입력
-        bool leftPressed = Input.GetKey(KeyCode.LeftArrow);
-        bool rightPressed = Input.GetKey(KeyCode.RightArrow);
+        bool leftPressed = KeySetting.GetKey(KeyInput.LEFT);
+        bool rightPressed = KeySetting.GetKey(KeyInput.RIGHT);
 
         int pressedCount = (leftPressed ? 1 : 0) + (rightPressed ? 1 : 0);
 
@@ -231,14 +232,11 @@ public class Player : Creature
             return false;
         }
 
-        if (leftPressed)
+
+        if (leftPressed || rightPressed)
         {
-            MoveDir = Vector2.left;
-            return true;
-        }
-        else if (rightPressed)
-        {
-            MoveDir = Vector2.right;
+            MoveDir = leftPressed ? Vector2.left : Vector2.right;
+            //AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerWalk); //사운드 바꿔야함 ㅋㅋ
             return true;
         }
 
@@ -250,22 +248,33 @@ public class Player : Creature
     bool IsSkillInput()
     {
         // 꾹 눌러야 하는 키
-        if (_pressedSkillKey != KeyCode.None)
+        if (_pressedSkillKey != KeyInput.NONE)
         {
-            if (Input.GetKeyUp(_pressedSkillKey))
+            if (KeySetting.GetKeyUp(_pressedSkillKey))
             {
-                _pressedSkillKey = KeyCode.None;
+                _pressedSkillKey = KeyInput.NONE;
                 _skillKeyPressedTime = 0f;
             }
             else
             {
+                var pressedKey = KeySetting.keys[_pressedSkillKey];
+                PlayerSkillBase psk = null;
+                
+                foreach (PlayerSkillBase skill in Skills)
+                {
+                    if (skill.Key == pressedKey)
+                    {
+                        psk = skill;
+                        break;
+                    }
+                }
+
                 // 키를 누르고 있다
                 float pressedTime = Time.time - _skillKeyPressedTime;
-                if (pressedTime >= Skills[_pressedSkillKey].KeyPressedTime)
+                if (psk != null && pressedTime >= psk.KeyPressedTime)
                 {
-                    Skills[_pressedSkillKey].DoSkill();
-
-                    _pressedSkillKey = KeyCode.None;
+                    psk.DoSkill();
+                    _pressedSkillKey = KeyInput.NONE;
                     _skillKeyPressedTime = 0f;
                 }
 
@@ -274,35 +283,54 @@ public class Player : Creature
         }
 
         // 스킬키 입력
-        foreach (KeyCode keyCode in Skills.Keys)
+        foreach (PlayerSkillBase skill in Skills)
         {
-            if (Input.GetKeyDown(keyCode))
+            if (Input.GetKeyDown(skill.Key))
             {
-                //Debug.Log($"입력된 키: {keyCode}");
-
-                if (Skills[keyCode].KeyPressedTime > 0)
+                Debug.Log($"입력된 스킬 키: {skill.Key}");
+                if (skill.KeyPressedTime > 0)
                 {
-                    // 꾹 눌러야 하는 키
-                    _pressedSkillKey = keyCode;
+                    // _pressedSkillKey 설정
+                    foreach (var dic in KeySetting.keys)
+                    {
+                        if (skill.Key == dic.Value)
+                        {
+                            _pressedSkillKey = dic.Key;
+                            break;
+                        }
+                    }
+
+                    if (_pressedSkillKey == KeyInput.NONE)
                     _skillKeyPressedTime = Time.time;
                 }
                 else
                 {
-                    Skills[keyCode].DoSkill();
-                    _pressedSkillKey = KeyCode.None;
+                    skill.DoSkill();
+                    _pressedSkillKey = KeyInput.NONE;
                     _skillKeyPressedTime = 0f;
                 }
 
                 return true;
             }
 
-            if (Input.GetKey(keyCode))
+            if (Input.GetKey(skill.Key))
             {
                 //Debug.Log($"입력된 키: {keyCode}");
-                if (Skills[keyCode].KeyPressedTime > 0)
+                if (skill.KeyPressedTime > 0)
                 {
-                    // 꾹 눌러야 하는 키
-                    _pressedSkillKey = keyCode;
+                    // _pressedSkillKey 설정
+                    foreach (var dic in KeySetting.keys)
+                    {
+                        if (skill.Key == dic.Value)
+                        {
+                            _pressedSkillKey = dic.Key; // 꾹 눌러야 하는 키
+                            break;
+                        }
+                    }
+
+                    if (_pressedSkillKey == KeyInput.NONE)
+                        Debug.Log("");
+
                     _skillKeyPressedTime = Time.time;
                 }
 
@@ -485,6 +513,7 @@ public class Player : Creature
         // 벽을 감지하면 벽 점프로 전환
         if (State == ECreatureState.WallCling || State == ECreatureState.WallClimbing || CheckWall())
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerJump); //Jump SFX 재생
             OnWallJump();
             return;
         }
@@ -492,10 +521,12 @@ public class Player : Creature
         // 기본(1단) 점프이거나 벽 점프 상태에서 다시 점프하면 이단 점프로 전환
         else if (_hasDoubleJumped == false && State == ECreatureState.Jump)
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerJump); //Jump SFX 재생
             OnDoubleJump();
             return;
         }
 
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerJump); //Jump SFX 재생
         base.OnJump();
     }
 
@@ -532,6 +563,7 @@ public class Player : Creature
 
         if (base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle))
         {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDash); //Dash SFX 재생
             StartCoroutine(CoDashCooldown());
             StartCoroutine(CoHandleDashInvincibility());
             return true;
@@ -552,6 +584,7 @@ public class Player : Creature
         // HP 감소
         Hp -= damage;
         OnHpChanged?.Invoke(); //체력 변경 이벤트 호출
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDamaged1); //Damaged SFX 재생
 
         State = ECreatureState.Hurt;
         if (_CoDamaged != null)
@@ -582,6 +615,8 @@ public class Player : Creature
     /// </summary>
     public override void OnDied()
     {
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDead); //Dead SFX 재생
+        
         // 모두 회복
         Hp = MaxHp;
         Mp = MaxMp;

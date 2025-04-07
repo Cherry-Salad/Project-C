@@ -849,7 +849,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: w
+  m_text: UPARROW
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -1114,7 +1114,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -1905,7 +1905,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8328444474084639480}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionSound, Assembly-CSharp
         m_MethodName: SetMasterVolume
         m_Mode: 1
@@ -2190,7 +2190,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -3539,7 +3539,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ESC
+  m_text: Escape
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -4072,7 +4072,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Cntl
+  m_text: LeftControl
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -4099,11 +4099,11 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 64.9
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 68
+  m_fontSizeMin: 60
   m_fontSizeMax: 80
   m_fontStyle: 16
   m_HorizontalAlignment: 2
@@ -4262,7 +4262,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -4365,7 +4365,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -4528,7 +4528,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -5040,7 +5040,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -5142,7 +5142,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8328444474084639480}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionSound, Assembly-CSharp
         m_MethodName: SetBGMVolume
         m_Mode: 1
@@ -5275,7 +5275,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -5542,7 +5542,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -6064,7 +6064,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Shift
+  m_text: LeftShift
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -7419,7 +7419,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -7571,7 +7571,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: D
+  m_text: Alpha1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -8035,7 +8035,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8328444474084639480}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: OptionSound, Assembly-CSharp
         m_MethodName: SetEffectVolume
         m_Mode: 1
@@ -8955,7 +8955,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -9032,7 +9032,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: s
+  m_text: DownArrow
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -9059,7 +9059,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 73.4
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9354,10 +9354,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1979057176594111672}
-  - component: {fileID: 8328444474084639480}
-  - component: {fileID: 8916144134285268081}
-  - component: {fileID: 8701578529850431354}
-  - component: {fileID: 4302903351745557577}
   m_Layer: 5
   m_Name: OptionPanel
   m_TagString: Untagged
@@ -9390,78 +9386,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8328444474084639480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6749676678522271458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4b8f890e484d234686908604106c0fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: aa142cb5d382b2542957f08a6bac16b0, type: 2}
-  MasterSlider: {fileID: 2569480079912007989}
-  BGMSlider: {fileID: 5047292502983651686}
-  EffectSlider: {fileID: 1383127676124157284}
---- !u!114 &8916144134285268081
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6749676678522271458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1500ed3ebf072e44382ab33b4a513725, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resolutionDropdown: {fileID: 326931575203092168}
---- !u!114 &8701578529850431354
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6749676678522271458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25f79291f016810449c011c543801579, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alertPanel: {fileID: 5257151962550135955}
-  alertText: {fileID: 3260607211265390919}
---- !u!114 &4302903351745557577
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6749676678522271458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ddd24a2a20753a41830a5d3365d25b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  txt:
-  - {fileID: 8301369777468990218}
-  - {fileID: 4548563535682348350}
-  - {fileID: 8516995217809057254}
-  - {fileID: 635929912801948079}
-  - {fileID: 2241701857894953706}
-  - {fileID: 8528538525520870899}
-  - {fileID: 5145858660053252188}
-  - {fileID: 6519508457021833946}
-  - {fileID: 4173992220238262115}
-  - {fileID: 1060308326722450672}
-  - {fileID: 6652814716049243872}
-  - {fileID: 7969895416714031725}
-  - {fileID: 8756706805189637509}
-  - {fileID: 7038491380803496132}
-  - {fileID: 492383824231311992}
-  - {fileID: 4719796829069930015}
 --- !u!1 &6813551455657354621
 GameObject:
   m_ObjectHideFlags: 0
@@ -9658,7 +9582,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -9878,7 +9802,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -10717,7 +10641,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -11141,7 +11065,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -11352,7 +11276,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A
+  m_text: LeftArrow
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -11379,7 +11303,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 78.55
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -12446,7 +12370,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -12523,7 +12447,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: D
+  m_text: RightArrow
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5c21135694cfd92408338f16c276f443, type: 2}
   m_sharedMaterial: {fileID: 1231001594281757362, guid: 5c21135694cfd92408338f16c276f443, type: 2}
@@ -12550,7 +12474,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 73.4
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -12713,7 +12637,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8701578529850431354}
+      - m_Target: {fileID: 3031396323744171574, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
         m_TargetAssemblyTypeName: OptionControl, Assembly-CSharp
         m_MethodName: ChangeKey
         m_Mode: 3
@@ -13117,21 +13041,5 @@ PrefabInstance:
 --- !u!224 &2263009527699811359 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5468839852070378641, guid: 0abf719c1246b1d4eb55cf641fc0507e, type: 3}
-  m_PrefabInstance: {fileID: 6089689071342891150}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3260607211265390919 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8773833450415475145, guid: 0abf719c1246b1d4eb55cf641fc0507e, type: 3}
-  m_PrefabInstance: {fileID: 6089689071342891150}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &5257151962550135955 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2051332632225307677, guid: 0abf719c1246b1d4eb55cf641fc0507e, type: 3}
   m_PrefabInstance: {fileID: 6089689071342891150}
   m_PrefabAsset: {fileID: 0}

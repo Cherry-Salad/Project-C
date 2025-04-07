@@ -58,13 +58,15 @@ public class GoblinFly : FlyMonsterBase
         Vector2 attackDir = getDirection(this.transform.position, TargetGameObject.transform.position);
 
         Rigidbody.velocity = attackDir * -1;
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterFly_BodySlam_Ready); //고블린 플라이 BodySlam Ready SFX 재생
         yield return new WaitForSeconds(_ATTACK_READY_SPEED);
 
         _isAttack = true;
         UpdateAnimation();
         Rigidbody.velocity = attackDir * TypeRecorder.Battle.Attack[_BODY_SLAM_SKILL_NUMBER].MovementMultiplier;
         ActiveHitBox(_HITBOX_NUM_BODY);
-        
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.MonsterFly_BodySlam_Shot); //고블린 플라이 BodySlam Shot SFX 재생
+
         yield return new WaitForSeconds(_ATTACK_TIME);
         _isAttack = false;
         DeactivateHitBox();
