@@ -50,9 +50,8 @@ public class BossMonsterScene : BaseScene
 
                 // 플레이어 소환, TODO: 맵마다 플레이어 스폰 위치를 다르게 설정
                 player = Managers.Resource.Instantiate("Player");
+                Managers.Game.Player = player.GetComponent<Player>();
                 player.transform.position = _startPos;   // TODO: 맵에서 플레이어 소환 위치 설정                
-
-                
             }
         });
         #endregion
