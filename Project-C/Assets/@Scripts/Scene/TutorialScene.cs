@@ -44,7 +44,7 @@ public class TutorialScene : BaseScene
                 // Test, 플레이어 소환
                 GameObject player = Managers.Resource.Instantiate("Player");
                 Managers.Game.Player = player.GetComponent<Player>();
-                player.transform.position = Managers.Map.CurrentSavePoint.transform.position;   // 플레이어 위치 설정
+                player.transform.position = Managers.Game.GameData.CurrentSavePoint.Position;   // 플레이어 위치 설정
 
                 Managers.Camera.Load();
             }

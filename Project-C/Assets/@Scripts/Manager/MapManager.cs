@@ -47,7 +47,7 @@ public class MapManager
     public Vector3 CurrentCheckpoint { get; set; }
 
     /// <summary>
-    /// 현재 활성화된 세이브 포인트이다. null이라면 비활성화 되어 있다.
+    /// 현재 활성화된 세이브 포인트이다. null이라면 활성화된 세이브 포인트가 없거나, 현재 맵에서 활성화 된 것이 아니다.
     /// </summary>
     public SavePoint CurrentSavePoint { get; set; } = null;
 

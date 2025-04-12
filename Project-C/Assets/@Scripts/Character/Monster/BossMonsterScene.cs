@@ -24,7 +24,7 @@ public class BossMonsterScene : BaseScene
         if (base.Init() == false)
             return false;
 
-        SceneType = Define.EScene.TutorialScene;
+        SceneType = Define.EScene.BossMonsterScene;
 
         _battleRoom.SetActive(false);
         _bossHpBar.SetActive(false);
@@ -41,6 +41,12 @@ public class BossMonsterScene : BaseScene
             if (loadCount == totalCount)
             {
                 Managers.Data.Init();
+
+                if (Managers.Game.Load() == false)
+                {
+                    Managers.Game.Init();
+                    Managers.Game.Save();
+                }
 
                 // 플레이어 소환, TODO: 맵마다 플레이어 스폰 위치를 다르게 설정
                 player = Managers.Resource.Instantiate("Player");

@@ -9,6 +9,7 @@ public class Define
         None,
         MainScene,
         TutorialScene,
+        BossMonsterScene,
     }
 
     public enum EObjectType
