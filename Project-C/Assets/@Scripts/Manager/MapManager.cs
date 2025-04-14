@@ -1,20 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static Define;
-
-[CreateAssetMenu]
-public class MapObject : Tile
-{
-    public int DataId;
-    public string Name;
-    public EObjectType ObjectType;
-    public bool FlipX = false;
-    public bool FlipY = false;
-    public bool IsRespawn = false;  // 파괴되면 더이상 스폰 안 한다.
-}
 
 public class MapManager
 {
@@ -85,6 +73,7 @@ public class MapManager
         if (Map != null)
             Managers.Resource.Destroy(Map);
 
+        CurrentSavePoint = null;
         Checkpoints.Clear();
         Managers.Camera.Clear();
     }
@@ -99,7 +88,7 @@ public class MapManager
             for (int x = SpawnObject.cellBounds.xMin; x <= SpawnObject.cellBounds.xMax; x++)
             {
                 Vector3Int cellPos = new Vector3Int(x, y, 0);
-                MapObject tile = SpawnObject.GetTile(cellPos) as MapObject;
+                MapObjectTile tile = SpawnObject.GetTile(cellPos) as MapObjectTile;
 
                 if (tile != null)
                 {
@@ -118,7 +107,11 @@ public class MapManager
 
                             // 활성화된 세이브 포인트가 아무것도 없다면 시작 포인트를 세이브 포인트로 활성화
                             if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
+                            {
+                                Managers.Game.GameData.CurrentSavePoint.SceneType = startPoint.SceneType;
+                                Managers.Game.GameData.CurrentSavePoint.Position = startPoint.transform.position;
                                 CurrentSavePoint = startPoint;
+                            }
 
                             SavePoints.Add(startPoint);
                             break;

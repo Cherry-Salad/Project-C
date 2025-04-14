@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: e7908e6369f5fa14bbf1cb7931999778, type: 3}
   m_Name: SavePoint
-  m_EditorClassIdentifier: Assembly-CSharp::MapObject
+  m_EditorClassIdentifier: 
   m_Sprite: {fileID: 1510973760, guid: dfb160ddc5596284f90ba86a88c8316c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:

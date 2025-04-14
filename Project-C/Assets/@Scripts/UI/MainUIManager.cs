@@ -18,7 +18,8 @@ public class MainUIManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene(1); //GameScene불러오기
+        //SceneManager.LoadScene(1); //GameScene불러오기
+        Managers.Scene.LoadScene(Define.EScene.TutorialScene);  // TODO: 활성화된 세이브 포인트 씬부터 시작
     }
 
     public void OpenOption()

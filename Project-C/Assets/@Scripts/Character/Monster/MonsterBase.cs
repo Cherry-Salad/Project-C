@@ -10,7 +10,6 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using static Define;
 using static MonsterBase;
-using static UnityEditor.Searcher.SearcherWindow.Alignment;
 using static UnityEngine.UI.Image;
 
 public class MonsterProjectile

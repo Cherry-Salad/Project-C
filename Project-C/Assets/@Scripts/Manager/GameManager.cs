@@ -35,13 +35,16 @@ public class GameManager
 
     public void Init()
     {
-        if (File.Exists(Path))
-            return;
+        //if (File.Exists(Path))
+        //    return;
 
         // Player
         var player = Managers.Data.PlayerDataDic.Values.ToList();
         foreach (Data.PlayerData p in player)
             GameData.Player = p;
+
+        // 세이브 포인트
+        GameData.CurrentSavePoint.SceneType = Define.EScene.None;
 
         // Map
 

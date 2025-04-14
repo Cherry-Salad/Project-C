@@ -350,6 +350,11 @@ public class Player : Creature
                 Debug.Log("세이브 포인트 활성화");
                 // TODO: 세이브 포인트 활성화 연출 효과가 필요
                 Managers.Map.CurrentSavePoint = _savePoint;
+
+                // 모두 회복
+                Hp = MaxHp;
+                Mp = MaxMp;
+
                 Managers.Game.Save();
             }
 
