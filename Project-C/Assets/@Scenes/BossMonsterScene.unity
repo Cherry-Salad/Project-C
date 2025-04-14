@@ -2619,7 +2619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _battleRoom: {fileID: 1262727072}
   _bossMonster: {fileID: 1046690308}
-  _bossHpBar: {fileID: 1955568878}
+  _bossHpBar: {fileID: 2047603772}
 --- !u!4 &1875649636
 Transform:
   m_ObjectHideFlags: 0
@@ -2793,6 +2793,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6bff3224b3082e546b56332b98a6810e, type: 3}
+--- !u!1 &2047603772 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4473667231540353568, guid: b2e6ae91fd5b7164694d2d31f93be40b, type: 3}
+  m_PrefabInstance: {fileID: 736596928}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -2806,3 +2811,4 @@ SceneRoots:
   - {fileID: 940169945}
   - {fileID: 1881812475}
   - {fileID: 1885555916}
+  - {fileID: 736596928}
