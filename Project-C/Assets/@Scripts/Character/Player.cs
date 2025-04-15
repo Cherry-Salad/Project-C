@@ -151,7 +151,10 @@ public class Player : Creature
 
         // 테스트용 코드, 마나 회복
         if (Input.GetKeyDown(KeyCode.Q))
+        {
             Mp = Mathf.Clamp(Mp + 1f, 1f, MaxMp);
+            TriggerOnMpChanged();
+        }
 
         if (IsInteractionInput())
             return;
@@ -388,6 +391,9 @@ public class Player : Creature
             case ECreatureState.WallClimbing:
                 Animator.Play("WallSlide");
                 break;
+            case ECreatureState.Hurt:
+                Animator.Play("Hurt");
+                break;
             case ECreatureState.Dead:
                 Animator.Play("Dead");
                 //OnSpawnDust();  // 애니메이션 이벤트로 호출한다
@@ -566,13 +572,13 @@ public class Player : Creature
     protected override bool OnDash(float distance = 3f, float speedMultiplier = 3f, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
         // 대시 쿨타임 완료 여부
-        if (_completeDashCooldown == false)
-            return false;
+        //if (_completeDashCooldown == false)
+        //    return false;
 
         if (base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle))
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDash); //Dash SFX 재생
-            StartCoroutine(CoDashCooldown());
+            //StartCoroutine(CoDashCooldown());
             StartCoroutine(CoHandleDashInvincibility());
             return true;
         }

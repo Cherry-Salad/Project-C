@@ -85,9 +85,6 @@ public class Creature : BaseObject
             case ECreatureState.Dash:
                 Animator.Play("Dash");
                 break;
-            case ECreatureState.Hurt:
-                Animator.Play("Hurt");
-                break;
         }
     }
 
