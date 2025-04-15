@@ -29,7 +29,7 @@ public class SceneGate : InitBase
     {
         Debug.Log($"{TransitionSceneType.ToString()} 전환");
         Managers.Game.Save();
-        // TODO: 씬 전환하는 연출 필요, (ex: 플레이어가 걸어가는 모습, 까맣게 암전되는 모습 등)
+        // For 최혁도, TODO: 씬 전환하는 연출 필요, (ex: 플레이어가 걸어가는 모습, 까맣게 암전되는 모습 등)
         Managers.Scene.LoadScene(TransitionSceneType);
     }
 }

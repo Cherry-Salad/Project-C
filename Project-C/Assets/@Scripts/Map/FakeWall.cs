@@ -40,7 +40,7 @@ public class FakeWall : InitBase
         if (collision.GetComponent<Player>() != null)
         {
             Debug.Log($"가짜벽 비활성화 {collision.name}");
-            // TODO: 효과음
+            // For 최혁도, TODO: 효과음
             StartCoroutine(CoHide());
         }
     }
@@ -56,7 +56,7 @@ public class FakeWall : InitBase
         if (collision.GetComponent<Player>() != null)
         {
             Debug.Log($"가짜벽 활성화 {collision.name}");
-            // TODO: 효과음
+            // For 최혁도, TODO: 효과음
             StartCoroutine(CoShow());
         }
     }

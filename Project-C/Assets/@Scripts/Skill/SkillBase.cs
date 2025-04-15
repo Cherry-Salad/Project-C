@@ -211,7 +211,7 @@ public class SkillBase : InitBase
     /// <summary>
     /// 캐스팅을 시작한다. 피격 받으면 캐스팅을 취소한다.
     /// </summary>
-    /// <param name="action">캐스팅을 완료하면 호출할 이벤트</param>
+    /// <param name="callback">캐스팅을 완료하면 호출할 이벤트</param>
     /// <returns></returns>
     protected IEnumerator CoDoCastingSkill(Action callback)
     {

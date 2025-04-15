@@ -20,24 +20,24 @@ public class TutorialScene : BaseScene
 
         Managers.Map.LoadMap("TutorialMap");
 
+        // Test, 플레이어 소환
+        GameObject player = Managers.Resource.Instantiate("Player");
+        Managers.Game.Player = player.GetComponent<Player>();
+
         // 활성화된 세이브 포인트 찾기
-        if (Managers.Game.GameData.CurrentSavePoint.SceneType != Define.EScene.None)
+        if (SceneType == Managers.Game.GameData.CurrentSavePoint.SceneType)
         {
-            foreach (var sp in Managers.Map.SavePoints)
+            foreach (var sp in Managers.Map.SavePoints) // 정보가 일치하는지 확인
             {
-                if (Managers.Game.GameData.CurrentSavePoint.Position == sp.transform.position)
+                if (sp.transform.position == Managers.Game.GameData.CurrentSavePoint.Position)
                 {
-                    Managers.Map.CurrentSavePoint = sp;
+                    // 플레이어 위치 설정
+                    player.transform.position = sp.transform.position;
                     break;
                 }
             }
         }
-
-        // Test, 플레이어 소환
-        GameObject player = Managers.Resource.Instantiate("Player");
-        Managers.Game.Player = player.GetComponent<Player>();
-        player.transform.position = Managers.Game.GameData.CurrentSavePoint.Position;   // 플레이어 위치 설정
-
+        
         Managers.Camera.Load();
         
         return true;
@@ -46,6 +46,5 @@ public class TutorialScene : BaseScene
     public override void Clear()
     {
         base.Clear();
-        // TODO: 맵 상태 저장
     }
 }

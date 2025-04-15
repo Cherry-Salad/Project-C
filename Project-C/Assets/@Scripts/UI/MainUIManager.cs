@@ -18,9 +18,14 @@ public class MainUIManager : MonoBehaviour
 
     public void StartGame()
     {
+        Managers.Game.Init();
+        Managers.Game.Save();
+
         //SceneManager.LoadScene(1); //GameScene불러오기
-        Managers.Scene.LoadScene(Define.EScene.TutorialScene);  // TODO: 활성화된 세이브 포인트 씬부터 시작
+        Managers.Scene.LoadScene(Define.EScene.TutorialScene);
     }
+
+    // For 최혁도, TODO: 게임 이어하기, 활성화된 세이브 포인트 씬부터 시작
 
     public void OpenOption()
     {

@@ -34,11 +34,6 @@ public class MapManager
     /// </summary>
     public Vector3 CurrentCheckpoint { get; set; }
 
-    /// <summary>
-    /// 현재 활성화된 세이브 포인트이다. null이라면 활성화된 세이브 포인트가 없거나, 현재 맵에서 활성화 된 것이 아니다.
-    /// </summary>
-    public SavePoint CurrentSavePoint { get; set; } = null;
-
     public void LoadMap(string mapName)
     {
         DestroyMap();
@@ -73,7 +68,6 @@ public class MapManager
         if (Map != null)
             Managers.Resource.Destroy(Map);
 
-        CurrentSavePoint = null;
         Checkpoints.Clear();
         Managers.Camera.Clear();
     }
@@ -105,12 +99,11 @@ public class MapManager
                             SavePoint startPoint = obj.GetComponent<SavePoint>();
                             startPoint.SetInfo(worldPos, Managers.Scene.CurrentScene.SceneType);
 
-                            // 활성화된 세이브 포인트가 아무것도 없다면 시작 포인트를 세이브 포인트로 활성화
+                            // 활성화된 세이브 포인트가 아무것도 없다면, 시작 포인트를 세이브 포인트로 활성화
                             if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
                             {
                                 Managers.Game.GameData.CurrentSavePoint.SceneType = startPoint.SceneType;
                                 Managers.Game.GameData.CurrentSavePoint.Position = startPoint.transform.position;
-                                CurrentSavePoint = startPoint;
                             }
 
                             SavePoints.Add(startPoint);
@@ -163,7 +156,7 @@ public class MapManager
         // 활성화된 체크포인트가 없다면 가장 가까운 체크포인트로 이동
         if (CurrentCheckpoint == Vector3.zero)
         {
-            Vector3 closest = Vector3.zero; // 가장 가까운 체크포인트 위치
+            Vector3 closestCheckpoint = Vector3.zero; // 가장 가까운 체크포인트 위치
             float minDistance = float.MaxValue;
 
             foreach (Vector3 pos in Checkpoints)
@@ -172,20 +165,20 @@ public class MapManager
                 if (distance < minDistance)
                 {
                     minDistance = distance;
-                    closest = pos;
+                    closestCheckpoint = pos;
                 }
             }
 
-            if (closest == Vector3.zero)    // 가까운 체크포인트를 못 찾았다면 버그다
+            if (closestCheckpoint == Vector3.zero)    // 가까운 체크포인트를 못 찾았다면 버그다
             {
                 Debug.LogError("와 샌즈");
                 return;
             }
 
-            CurrentCheckpoint = closest;
+            CurrentCheckpoint = closestCheckpoint;
         }
 
-        // TODO: 체크포인트로 이동하는 연출
+        // For 최혁도, TODO: 체크포인트로 이동하는 연출
         go.transform.position = CurrentCheckpoint;  // 플레이어를 체크 포인트로 이동
     }
 }

@@ -17,13 +17,8 @@ public class MainScene : BaseScene
             // 모두 로드
             if (loadCount == totalCount)
             {
-                Debug.Log("에셋 모두 로드 완료!");
-
+                Debug.Log("PreLoad 에셋 로드 모두 완료!");
                 Managers.Data.Init();
-
-                // Test: 새로 시작 테스트용
-                Managers.Game.Init();
-                Managers.Game.Save();
             }
         });
         #endregion

@@ -138,7 +138,7 @@ public class OptionControl : MonoBehaviour
                     return;
                 }
 
-                // TODO: @최혁도, 테스크용 코드로 플레이어 스킬 키 변경(게임 매니저 생성 이후 변경할 필요가 있음
+                // For 최혁도, TODO: 테스크용 코드로 플레이어 스킬 키 변경(게임 매니저 생성 이후 변경할 필요가 있음
                 // 하긴했는데 진짜 임시임 - 현재 스킬키 변경에 대해서는 저장을 못함
                 foreach (PlayerSkillBase skill in player.Skills)
                 {

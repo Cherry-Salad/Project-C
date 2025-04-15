@@ -41,7 +41,7 @@ public class Player : Creature
     /// <summary>
     /// 세이브 포인트와 접촉 중인지 확인
     /// </summary>
-    SavePoint _savePoint = null;
+    SavePoint _inSavePointArea = null;
 
     Coroutine _CoDamaged = null;    // 피격 판정 중복 방지
 
@@ -146,8 +146,6 @@ public class Player : Creature
     {
         if (State == ECreatureState.Dead || State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
             return;
-
-        // TODO: 입력 키 설정이 구현되면 불러오는 것으로 바꾼다
 
         // 테스트용 코드, 마나 회복
         if (Input.GetKeyDown(KeyCode.Q))
@@ -348,11 +346,15 @@ public class Player : Creature
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (_savePoint != null)
+            // 세이브 포인트 활성화
+            if (_inSavePointArea != null)
             {
-                Debug.Log("세이브 포인트 활성화");
-                // TODO: 세이브 포인트 활성화 연출 효과가 필요
-                Managers.Map.CurrentSavePoint = _savePoint;
+                Debug.Log("세이브 포인트 활성화, 활성화된 세이브 포인트 업데이트 및 저장");
+                // For 최혁도, TODO: 세이브 포인트 활성화 연출 효과가 필요
+
+                // 활성화된 세이브 포인트 업데이트 및 저장
+                Managers.Game.GameData.CurrentSavePoint.SceneType = _inSavePointArea.SceneType;
+                Managers.Game.GameData.CurrentSavePoint.Position = _inSavePointArea.transform.position;
 
                 // 모두 회복
                 Hp = MaxHp;
@@ -643,7 +645,6 @@ public class Player : Creature
             return;
         }
 
-        // TODO: 활성화된 세이브 포인트가 현재 씬과 다르면 씬 이동
         Managers.Scene.LoadScene(Managers.Game.GameData.CurrentSavePoint.SceneType);
     }
 
@@ -652,7 +653,7 @@ public class Player : Creature
         if (collision.TryGetComponent<SavePoint>(out var sp))
         {
             //Debug.Log($"{collision.name} 충돌");
-            _savePoint = sp;
+            _inSavePointArea = sp;
         }
     }
 
@@ -695,7 +696,7 @@ public class Player : Creature
         if (collision.TryGetComponent<SavePoint>(out var sp))
         {
             //Debug.Log($"{collision.name} 충돌 안 함");
-            _savePoint = null;
+            _inSavePointArea = null;
         }
     }
 

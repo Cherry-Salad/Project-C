@@ -17,7 +17,7 @@ public class GameData
 public class CurrentSavePointData
 {
     public Vector3 Position;
-    public Define.EScene SceneType;
+    public Define.EScene SceneType; // None이라면 활성화된 세이브 포인트가 없다
 }
 
 public class GameManager
@@ -35,8 +35,11 @@ public class GameManager
 
     public void Init()
     {
-        //if (File.Exists(Path))
-        //    return;
+        if (File.Exists(Path))
+        {
+            Debug.Log("이미 플레이어한 데이터가 있습니다. 게임을 새로 시작하겠습니까");
+            // return;
+        }
 
         // Player
         var player = Managers.Data.PlayerDataDic.Values.ToList();
@@ -47,6 +50,7 @@ public class GameManager
         GameData.CurrentSavePoint.SceneType = Define.EScene.None;
 
         // Map
+        // TODO
 
         // Accessory
     }
@@ -56,6 +60,7 @@ public class GameManager
     /// </summary>
     public void Save()
     {
+        // Player
         if (Player != null)
         {
             var player = GameData.Player;
@@ -83,14 +88,10 @@ public class GameManager
             GameData.Player = player;
         }
 
-        // 현재 활성화된 세이브 포인트를 찾는다
-        if (Managers.Map.CurrentSavePoint != null)
-        {
-            GameData.CurrentSavePoint.Position = Managers.Map.CurrentSavePoint.transform.position;
-            GameData.CurrentSavePoint.SceneType = Managers.Map.CurrentSavePoint.SceneType;
-        }
+        // 세이브 포인트는 플레이어가 활성화 할 때만 저장되므로, Save에서 작성할 필요가 없다 
 
         // Map
+        // TODO
 
         // Accessory
 
@@ -120,6 +121,7 @@ public class GameManager
             return false;
         }
 
+        Debug.Log("게임 데이터 불러오기 성공");
         GameData = data;
         return true;
     }

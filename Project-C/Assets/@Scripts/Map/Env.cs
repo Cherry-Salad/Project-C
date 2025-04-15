@@ -74,6 +74,6 @@ public class Env : BaseObject
         transform.position = pos; // 원래 위치로 복구
 
         if (Hp <= 0)
-            Managers.Resource.Destroy(gameObject);  // TODO: 부숴지는 연출
+            Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출
     }
 }
