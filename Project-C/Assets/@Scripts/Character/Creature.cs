@@ -189,7 +189,9 @@ public class Creature : BaseObject
             State = ECreatureState.Jump;
 
             // 경사진 바닥에서도 점프를 할 수 있도록 수평 속도(velocity.x)를 0으로 설정
-            Rigidbody.velocity = new Vector2(0f, JumpForce);
+            //Rigidbody.velocity = new Vector2(0f, JumpForce);
+            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, 0f);
+            Rigidbody.AddForce(new Vector2(0, JumpForce), ForceMode2D.Impulse);
         }
     }
 
@@ -199,7 +201,9 @@ public class Creature : BaseObject
 
         // 이단 점프
         _hasDoubleJumped = true;
-        Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + DoubleJumpForce);
+        // Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + DoubleJumpForce);
+        Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, 0f);
+        Rigidbody.AddForce(new Vector2(0f, JumpForce + DoubleJumpForce), ForceMode2D.Impulse);
     }
 
     protected virtual void OnWallJump(float duration)
@@ -294,7 +298,10 @@ public class Creature : BaseObject
             float velocityX = (noObstacles) ? moveDir.x * MoveSpeed : 0f;   // 장애물이 있다면 수평 속도(velocityX)를 0으로 설정
 
             // 벽 점프
-            Rigidbody.velocity = new Vector2(velocityX, JumpForce);
+            //Rigidbody.velocity = new Vector2(velocityX, JumpForce);
+            Rigidbody.velocity = new Vector2(velocityX, 0f);
+            Rigidbody.AddForce(new Vector2(0f, JumpForce), ForceMode2D.Impulse);
+
             elapsedTime += Time.deltaTime;
             yield return new WaitForFixedUpdate();  // Collider 갱신
         }

@@ -552,8 +552,10 @@ public class Player : Creature
         // 1단 점프일 때 추가 점프 힘 적용
         if (State == ECreatureState.Jump)
         {
-            //Rigidbody.AddForce(Vector2.up * _jumpHoldForce, ForceMode2D.Impulse); // 이건 영 조작감이 별로라 velocity를 사용
-            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
+            //Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, JumpForce + _jumpHoldForce);
+
+            Rigidbody.velocity = new Vector2(Rigidbody.velocity.x, 0f);
+            Rigidbody.AddForce(new Vector2(0f, JumpForce + _jumpHoldForce), ForceMode2D.Impulse);
             State = ECreatureState.Jump;
         }
     }
