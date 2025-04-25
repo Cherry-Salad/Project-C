@@ -42,6 +42,8 @@ public class Creature : BaseObject
     /// </summary>
     public CapsuleCollider2D BodyHitBox { get; protected set; }
 
+    public string Name { get; set; }
+    
     #region Stat
     public float Hp { get; set; }
     public float MaxHp { get; set; }

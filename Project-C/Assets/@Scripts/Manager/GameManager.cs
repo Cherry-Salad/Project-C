@@ -63,29 +63,29 @@ public class GameManager
         // Player
         if (Player != null)
         {
-            var player = GameData.Player;
+            var playerInfo = GameData.Player;
             #region 플레이어 정보
-            player.DataId = Player.Data.DataId;
-            player.Name = Player.Data.Name;
-            player.Hp = Player.Hp;
-            player.MaxHp = Player.MaxHp;
-            player.HpLevel = Player.HpLevel;
-            player.Mp = Player.Mp;
-            player.MaxMp = Player.MaxMp;
-            player.MpLevel = Player.MpLevel;
-            player.Atk = Player.Atk;
-            player.AtkLevel = Player.AtkLevel;
-            player.Speed = Player.MoveSpeed;
-            player.AccessorySlot = Player.AccessorySlot;
+            playerInfo.DataId = Define.PLAYER_ID;
+            playerInfo.Name = Player.Name;
+            playerInfo.Hp = Player.Hp;
+            playerInfo.MaxHp = Player.MaxHp;
+            playerInfo.HpLevel = Player.HpLevel;
+            playerInfo.Mp = Player.Mp;
+            playerInfo.MaxMp = Player.MaxMp;
+            playerInfo.MpLevel = Player.MpLevel;
+            playerInfo.Atk = Player.Atk;
+            playerInfo.AtkLevel = Player.AtkLevel;
+            playerInfo.Speed = Player.MoveSpeed;
+            playerInfo.AccessorySlot = Player.AccessorySlot;
 
-            player.SkillIdList = new List<int>();
+            playerInfo.SkillIdList = new List<int>();
             var skillList = Player.Skills;
 
             foreach (var skill in skillList)
-                player.SkillIdList.Add(skill.DataId);
+                playerInfo.SkillIdList.Add(skill.DataId);
             #endregion
             
-            GameData.Player = player;
+            GameData.Player = playerInfo;
         }
 
         // 세이브 포인트는 플레이어가 활성화 할 때만 저장되므로, Save에서 작성할 필요가 없다 

@@ -18,11 +18,23 @@ public class MainUIManager : MonoBehaviour
 
     public void StartGame()
     {
-        Managers.Game.Init();
-        Managers.Game.Save();
+        Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
+        {
+            // For 최혁도, TODO: 로딩 화면
 
-        //SceneManager.LoadScene(1); //GameScene불러오기
-        Managers.Scene.LoadScene(Define.EScene.TutorialScene);
+            // 모두 로드 완료
+            if (loadCount == totalCount)
+            {
+                Debug.Log("PreLoad 에셋 로드 모두 완료!");
+                Managers.Data.Init();
+
+                Managers.Game.Init();
+                Managers.Game.Save();
+
+                //SceneManager.LoadScene(1); //GameScene불러오기
+                Managers.Scene.LoadScene(Define.EScene.TutorialScene);  // 게임 시작
+            }
+        });
     }
 
     // For 최혁도, TODO: 게임 이어하기, 활성화된 세이브 포인트 씬부터 시작

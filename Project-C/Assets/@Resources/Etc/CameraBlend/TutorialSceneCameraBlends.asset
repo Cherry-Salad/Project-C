@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: TutorialSceneCameraBlends
   m_EditorClassIdentifier: 
   m_CustomBlends:
-  - m_From: Room02
+  - m_From: Room01
     m_To: Room03
     m_Blend:
       m_Style: 2
-      m_Time: 0.5
+      m_Time: 0.7
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []

@@ -102,6 +102,7 @@ public class MapManager
                             // 활성화된 세이브 포인트가 아무것도 없다면, 시작 포인트를 세이브 포인트로 활성화
                             if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
                             {
+                                Debug.Log("시작 포인트 활성화");
                                 Managers.Game.GameData.CurrentSavePoint.SceneType = startPoint.SceneType;
                                 Managers.Game.GameData.CurrentSavePoint.Position = startPoint.transform.position;
                             }

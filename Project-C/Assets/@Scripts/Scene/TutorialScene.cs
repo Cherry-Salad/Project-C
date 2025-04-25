@@ -18,9 +18,8 @@ public class TutorialScene : BaseScene
             Managers.Game.Save();
         }
 
-        Managers.Map.LoadMap("TutorialMap");
+        Managers.Map.LoadMap("TutorialMap");    // 맵 정보 로드, 세이브 포인트 활성화
 
-        // Test, 플레이어 소환
         GameObject player = Managers.Resource.Instantiate("Player");
         Managers.Game.Player = player.GetComponent<Player>();
 

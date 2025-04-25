@@ -7,8 +7,6 @@ using static Define;
 
 public class Player : Creature
 {
-    public PlayerData Data;
-
     #region Stat
     public int HpLevel { get; set; }
     public int MpLevel { get; set; }
@@ -74,20 +72,9 @@ public class Player : Creature
         DoubleJumpForce = 1f;
 
         #region 데이터 로드
-        // 플레이어 스탯
-        //Data = Managers.Data.PlayerDataDic[PLAYER_ID];
-        //Hp = Data.Hp;
-        //MaxHp = Data.MaxHp;
-        //HpLevel = Data.HpLevel;
-        //Mp = Data.Mp;
-        //MaxMp = Data.MaxMp;
-        //MpLevel = Data.MpLevel;
-        //Atk = Data.Atk;
-        //AtkLevel = Data.AtkLevel;
-        //MoveSpeed = Data.Speed;
-        //AccessorySlot = Data.AccessorySlot;
-
         var data = Managers.Game.GameData.Player;
+
+        Name = data.Name;
 
         // 플레이어 스탯
         Hp = data.Hp;
