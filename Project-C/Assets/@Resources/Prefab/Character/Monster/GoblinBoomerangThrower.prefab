@@ -220,11 +220,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _state: 0
   MonsterID: 300002
+  _INIT_STAIT: 0
   _qMark: {fileID: 7828532685781875637}
   _eMark: {fileID: 3943590647091390833}
   hitBoxList:
   - {fileID: 1948076384959008187}
-  _INIT_STAIT: 0
+  effectList: []
+  originColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1948076384959008187
 GameObject:
   m_ObjectHideFlags: 0
@@ -364,7 +366,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 300
   m_Sprite: {fileID: 21300000, guid: 77c09968f5d1dad49930f1dbbad7fde1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -480,7 +482,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 300
   m_Sprite: {fileID: 21300000, guid: cee4e3c5ca6b1c34088067bedd38d0ed, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
