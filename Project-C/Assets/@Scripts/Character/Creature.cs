@@ -56,9 +56,13 @@ public class Creature : BaseObject
     #endregion
 
     /// <summary>
-    /// 이단 점프 재사용을 방지하기 위해 공중에서 이미 이단 점프를 했는지 확인한다. 
+    /// 공중에서 무한으로 이단 점프하는 것을 방지하기 위해서 공중에서 이미 이단 점프를 했는지 확인한다. 
     /// </summary>
     protected bool _hasDoubleJumped = false;
+    /// <summary>
+    /// 공중에서 무한으로 대시하는 것을 방지하기 위해서 공중에서 이미 대시 했는지 확인한다
+    /// </summary>
+    protected bool _hasDashed = false;
     protected bool _isInvincibility = false;  // 무적 상태
 
     public override bool Init()
@@ -157,12 +161,14 @@ public class Creature : BaseObject
         {
             State = ECreatureState.WallCling;
             _hasDoubleJumped = false;
+            _hasDashed = false;
             return;
         }
         else if (onGround)  // 캐릭터가 바닥에 닿을 때
         {
             State = ECreatureState.Idle;
             _hasDoubleJumped = false;
+            _hasDashed = false;
             return;
         }
 
@@ -365,6 +371,8 @@ public class Creature : BaseObject
             if (Collider.isTrigger)
                 Collider.isTrigger = false;
         }
+
+        _hasDashed = !OnGround;
 
         // 캐릭터가 공중에 있으면 점프로 전환
         State = OnGround ? ECreatureState.Idle : ECreatureState.Jump;

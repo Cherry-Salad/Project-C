@@ -566,6 +566,9 @@ public class Player : Creature
         //if (_completeDashCooldown == false)
         //    return false;
 
+        if (_hasDashed)
+            return false;
+
         if (base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle))
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDash); //Dash SFX 재생
@@ -625,6 +628,8 @@ public class Player : Creature
         // 모두 회복
         Hp = MaxHp;
         Mp = MaxMp;
+
+        // TODO: 몬스터 부활
 
         Managers.Game.Save();   // 데이터 저장
 
