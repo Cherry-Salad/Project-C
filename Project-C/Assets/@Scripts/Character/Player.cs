@@ -27,7 +27,7 @@ public class Player : Creature
     float _jumpHoldForce = 0.2f;    // 점프 키를 유지했을 때 적용되는 힘
 
     // 대시
-    float _dashCoolTime = 1.0f; // 대시 쿨타임
+    float _dashCoolTime = 0.5f; // 대시 쿨타임
     bool _completeDashCooldown = true;  // 대쉬 쿨다운 완료 여부
 
     // 스킬
@@ -563,8 +563,8 @@ public class Player : Creature
     protected override bool OnDash(float distance = 3f, float speedMultiplier = 3f, bool ignorePhysics = true, bool ignoreObstacle = false)
     {
         // 대시 쿨타임 완료 여부
-        //if (_completeDashCooldown == false)
-        //    return false;
+        if (_completeDashCooldown == false)
+            return false;
 
         if (_hasDashed)
             return false;
@@ -572,7 +572,7 @@ public class Player : Creature
         if (base.OnDash(distance, speedMultiplier, ignorePhysics, ignoreObstacle))
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.PlayerDash); //Dash SFX 재생
-            //StartCoroutine(CoDashCooldown());
+            StartCoroutine(CoDashCooldown());
             StartCoroutine(CoHandleDashInvincibility());
             return true;
         }

@@ -211,6 +211,11 @@ public class MapManager
         }
     }
 
+    /// <summary>
+    /// IsRespawn이 false인 맵 오브젝트가 한 번이라도 파괴(죽음)된 경우 재스폰되지 않는다.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="obj"></param>
     public void DespawnObject<T>(T obj) where T : BaseObject
     {
         if (ObjectInfos.ContainsKey(obj.transform.position) == false)
