@@ -11,46 +11,35 @@ public class TutorialScene : BaseScene
 
         SceneType = Define.EScene.TutorialScene;
 
-        // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
-        #region PreLoad 어드레서블 모두 로드
-        Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
+        if (Managers.Game.Load() == false)
         {
-            // 모두 로드
-            if (loadCount == totalCount)
+            // Test: 저장한 데이터가 없다면 새로 시작
+            Managers.Game.Init();
+            Managers.Game.Save();
+        }
+
+        Managers.Map.LoadMap("TutorialMap");
+
+        // 활성화된 세이브 포인트 찾기
+        if (Managers.Game.GameData.CurrentSavePoint.SceneType != Define.EScene.None)
+        {
+            foreach (var sp in Managers.Map.SavePoints)
             {
-                Managers.Data.Init();
-                
-                if (Managers.Game.Load() == false)
+                if (Managers.Game.GameData.CurrentSavePoint.Position == sp.transform.position)
                 {
-                    Managers.Game.Init();
-                    Managers.Game.Save();
+                    Managers.Map.CurrentSavePoint = sp;
+                    break;
                 }
-
-                Managers.Map.LoadMap("TutorialMap");
-
-                // 활성화된 세이브 포인트 찾기
-                if (Managers.Game.GameData.CurrentSavePoint.SceneType != Define.EScene.None)
-                {
-                    foreach (var sp in Managers.Map.SavePoints)
-                    {
-                        if (Managers.Game.GameData.CurrentSavePoint.Position == sp.transform.position)
-                        {
-                            Managers.Map.CurrentSavePoint = sp;
-                            break;
-                        }
-                    }
-                }
-
-                // Test, 플레이어 소환
-                GameObject player = Managers.Resource.Instantiate("Player");
-                Managers.Game.Player = player.GetComponent<Player>();
-                player.transform.position = Managers.Game.GameData.CurrentSavePoint.Position;   // 플레이어 위치 설정
-
-                Managers.Camera.Load();
             }
-        });
-        #endregion
+        }
 
+        // Test, 플레이어 소환
+        GameObject player = Managers.Resource.Instantiate("Player");
+        Managers.Game.Player = player.GetComponent<Player>();
+        player.transform.position = Managers.Game.GameData.CurrentSavePoint.Position;   // 플레이어 위치 설정
+
+        Managers.Camera.Load();
+        
         return true;
     }
 

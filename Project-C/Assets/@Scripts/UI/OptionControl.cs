@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 
 public enum KeyInput
 {
@@ -210,7 +209,7 @@ public class OptionControl : MonoBehaviour
             {
                 KeySetting.keys[keyInputs[i]] = defaultKeys[i]; // 저장된 값이 없으면 기본값 사용
             }
-            Debug.Log($"{KeySetting.keys[keyInputs[i]]}");
+            //Debug.Log($"{KeySetting.keys[keyInputs[i]]}");
         }
     }
 

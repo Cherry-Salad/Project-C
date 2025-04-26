@@ -1,11 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
 using static MonsterBase;
-using static UnityEditor.PlayerSettings;
 
 public class FlyMonsterBase : MonsterBase
 {
