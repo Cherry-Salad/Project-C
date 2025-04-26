@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 
 public class MainUIManager : MonoBehaviour
 {
     public GameObject OptionPanel;
+
+    bool _load = false;
 
     void Update()
     {
@@ -18,6 +19,10 @@ public class MainUIManager : MonoBehaviour
 
     public void StartGame()
     {
+        if (_load)
+            return;
+
+        _load = true;
         Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>
         {
             // For 최혁도, TODO: 로딩 화면

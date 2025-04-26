@@ -57,6 +57,13 @@ public class Env : BaseObject
         }
     }
 
+    public override void OnDied()
+    {
+        base.OnDied();
+        Managers.Map.DespawnObject(this);
+        Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출
+    }
+
     protected IEnumerator CoShake(float duration = 0.2f)
     {
         Vector3 pos = transform.position;
@@ -74,6 +81,6 @@ public class Env : BaseObject
         transform.position = pos; // 원래 위치로 복구
 
         if (Hp <= 0)
-            Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출
+            OnDied();
     }
 }

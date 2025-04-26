@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,11 @@ public class MapManager
     public Tilemap SpawnObject { get; private set; }
 
     public HashSet<Room> Rooms { get; private set; } = new HashSet<Room>();
+
     public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
-    public HashSet<SavePoint> SavePoints;
+    public HashSet<SavePoint> SavePoints = new HashSet<SavePoint>();
+
+    public Dictionary<Vector3, MapObjectInfo> ObjectInfos = new Dictionary<Vector3, MapObjectInfo>();
 
     Room _room = null;
     public Room CurrentRoom 
@@ -46,7 +50,6 @@ public class MapManager
         MapName = mapName;
         CellGrid = map.GetComponent<Grid>();
         SpawnObject = Util.FindChild<Tilemap>(map, "SpawnObject");
-        SavePoints = new HashSet<SavePoint>();
 
         Transform rooms = Util.FindChild<Transform>(map, "@Rooms");
         foreach (Transform child in rooms)
@@ -68,15 +71,29 @@ public class MapManager
         if (Map != null)
             Managers.Resource.Destroy(Map);
 
+        MapName = null;
+        
+        Rooms.Clear();
         Checkpoints.Clear();
+        SavePoints.Clear();
+
+        ObjectInfos.Clear();
+
         Managers.Camera.Clear();
     }
 
     void SpawnObjects()
     {
+        // 저장된 맵 데이터를 통해서 스폰
+        if (SpawnObjectsFromData())
+            return;
+
         if (SpawnObject == null)
             return;
 
+        Debug.Log("SpawnObjects");
+
+        // Init
         for (int y = SpawnObject.cellBounds.yMax; y >= SpawnObject.cellBounds.yMin; y--)
         {
             for (int x = SpawnObject.cellBounds.xMin; x <= SpawnObject.cellBounds.xMax; x++)
@@ -91,43 +108,122 @@ public class MapManager
                     Vector3 tileOffset = CellGrid.cellSize * 0.5f;  // 타일 크기의 절반
                     worldPos += tileOffset;
 
-                    GameObject obj = Managers.Resource.Instantiate(tile.Name, pooling: true);
-
-                    switch (tile.ObjectType)
+                    // 맵 오브젝트 정보 저장
+                    MapObjectInfo info = new MapObjectInfo()
                     {
-                        case EObjectType.StartPoint:
-                            SavePoint startPoint = obj.GetComponent<SavePoint>();
-                            startPoint.SetInfo(worldPos, Managers.Scene.CurrentScene.SceneType);
+                        DataId = tile.DataId,
+                        Name = tile.Name,
+                        ObjectType = tile.ObjectType,
+                        WorldPos = worldPos,
+                        CellPos = cellPos,
+                        FlipX = tile.FlipX,
+                        FlipY = tile.FlipY,
+                        IsRespawn = tile.IsRespawn,
+                    };
 
-                            // 활성화된 세이브 포인트가 아무것도 없다면, 시작 포인트를 세이브 포인트로 활성화
-                            if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
-                            {
-                                Debug.Log("시작 포인트 활성화");
-                                Managers.Game.GameData.CurrentSavePoint.SceneType = startPoint.SceneType;
-                                Managers.Game.GameData.CurrentSavePoint.Position = startPoint.transform.position;
-                            }
-
-                            SavePoints.Add(startPoint);
-                            break;
-                        case EObjectType.Checkpoint:
-                            obj.transform.position = worldPos;
-                            Checkpoints.Add(worldPos);
-                            break;
-                        case EObjectType.SavePoint:
-                            SavePoint savePoint = obj.GetComponent<SavePoint>();
-                            savePoint.SetInfo(worldPos, Managers.Scene.CurrentScene.SceneType);
-                            SavePoints.Add(savePoint);
-                            break;
-                        case EObjectType.Env:
-                            Env env = obj.GetComponent<Env>();
-                            env.SetInfo(tile.DataId, worldPos, tile.FlipX, tile.FlipY);
-                            break;
-                    }
+                    GameObject obj = Managers.Resource.Instantiate(tile.Name, pooling: true);   // 소환
+                    StoreObject(obj, info);
                 }
             }
         }
 
         SpawnObject.GetComponent<TilemapRenderer>().enabled = false;
+    }
+
+    /// <summary>
+    /// 저장된 맵 데이터를 통해서 오브젝트를 소환한다.
+    /// </summary>
+    /// <returns></returns>
+    bool SpawnObjectsFromData()
+    {
+        MapData data = null;
+        foreach (MapData map in Managers.Game.GameData.Maps)
+        {
+            if (MapName == map.MapName)
+            {
+                data = map;
+                break;
+            }
+        }
+
+        if (data == null)
+        {
+            Debug.Log("아직 이 맵에 대한 저장된 정보가 없다.");
+            return false;
+        }
+
+        Debug.Log("SpawnObjectsFromData");
+
+        if (SpawnObject != null)
+            SpawnObject.GetComponent<TilemapRenderer>().enabled = false;
+
+        foreach (MapObjectInfo info in data.ObjectInfos)
+        {
+            GameObject obj = Managers.Resource.Instantiate(info.Name, pooling: true);
+            StoreObject(obj, info);
+        }
+
+        return true;
+    }
+
+    void StoreObject(GameObject obj, MapObjectInfo info)
+    {
+        ObjectInfos.Add(info.WorldPos, info);
+
+        switch (info.ObjectType)
+        {
+            case EObjectType.StartPoint:
+                SavePoint startPoint = obj.GetComponent<SavePoint>();
+                startPoint.SetInfo(info.WorldPos, Managers.Scene.CurrentScene.SceneType);
+                // 활성화된 세이브 포인트가 아무것도 없다면, 시작 포인트를 세이브 포인트로 활성화
+                if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
+                {
+                    Debug.Log("시작 포인트 활성화");
+                    Managers.Game.GameData.CurrentSavePoint.SceneType = startPoint.SceneType;
+                    Managers.Game.GameData.CurrentSavePoint.Position = startPoint.transform.position;
+                }
+                SavePoints.Add(startPoint);
+                break;
+
+            case EObjectType.Checkpoint:
+                obj.transform.position = info.WorldPos;
+                Checkpoints.Add(info.WorldPos);
+                break;
+
+            case EObjectType.SavePoint:
+                SavePoint savePoint = obj.GetComponent<SavePoint>();
+                savePoint.SetInfo(info.WorldPos, Managers.Scene.CurrentScene.SceneType);
+                SavePoints.Add(savePoint);
+                break;
+
+            case EObjectType.Env:
+                Env env = obj.GetComponent<Env>();
+                env.SetInfo(info.DataId, info.WorldPos, info.FlipX, info.FlipY);
+                break;
+
+            case EObjectType.Monster:
+                obj.transform.position = info.WorldPos;
+                break;
+
+            case EObjectType.Npc:
+                obj.transform.position = info.WorldPos;
+                break;
+        }
+    }
+
+    public void DespawnObject<T>(T obj) where T : BaseObject
+    {
+        if (ObjectInfos.ContainsKey(obj.transform.position) == false)
+            return;
+
+        var info = ObjectInfos[obj.transform.position];
+
+        // IsRespawn이 true라면 다시 스폰해야 하므로 지우면 안된다
+        if (info.IsRespawn == false)
+        {
+            Debug.Log("DespawnObject");
+            ObjectInfos.Remove(obj.transform.position);
+        }
     }
 
     public void ChangeCurrentRoom(Vector3 pos, bool DisableCameraBlend = false)

@@ -783,4 +783,13 @@ public class MonsterBase : Creature
         foreach (GameObject member in list)
             member?.SetActive(false);
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Trap"))
+        {
+            // 즉시 사망
+            Hit(hp);
+        }
+    }
 }

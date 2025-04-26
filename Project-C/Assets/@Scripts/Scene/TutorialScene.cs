@@ -36,9 +36,9 @@ public class TutorialScene : BaseScene
                 }
             }
         }
-        
+
         Managers.Camera.Load();
-        
+
         return true;
     }
 

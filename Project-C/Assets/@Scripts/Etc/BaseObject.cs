@@ -43,8 +43,7 @@ public class BaseObject : InitBase
     /// <param name="damage">대미지 값</param>
     /// <param name="ignoreInvincibility">무적 상태를 무시하고 피격 받을지 확인한다. 주로 함정에 당했을 때 사용한다.</param>
     /// <param name="attacker">가해자(이런 번역 맞나..?)</param>
-    public virtual void OnDamaged(float damage, bool ignoreInvincibility = false, Collider2D attacker = null)
-    {
-        //Debug.Log("OnDamaged");
-    }
+    public virtual void OnDamaged(float damage, bool ignoreInvincibility = false, Collider2D attacker = null) {}
+
+    public virtual void OnDied() {}
 }

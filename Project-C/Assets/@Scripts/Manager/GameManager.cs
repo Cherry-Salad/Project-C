@@ -2,22 +2,54 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
+using static Define;
 
 [Serializable]
 public class GameData
 {
     public Data.PlayerData Player = new Data.PlayerData();
     public CurrentSavePointData CurrentSavePoint = new CurrentSavePointData();
-    public List<Data.EnvData> Env = new List<Data.EnvData>();   // TODO
+    public List<MapData> Maps = new List<MapData>();
 }
 
 [Serializable]
 public class CurrentSavePointData
 {
     public Vector3 Position;
-    public Define.EScene SceneType; // None이라면 활성화된 세이브 포인트가 없다
+    public EScene SceneType; // None이라면 활성화된 세이브 포인트가 없다
+}
+
+[Serializable]
+public class MapData
+{
+    public string MapName;
+    public List<MapObjectInfo> ObjectInfos = new List<MapObjectInfo>();
+}
+
+[Serializable]
+public struct MapObjectInfo
+{
+    public int DataId;
+    public string Name;
+    public EObjectType ObjectType;
+    public Vector3 WorldPos;
+    public Vector3Int CellPos;
+    public bool FlipX;
+    public bool FlipY;
+    public bool IsRespawn;  // 파괴되면 더이상 스폰 안 한다.
+
+    public MapObjectInfo(int dataId, string name, EObjectType type, Vector3 worldPos, Vector3Int cellPos, bool flipX, bool flipY, bool isRespawn)
+    {
+        DataId = dataId;
+        Name = name;
+        ObjectType = type;
+        WorldPos = worldPos;
+        CellPos = cellPos;
+        FlipX = flipX;
+        FlipY = flipY;
+        IsRespawn = isRespawn;
+    }
 }
 
 public class GameManager
@@ -42,15 +74,15 @@ public class GameManager
         }
 
         // Player
-        var player = Managers.Data.PlayerDataDic.Values.ToList();
+        var player = Managers.Data.PlayerDataDic.Values;
         foreach (Data.PlayerData p in player)
             GameData.Player = p;
 
         // 세이브 포인트
-        GameData.CurrentSavePoint.SceneType = Define.EScene.None;
+        GameData.CurrentSavePoint.SceneType = EScene.None;
 
         // Map
-        // TODO
+        GameData.Maps.Clear();
 
         // Accessory
     }
@@ -65,7 +97,7 @@ public class GameManager
         {
             var playerInfo = GameData.Player;
             #region 플레이어 정보
-            playerInfo.DataId = Define.PLAYER_ID;
+            playerInfo.DataId = PLAYER_ID;
             playerInfo.Name = Player.Name;
             playerInfo.Hp = Player.Hp;
             playerInfo.MaxHp = Player.MaxHp;
@@ -91,9 +123,24 @@ public class GameManager
         // 세이브 포인트는 플레이어가 활성화 할 때만 저장되므로, Save에서 작성할 필요가 없다 
 
         // Map
-        // TODO
+        string name = Managers.Map.MapName;
+        if (name != null)
+        {
+            for (int i = 0; i < GameData.Maps.Count; i++)
+            {
+                if (GameData.Maps[i].MapName == name)
+                {
+                    GameData.Maps.RemoveAt(i);
+                    break;
+                }
+            }
 
-        // Accessory
+            List<MapObjectInfo> infos = new List<MapObjectInfo>(Managers.Map.ObjectInfos.Values);
+            MapData mapData = new MapData() { MapName = name, ObjectInfos = infos };
+            GameData.Maps.Add(mapData);
+        }
+
+        // Accessory, TODO
 
         string jsonStr = JsonUtility.ToJson(GameData);
         File.WriteAllText(Path, jsonStr);

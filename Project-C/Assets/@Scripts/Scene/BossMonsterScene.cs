@@ -33,6 +33,8 @@ public class BossMonsterScene : BaseScene
         _hpBar = _bossHpBar.GetComponent<Slider>();
         _isFight = false;
 
+        Managers.Map.DestroyMap();  // Test
+
         // Test, TODO: 메인 화면에서 PreLoad 어드레서블을 모두 불러온다
         #region PreLoad 어드레서블 모두 로드
         Managers.Resource.LoadAllAsync<Object>("PreLoad", (key, loadCount, totalCount) =>

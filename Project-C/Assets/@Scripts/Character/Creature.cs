@@ -284,8 +284,10 @@ public class Creature : BaseObject
         State = (Hp <= 0) ? ECreatureState.Dead : ECreatureState.Hurt;
     }
 
-    public virtual void OnDied()
+    public override void OnDied()
     {
+        base.OnDied();
+        
         // 소멸
         Managers.Resource.Destroy(gameObject);
     }

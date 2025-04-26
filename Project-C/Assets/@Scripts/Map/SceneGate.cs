@@ -27,9 +27,21 @@ public class SceneGate : InitBase
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"{TransitionSceneType.ToString()} 전환");
-        Managers.Game.Save();
-        // For 최혁도, TODO: 씬 전환하는 연출 필요, (ex: 플레이어가 걸어가는 모습, 까맣게 암전되는 모습 등)
-        Managers.Scene.LoadScene(TransitionSceneType);
+        if (collision.CompareTag("Player"))
+        {
+            Debug.Log($"{TransitionSceneType.ToString()} 전환");
+            Managers.Game.Save();
+            // For 최혁도, TODO: 씬 전환하는 연출 필요, (ex: 플레이어가 걸어가는 모습, 까맣게 암전되는 모습 등)
+            Managers.Scene.LoadScene(TransitionSceneType);
+        }
+    }
+
+    void OnDrawGizmos()
+    {
+        if (_collider != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireCube(_collider.bounds.center, _collider.bounds.size);
+        }
     }
 }
