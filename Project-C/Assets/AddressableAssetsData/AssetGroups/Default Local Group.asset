@@ -23,18 +23,6 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 32d0c2a42f364bd4b963adeee3fa5cf9
-    m_Address: LongCactus
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PreLoad
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 61d727ca88ea46f49bc3a50dbdf28b29
-    m_Address: SmallCactus
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - PreLoad
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c517610e9aad53049b100aa8336bae86
     m_Address: Checkpoint
     m_ReadOnly: 0

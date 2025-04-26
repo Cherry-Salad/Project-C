@@ -40,6 +40,7 @@ public class Player : Creature
     /// 세이브 포인트와 접촉 중인지 확인
     /// </summary>
     SavePoint _inSavePointArea = null;
+    Env _inItemArea = null; 
 
     Coroutine _CoDamaged = null;    // 피격 판정 중복 방지
 
@@ -132,6 +133,9 @@ public class Player : Creature
     void GetInput()
     {
         if (State == ECreatureState.Dead || State == ECreatureState.Dash || State == ECreatureState.Hurt || State == ECreatureState.Skill)
+            return;
+
+        if (State == ECreatureState.Acquire)
             return;
 
         // 테스트용 코드, 마나 회복
@@ -350,6 +354,14 @@ public class Player : Creature
                 Managers.Game.Save();
             }
 
+            if (_inItemArea != null)
+            {
+                State = ECreatureState.Acquire;
+                Rigidbody.velocity = Vector2.zero;
+                _inItemArea.OnPickedUp();
+                Managers.Game.Save();
+            }
+
             return true;
         }
 
@@ -386,6 +398,9 @@ public class Player : Creature
             case ECreatureState.Dead:
                 Animator.Play("Dead");
                 //OnSpawnDust();  // 애니메이션 이벤트로 호출한다
+                break;
+            case ECreatureState.Acquire:
+                Animator.Play("Acquire");
                 break;
         }
 
@@ -582,7 +597,7 @@ public class Player : Creature
 
     public override void OnDamaged(float damage = 1f, bool ignoreInvincibility = false, Collider2D attacker = null)
     {
-        if (State == ECreatureState.Dead)
+        if (State == ECreatureState.Dead || State == ECreatureState.Acquire)
             return;
 
         // 무적 상태라면 대미지를 입지 않는다
@@ -642,12 +657,30 @@ public class Player : Creature
         Managers.Scene.LoadScene(Managers.Game.GameData.CurrentSavePoint.SceneType);
     }
 
+    /// <summary>
+    /// 애니메이션 이벤트로 호출한다.
+    /// </summary>
+    void OnAcquired()
+    {
+        State = ECreatureState.Idle;
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<SavePoint>(out var sp))
         {
             //Debug.Log($"{collision.name} 충돌");
             _inSavePointArea = sp;
+        }
+
+        if (collision.TryGetComponent<MaxHpUpItem>(out var mh))
+        {
+            _inItemArea = mh;
+        }
+
+        if (collision.TryGetComponent<MaxMpUpItem>(out var mp))
+        {
+            _inItemArea = mp;
         }
     }
 
@@ -691,6 +724,16 @@ public class Player : Creature
         {
             //Debug.Log($"{collision.name} 충돌 안 함");
             _inSavePointArea = null;
+        }
+
+        if (collision.TryGetComponent<MaxHpUpItem>(out var mh))
+        {
+            _inItemArea = null;
+        }
+
+        if (collision.TryGetComponent<MaxMpUpItem>(out var mp))
+        {
+            _inItemArea = null;
         }
     }
 

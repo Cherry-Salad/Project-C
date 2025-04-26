@@ -64,6 +64,7 @@ public class Define
         WallCling,
         Hurt,
         Dead,
+        Acquire,
     }
 
     public static int PLAYER_ID = 100001;

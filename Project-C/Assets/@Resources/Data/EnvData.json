@@ -4,6 +4,16 @@
       "DataId": 400001,
       "Name": "BreakableWall",
       "Hp": 3.0
+    },
+    {
+      "DataId": 400011,
+      "Name": "MaxHpUpItem",
+      "Hp": 0
+    },
+    {
+      "DataId": 400021,
+      "Name": "MaxMpUpItem",
+      "Hp": 0
     }
   ]
 }
