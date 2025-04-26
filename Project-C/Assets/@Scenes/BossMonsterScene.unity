@@ -1728,7 +1728,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4925609748890932831, guid: b2e6ae91fd5b7164694d2d31f93be40b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 150
+      value: 150.00003
       objectReference: {fileID: 0}
     - target: {fileID: 5615200030412624918, guid: b2e6ae91fd5b7164694d2d31f93be40b, type: 3}
       propertyPath: m_Pivot.x
@@ -1963,7 +1963,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9d220eb5482a4174c819cf623c4d257d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e3720b8d2fdef2648aeafd1630fdecf9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
