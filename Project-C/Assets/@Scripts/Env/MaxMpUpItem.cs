@@ -19,6 +19,8 @@ public class MaxMpUpItem : Env
     {
         base.OnPickedUp();
         Managers.Game.Player.MaxMp++;
+        Managers.Game.Player.Mp++;
+        Managers.Game.Player.TriggerOnMpChanged();
         OnDied();
     }
 

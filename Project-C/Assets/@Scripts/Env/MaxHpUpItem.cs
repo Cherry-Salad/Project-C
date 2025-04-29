@@ -19,6 +19,8 @@ public class MaxHpUpItem : Env
     {
         base.OnPickedUp();
         Managers.Game.Player.MaxHp++;
+        Managers.Game.Player.Hp++;
+        Managers.Game.Player.TriggerOnHpChanged();
         OnDied();
     }
 

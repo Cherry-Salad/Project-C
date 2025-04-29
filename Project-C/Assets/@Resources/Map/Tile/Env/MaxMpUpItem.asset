@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7908e6369f5fa14bbf1cb7931999778, type: 3}
   m_Name: MaxMpUpItem
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: 635f2d55485b4584089f63604f222b96, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 284e6b762a59aab429aa553626229fda, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

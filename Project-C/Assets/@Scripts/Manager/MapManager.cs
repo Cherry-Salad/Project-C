@@ -10,8 +10,15 @@ public class MapManager
     public GameObject Map { get; private set; }
     public string MapName { get; private set; }
     public Grid CellGrid { get; private set; }
+
+    /// <summary>
+    /// 찾으려는 타일맵의 이름은 반드시 SpawnObject로 설정할 것
+    /// </summary>
     public Tilemap SpawnObject { get; private set; }
 
+    /// <summary>
+    /// Room을 찾기 위해 부모 오브젝트의 이름은 반드시 @Rooms로 설정할 것
+    /// </summary>
     public HashSet<Room> Rooms { get; private set; } = new HashSet<Room>();
 
     public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
@@ -42,8 +49,10 @@ public class MapManager
     {
         DestroyMap();
 
-        //GameObject map = Managers.Resource.Instantiate(mapName);
         GameObject map = GameObject.Find(mapName);
+        if (map == null)
+            map = Managers.Resource.Instantiate(mapName);
+        
         map.transform.position = Vector3.zero;
 
         Map = map;

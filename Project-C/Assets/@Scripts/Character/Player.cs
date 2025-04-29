@@ -351,6 +351,9 @@ public class Player : Creature
                 Hp = MaxHp;
                 Mp = MaxMp;
 
+                TriggerOnHpChanged();
+                TriggerOnMpChanged();
+
                 Managers.Game.Save();
             }
 
