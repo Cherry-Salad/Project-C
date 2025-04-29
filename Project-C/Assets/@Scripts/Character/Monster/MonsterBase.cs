@@ -650,8 +650,8 @@ public class MonsterBase : Creature
         }
         finally
         {
-            StopCoroutine(ref vibrationCoroutine);
             Managers.Map.DespawnObject(this);
+            StopCoroutine(ref vibrationCoroutine);
             GameObject.Destroy(this.gameObject);
         }
     }

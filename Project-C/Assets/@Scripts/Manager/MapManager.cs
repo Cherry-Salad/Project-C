@@ -24,7 +24,7 @@ public class MapManager
     public HashSet<Vector3> Checkpoints = new HashSet<Vector3>();
     public HashSet<SavePoint> SavePoints = new HashSet<SavePoint>();
 
-    public Dictionary<Vector3, MapObjectInfo> ObjectInfos = new Dictionary<Vector3, MapObjectInfo>();
+    public Dictionary<GameObject, MapObjectInfo> ObjectInfos = new Dictionary<GameObject, MapObjectInfo>();
 
     Room _room = null;
     public Room CurrentRoom 
@@ -177,7 +177,7 @@ public class MapManager
 
     void StoreObject(GameObject obj, MapObjectInfo info)
     {
-        ObjectInfos.Add(info.WorldPos, info);
+        ObjectInfos.Add(obj, info);
 
         switch (info.ObjectType)
         {
@@ -227,16 +227,16 @@ public class MapManager
     /// <param name="obj"></param>
     public void DespawnObject<T>(T obj) where T : BaseObject
     {
-        if (ObjectInfos.ContainsKey(obj.transform.position) == false)
+        if (ObjectInfos.ContainsKey(obj.gameObject) == false)
             return;
 
-        var info = ObjectInfos[obj.transform.position];
+        var info = ObjectInfos[obj.gameObject];
 
         // IsRespawn이 true라면 다시 스폰해야 하므로 지우면 안된다
         if (info.IsRespawn == false)
         {
             Debug.Log("DespawnObject");
-            ObjectInfos.Remove(obj.transform.position);
+            ObjectInfos.Remove(obj.gameObject);
         }
     }
 
