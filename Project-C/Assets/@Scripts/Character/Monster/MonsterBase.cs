@@ -1,4 +1,3 @@
-using Assets.PixelFantasy.PixelMonsters.Common.Scripts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
