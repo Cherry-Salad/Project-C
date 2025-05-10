@@ -6,6 +6,11 @@
       "Hp": 2.0
     },
     {
+      "DataId": 400002,
+      "Name": "LockChain",
+      "Hp": 0
+    },
+    {
       "DataId": 400011,
       "Name": "MaxHpUpItem",
       "Hp": 0
@@ -13,6 +18,11 @@
     {
       "DataId": 400021,
       "Name": "MaxMpUpItem",
+      "Hp": 0
+    },
+    {
+      "DataId": 400031,
+      "Name": "Key",
       "Hp": 0
     }
   ]

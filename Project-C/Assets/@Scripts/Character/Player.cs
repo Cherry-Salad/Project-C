@@ -685,6 +685,11 @@ public class Player : Creature
         {
             _inItemArea = mp;
         }
+
+        if (collision.TryGetComponent<Key>(out var key))
+        {
+            _inItemArea = key;
+        }
     }
 
     void OnTriggerStay2D(Collider2D collision)
@@ -735,6 +740,11 @@ public class Player : Creature
         }
 
         if (collision.TryGetComponent<MaxMpUpItem>(out var mp))
+        {
+            _inItemArea = null;
+        }
+
+        if (collision.TryGetComponent<Key>(out var key))
         {
             _inItemArea = null;
         }
