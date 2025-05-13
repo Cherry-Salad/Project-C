@@ -189,20 +189,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _state: 0
-  Data:
-    DataId: 0
-    Name: 
-    Hp: 0
-    MaxHp: 0
-    HpLevel: 0
-    Mp: 0
-    MaxMp: 0
-    MpLevel: 0
-    Atk: 0
-    AtkLevel: 0
-    Speed: 0
-    AccessorySlot: 0
-    SkillIdList: 
   Skills: []
 --- !u!114 &2539579250733559445
 MonoBehaviour:

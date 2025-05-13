@@ -289,7 +289,8 @@ public class MapManager
             CurrentCheckpoint = closestCheckpoint;
         }
 
-        // For 최혁도, TODO: 체크포인트로 이동하는 연출
+        // For 최혁도, TODO: 체크포인트로 이동하는 연출 
+        // From 최혁도 : 음... 뭐가 있을까?
         go.transform.position = CurrentCheckpoint;  // 플레이어를 체크 포인트로 이동
     }
 }

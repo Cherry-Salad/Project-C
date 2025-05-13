@@ -49,9 +49,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGMSource: {fileID: 4017867509475747361}
   SFXSource: {fileID: 7435420309116417901}
-  background: {fileID: 8300000, guid: 911f725f156c26f43931ab180ea2e206, type: 3}
-  BossBackground: {fileID: 0}
+  background: {fileID: 8300000, guid: 8b5dbcf3d28694a44b9277cb42a229cb, type: 3}
+  BossBackground: {fileID: 8300000, guid: 0c7c5942e4690724b824741c7d8c45e0, type: 3}
   button: {fileID: 8300000, guid: 6362368c7c8e57e4a822420b68cd44b7, type: 3}
+  AroundItem: {fileID: 8300000, guid: 74433ec5ed738124483294754f764dd8, type: 3}
+  AcquireItem: {fileID: 8300000, guid: a8e305ee1558414448e7a413eeecb85a, type: 3}
   PlayerWalk: {fileID: 8300000, guid: 523924e8918aa8e47a8e695ff5b7a463, type: 3}
   PlayerJump: {fileID: 8300000, guid: 09e848b5fe4255440b05daec4b5e0ade, type: 3}
   PlayerDash: {fileID: 8300000, guid: 6b08e07b2853bb14c93a4c39250aa424, type: 3}

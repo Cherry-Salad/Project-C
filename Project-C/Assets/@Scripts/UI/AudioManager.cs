@@ -37,6 +37,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip background;
     public AudioClip BossBackground;
     public AudioClip button;
+    public AudioClip AroundItem;
+    public AudioClip AcquireItem;
 
     [Header("---Audio clip Player---")]
     public AudioClip PlayerWalk;
@@ -105,7 +107,6 @@ public class AudioManager : MonoBehaviour
         SFXSource.PlayOneShot(clip);
     }
 
-    //딜레이 후 SFX 재생 코루틴 사용
     public void PlaySFXAfterDelay(AudioClip clip, float delay)
     {
         StartCoroutine(DelayedPlaySFX(clip, delay));

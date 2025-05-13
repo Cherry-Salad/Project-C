@@ -61,12 +61,21 @@ public class Env : BaseObject
     {
         base.OnDied();
         Managers.Map.DespawnObject(this);
-        Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출
+        Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출 <- 이건 좀..
     }
 
     public virtual void OnPickedUp() 
     {
         // For 최혁도 선배, TODO: 아이템 획득하는 효과음 재생
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.AcquireItem);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.AroundItem);
+        }  
     }
 
     protected IEnumerator CoShake(float duration = 0.2f)

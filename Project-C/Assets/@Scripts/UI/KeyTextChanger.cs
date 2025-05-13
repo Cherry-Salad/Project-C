@@ -9,7 +9,7 @@ public class KeyTextChanger : MonoBehaviour
 
     private void Start()
     {
-        // 🔥 KeySetting.keys가 초기화될 때까지 대기
+        // KeySetting.keys가 초기화될 때까지 대기
         StartCoroutine(WaitForKeyMappings());
 
         // KeySetting이 변경될 때마다 UI 텍스트를 업데이트하도록 이벤트를 구독
@@ -38,7 +38,7 @@ public class KeyTextChanger : MonoBehaviour
     {
         if (KeySetting.keys.Count == 0)
         {
-            Debug.LogError("🚨 KeySetting.keys가 비어 있음! OptionControl 실행을 확인하세요.");
+            Debug.LogError("KeySetting.keys가 비어 있음! OptionControl 실행을 확인하세요.");
             return;
         }
 

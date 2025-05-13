@@ -342,6 +342,8 @@ public class Player : Creature
             {
                 Debug.Log("세이브 포인트 활성화, 활성화된 세이브 포인트 업데이트 및 저장");
                 // For 최혁도, TODO: 세이브 포인트 활성화 연출 효과가 필요
+                // From 최혁도 : 했어요
+                ShowAlertManager.Instance.ShowSaveAlert();
 
                 // 활성화된 세이브 포인트 업데이트 및 저장
                 Managers.Game.GameData.CurrentSavePoint.SceneType = _inSavePointArea.SceneType;
