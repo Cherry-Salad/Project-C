@@ -85,6 +85,7 @@ public class AudioManager : MonoBehaviour
     //배경 음악을 재생
     public void StartBGM(AudioClip clip)
     {
+        BGMSource.clip = clip;
         BGMSource.loop = true;
         BGMSource.Play();
     }

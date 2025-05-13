@@ -17,7 +17,7 @@ public class DUIManager : MonoBehaviour
 
     private void Awake()
     {
-        AudioManager.Instance.PlaySFX(AudioManager.Instance.background);
+        AudioManager.Instance.StartBGM(AudioManager.Instance.background);
         DUIPanel = new Dictionary<KeyCode, GameObject>
         {
             {KeyCode.I, InventoryPanel},

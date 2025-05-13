@@ -34,8 +34,11 @@ public class SavePoint : InitBase
     {
         if (collision.CompareTag("Player"))
         {
-            SpaceMark.SetActive(true);
-            StartCoroutine(PressKeyDisplay());
+            if (SpaceMark != null)
+            {
+                SpaceMark.SetActive(true);
+                StartCoroutine(PressKeyDisplay());
+            }
         }
     }
 
@@ -43,7 +46,7 @@ public class SavePoint : InitBase
     {
         if (collision.CompareTag("Player"))
         {
-            SpaceMark.SetActive(false);
+            if (SpaceMark != null) SpaceMark.SetActive(false);
         }
     }
 
