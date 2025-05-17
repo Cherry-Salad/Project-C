@@ -39,6 +39,8 @@ public class AudioManager : MonoBehaviour
     [Header("---Audio clip System---")]
     public AudioClip background;
     public AudioClip BossBackground;
+    public AudioClip VlilageBackGround;
+    public AudioClip EndSceneBackGround;
     public AudioClip button;
     public AudioClip AroundItem;
     public AudioClip AcquireItem;
@@ -80,7 +82,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip MonsterDamaged;
 
     // Start에서 배경 음악을 재생합니다.
-    private void Start()
+    private void Awake()
     {
         StartBGM(background);
     }

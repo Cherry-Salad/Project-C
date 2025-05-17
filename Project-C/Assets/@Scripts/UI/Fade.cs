@@ -75,4 +75,9 @@ public class Fade : MonoBehaviour
         Panel.color = c;
         Panel.gameObject.SetActive(false);
     }
+
+    public void OnBlackScreen(bool isBlack)
+    {
+        Panel.gameObject.SetActive(isBlack);
+    }
 }

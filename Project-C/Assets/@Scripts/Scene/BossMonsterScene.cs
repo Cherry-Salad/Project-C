@@ -84,6 +84,7 @@ public class BossMonsterScene : BaseScene
             if (!_isFight && _bossMonster.activeSelf == true && player.transform.position.x >= _FIGHT_POS_X)
             {
                 OnBossFight();
+                AudioManager.Instance.StartBGM(AudioManager.Instance.BossBackground);
             }
         }
 

@@ -41,6 +41,8 @@ public class VillageScene : BaseScene
             }
         });
 
+
+        AudioManager.Instance.StartBGM(AudioManager.Instance.VlilageBackGround);
         #endregion
 
         return true;
