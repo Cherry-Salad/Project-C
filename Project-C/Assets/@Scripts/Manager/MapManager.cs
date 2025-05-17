@@ -157,7 +157,7 @@ public class MapManager
 
         if (data == null)
         {
-            Debug.Log("아직 이 맵에 대한 저장된 정보가 없다.");
+            Debug.Log("아직 이 맵의 SpawnObjects에 대한 저장된 정보가 없다.");
             return false;
         }
 
