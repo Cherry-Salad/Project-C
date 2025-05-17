@@ -669,7 +669,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59e1faacb4323794e9d81c0bcbd608c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OptionPanel: {fileID: 6749676678522271458, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
+  OptionPanel: {fileID: 0}
 --- !u!1 &4102231239192836935
 GameObject:
   m_ObjectHideFlags: 0

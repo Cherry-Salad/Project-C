@@ -49,8 +49,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BGMSource: {fileID: 4017867509475747361}
   SFXSource: {fileID: 7435420309116417901}
-  sfxMixerGroup: {fileID: -1385400300797300298, guid: aa142cb5d382b2542957f08a6bac16b0, type: 2}
-  sfx3DPrefab: {fileID: 4054569168502126416, guid: 449559a35f267e34b96cea1cd7a6fd4f, type: 3}
   background: {fileID: 8300000, guid: 8b5dbcf3d28694a44b9277cb42a229cb, type: 3}
   BossBackground: {fileID: 8300000, guid: 0c7c5942e4690724b824741c7d8c45e0, type: 3}
   button: {fileID: 8300000, guid: 6362368c7c8e57e4a822420b68cd44b7, type: 3}

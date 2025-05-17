@@ -4965,7 +4965,27 @@ PrefabInstance:
     - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
       objectReference: {fileID: 7945651430760043633}
+    - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseOption
+      objectReference: {fileID: 0}
+    - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ClosePanel
+      objectReference: {fileID: 0}
+    - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MainUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: DUIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 1247370638027272537, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -5628,7 +5648,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6749676678522271458, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6775795351055640101, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
