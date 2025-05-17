@@ -86,10 +86,10 @@ public class DUIManager : MonoBehaviour
         }
     }
 
-    public void ReturnToTitle() //수정 필요 - 씬 전환 후 제대로 동작이 안됨
+    public void ReturnToTitle() //수정 필요 - 씬 전환 후 MainPanel의 OptionPanel의 오브젝트가 사라짐
     {
         Managers.Scene.LoadScene(EScene.MainScene);
-        //optionPanel.SetActive(false);
+        optionPanel.SetActive(false);
     }
 
     public void QuitGame()
@@ -104,6 +104,16 @@ public class DUIManager : MonoBehaviour
         if (playerComp == null)
             return;
 
-        Managers.Map.RespawnAtCheckpoint(playerComp.gameObject);
+        Managers.Game.Save();   // 데이터 저장
+
+        if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
+        {
+            Debug.LogError("와 파피루스");
+            return;
+        }
+
+        Managers.Scene.LoadScene(Managers.Game.GameData.CurrentSavePoint.SceneType);
+        optionPanel.SetActive(false);
+        Time.timeScale = 1f;
     }
 }

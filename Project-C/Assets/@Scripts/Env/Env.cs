@@ -6,7 +6,6 @@ public class Env : BaseObject
 {
     public Data.EnvData Data;
     public float Hp { get; set; }
-    private GameObject _loopSfxGO;
 
 
     public override bool Init()
@@ -15,14 +14,6 @@ public class Env : BaseObject
             return false;
 
         ObjectType = Define.EObjectType.Env;
-
-        // 등장하자마자 3D 루프 사운드 시작
-        var src = AudioManager.Instance.Play3DSFXAt(
-            AudioManager.Instance.AroundItem,
-            transform.position
-        );
-        src.loop = true;
-        _loopSfxGO = src.gameObject;
 
         return true;
     }
@@ -78,37 +69,7 @@ public class Env : BaseObject
     public virtual void OnPickedUp() 
     {
         // For 최혁도 선배, TODO: 아이템 획득하는 효과음 재생
-        // 루프 중인 3D 사운드가 있으면 중지
-        if (_loopSfxGO != null)
-        {
-            Destroy(_loopSfxGO);
-            _loopSfxGO = null;
-        }
-
         AudioManager.Instance.PlaySFX(AudioManager.Instance.AcquireItem); // 획득 효과음
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player") && _loopSfxGO == null)
-        {
-            // AroundItem 을 루프 모드로 3D 재생
-            var src = AudioManager.Instance.Play3DSFXAt(
-                AudioManager.Instance.AroundItem,
-                transform.position
-            );
-            src.loop = true;
-            _loopSfxGO = src.gameObject;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player") && _loopSfxGO != null)
-        {
-            Destroy(_loopSfxGO);
-            _loopSfxGO = null;
-        }
     }
 
     protected IEnumerator CoShake(float duration = 0.2f)

@@ -4,12 +4,18 @@ using UnityEngine;
 
 public class MaxHpUpItem : Env
 {
+    AudioSource _3DSFXSource;
+
     public override bool Init()
     {
         if (base.Init() == false)
             return false;
 
         ObjectType = Define.EObjectType.Env;
+
+        _3DSFXSource = GetComponent<AudioSource>();
+        _3DSFXSource.loop = true;
+
         return true;
     }
 
@@ -17,6 +23,9 @@ public class MaxHpUpItem : Env
 
     public override void OnPickedUp()
     {
+        if (_3DSFXSource.isPlaying)
+            _3DSFXSource.Stop();
+
         base.OnPickedUp();
         Managers.Game.Player.MaxHp++;
         Managers.Game.Player.Hp++;
@@ -31,4 +40,17 @@ public class MaxHpUpItem : Env
         Managers.Map.DespawnObject(this);
         Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && !_3DSFXSource.isPlaying)
+            _3DSFXSource.Play();
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player") && _3DSFXSource.isPlaying)
+            _3DSFXSource.Stop();
+    }
+
 }
