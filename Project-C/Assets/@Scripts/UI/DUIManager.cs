@@ -104,6 +104,15 @@ public class DUIManager : MonoBehaviour
         if (playerComp == null)
             return;
 
-        Managers.Map.RespawnAtCheckpoint(playerComp.gameObject);
+        Managers.Game.Save();   // 데이터 저장
+
+        if (Managers.Game.GameData.CurrentSavePoint.SceneType == EScene.None)
+        {
+            Debug.LogError("와 파피루스");
+            return;
+        }
+
+        Managers.Scene.LoadScene(Managers.Game.GameData.CurrentSavePoint.SceneType);
+
     }
 }
