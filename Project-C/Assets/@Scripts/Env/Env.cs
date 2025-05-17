@@ -72,7 +72,7 @@ public class Env : BaseObject
     {
         base.OnDied();
         Managers.Map.DespawnObject(this);
-        Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출 <- 이건 좀..
+        Managers.Resource.Destroy(gameObject);  
     }
 
     public virtual void OnPickedUp() 

@@ -10,6 +10,7 @@ public class Define
         MainScene,
         TutorialScene,
         BossMonsterScene,
+        VillageScene
     }
 
     public enum EObjectType

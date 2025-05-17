@@ -93,6 +93,14 @@ public class AudioManager : MonoBehaviour
         BGMSource.Play();
     }
 
+    public void BossBackGroundUpdateBGM()
+    {
+        if (BossBackground == null) return;
+        BGMSource.clip = BossBackground;
+        BGMSource.loop = true;
+        BGMSource.Play();
+    }
+
     // 배경 음악을 중지
     public void StopBGM()
     {
