@@ -57,6 +57,7 @@ public class MainUIManager : MonoBehaviour
     public void OpenOption()
     {
         OptionPanel.SetActive(true);
+        Debug.Log("눌림");
     }    
     
     public void CloseOption()

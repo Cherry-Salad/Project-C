@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -32,6 +33,8 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] AudioSource BGMSource;
     [SerializeField] AudioSource SFXSource;
+    [SerializeField] AudioMixerGroup sfxMixerGroup;
+    [SerializeField] GameObject sfx3DPrefab;
 
     [Header("---Audio clip System---")]
     public AudioClip background;
@@ -122,4 +125,15 @@ public class AudioManager : MonoBehaviour
 
     //사용 시
     //AudioManager.Instance.PlaySFX(AudioManager.Instance.원하는 AudioClip);
+
+    public AudioSource Play3DSFXAt(AudioClip clip, Vector3 position)
+    {
+        var go = Instantiate(sfx3DPrefab, position, Quaternion.identity);
+        var src = go.GetComponent<AudioSource>();
+        src.outputAudioMixerGroup = sfxMixerGroup;
+        src.clip = clip;
+        src.Play();
+        if (!src.loop) Destroy(go, clip.length);
+        return src;
+    }
 }

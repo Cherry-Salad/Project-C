@@ -89,7 +89,7 @@ public class DUIManager : MonoBehaviour
     public void ReturnToTitle() //수정 필요 - 씬 전환 후 제대로 동작이 안됨
     {
         Managers.Scene.LoadScene(EScene.MainScene);
-        activePanel.SetActive(false);
+        //optionPanel.SetActive(false);
     }
 
     public void QuitGame()
