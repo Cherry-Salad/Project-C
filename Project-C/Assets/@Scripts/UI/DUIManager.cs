@@ -84,6 +84,7 @@ public class DUIManager : MonoBehaviour
             activePanel.SetActive(false);
             activePanel = null;
         }
+            Time.timeScale = 1f;
     }
 
     public void ReturnToTitle() //수정 필요 - 씬 전환 후 MainPanel의 OptionPanel의 오브젝트가 사라짐

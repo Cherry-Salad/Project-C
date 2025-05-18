@@ -40,16 +40,16 @@ public class MaxMpUpItem : Env
         Managers.Resource.Destroy(gameObject);  // For 최혁도, TODO: 부숴지는 연출
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected override void OnPlayerEnter(Collider2D other)
     {
-        if (other.CompareTag("Player") && !_3DSFXSource.isPlaying)
+        if (!_3DSFXSource.isPlaying)
             _3DSFXSource.Play();
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    protected override void OnPlayerExit(Collider2D other)
     {
-        if (other.CompareTag("Player") && _3DSFXSource.isPlaying)
+        // 플레이어가 범위 밖으로 나갔을 때 사운드 정지
+        if (_3DSFXSource.isPlaying)
             _3DSFXSource.Stop();
     }
-
 }

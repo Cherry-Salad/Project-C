@@ -57,12 +57,14 @@ public class MainUIManager : MonoBehaviour
     public void OpenOption()
     {
         OptionPanel.SetActive(true);
+        Time.timeScale = 0f;
         Debug.Log("눌림");
     }    
     
     public void CloseOption()
     {
         OptionPanel.SetActive(false);
+        Time.timeScale = 1f;
     }
 
     public void QuitGame()

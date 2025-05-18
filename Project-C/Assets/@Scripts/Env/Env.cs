@@ -6,6 +6,7 @@ public class Env : BaseObject
 {
     public Data.EnvData Data;
     public float Hp { get; set; }
+    public GameObject SpaceMark;
 
 
     public override bool Init()
@@ -90,5 +91,61 @@ public class Env : BaseObject
 
         if (Hp <= 0)
             OnDied();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (SpaceMark != null)
+            {
+                SpaceMark.SetActive(true);
+                StartCoroutine(PressKeyDisplay());
+            }
+        }
+        OnPlayerEnter(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            if (SpaceMark != null) SpaceMark.SetActive(false);
+        }
+        OnPlayerExit(collision);
+    }
+
+    protected virtual void OnPlayerEnter(Collider2D other){ }
+    protected virtual void OnPlayerExit(Collider2D other) { }
+
+
+    private IEnumerator PressKeyDisplay()
+    {
+        float currentY = SpaceMark.transform.position.y;
+        float initY = currentY;
+        float dir = 1f;               // 1 == 위로, -1 == 아래로
+        float distance = 0.1f;        // 위아래로 움직일 거리
+        float speed = 1f;             // 이동 속도
+
+        while (true)
+        {
+            currentY += dir * speed * Time.deltaTime;
+
+            if (currentY >= initY + distance)
+            {
+                currentY = initY + distance;
+                dir = -1f;
+            }
+            else if (currentY <= initY - distance)
+            {
+                currentY = initY - distance;
+                dir = 1f;
+            }
+
+            Vector3 pos = SpaceMark.transform.position;
+            SpaceMark.transform.position = new Vector3(pos.x, currentY, pos.z);
+
+            yield return null; // 한 프레임 대기
+        }
     }
 }
