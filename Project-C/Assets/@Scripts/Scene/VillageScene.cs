@@ -32,11 +32,10 @@ public class VillageScene : BaseScene
                 }
 
                 Managers.Map.LoadMap("VillageMap");
-
+                
                 player = Managers.Resource.Instantiate("Player");
-                player.transform.position = _startPos;             
-
                 Managers.Game.Player = player.GetComponent<Player>();
+                
                 Managers.Camera.Load();
 
                 // 활성화된 세이브 포인트 업데이트 및 저장
@@ -45,6 +44,10 @@ public class VillageScene : BaseScene
                 {
                     Managers.Game.GameData.CurrentSavePoint.SceneType = sv.SceneType;
                     Managers.Game.GameData.CurrentSavePoint.Position = sv.transform.position;
+                    
+                    _startPos = sv.transform.position;
+                    player.transform.position = _startPos;
+
                     Managers.Game.Save();
                 }
             }
