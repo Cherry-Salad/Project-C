@@ -5040,18 +5040,18 @@ PrefabInstance:
     - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1835053055329052266, guid: 0eb23ddb66962f342ac4006bfb035f3e, type: 3}
     - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 7945651430760043633}
     - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: CloseOption
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: ClosePanel
+      value: CloseActivePanel
       objectReference: {fileID: 0}
     - target: {fileID: 590991196712944632, guid: 2ab153c1266d6d74295c7d7719abe415, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
