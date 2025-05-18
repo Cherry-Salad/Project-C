@@ -88,9 +88,15 @@ public class DUIManager : MonoBehaviour
 
     public void ReturnToTitle() //수정 필요 - 씬 전환 후 MainPanel의 OptionPanel의 오브젝트가 사라짐
     {
-        Managers.Scene.LoadScene(EScene.MainScene); //to 정민 : 이렇게 하면 안돼?
+        if (SceneManager.GetActiveScene().name == EScene.MainScene.ToString())
+            return;
+
+        Managers.Game.Save();
+        Managers.Scene.LoadScene(EScene.MainScene);
+
         optionPanel.SetActive(false);
     }
+
 
     public void QuitGame()
     {

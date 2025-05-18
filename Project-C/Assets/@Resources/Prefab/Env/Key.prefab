@@ -161,4 +161,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 333dbaf6700a65448b22429c927281af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpaceMark: {fileID: 5958549061941351214, guid: 100aacb72106b744986ac64cc6180c15, type: 3}
   LockObjectName: LockChain

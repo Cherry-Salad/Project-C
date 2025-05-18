@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd4554963a2d9e45ada50564f875950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SpaceMark: {fileID: 5958549061941351214, guid: 100aacb72106b744986ac64cc6180c15, type: 3}
 --- !u!70 &-8119587795299211423
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
