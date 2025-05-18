@@ -95,23 +95,25 @@ public class Env : BaseObject
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (!collision.CompareTag("Player"))
+            return;
+
+        if (SpaceMark != null)
         {
-            if (SpaceMark != null)
-            {
-                SpaceMark.SetActive(true);
-                StartCoroutine(PressKeyDisplay());
-            }
+            SpaceMark.SetActive(true);
+            StartCoroutine(PressKeyDisplay());
         }
+
         OnPlayerEnter(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
-        {
-            if (SpaceMark != null) SpaceMark.SetActive(false);
-        }
+        if (!collision.CompareTag("Player"))
+            return;
+
+        if (SpaceMark != null) SpaceMark.SetActive(false);
+
         OnPlayerExit(collision);
     }
 

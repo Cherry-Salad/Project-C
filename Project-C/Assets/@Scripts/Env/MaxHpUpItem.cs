@@ -15,7 +15,7 @@ public class MaxHpUpItem : Env
 
         _3DSFXSource = GetComponent<AudioSource>();
         _3DSFXSource.loop = true;
-
+        _3DSFXSource.playOnAwake = false;
         return true;
     }
 
@@ -48,7 +48,6 @@ public class MaxHpUpItem : Env
 
     protected override void OnPlayerExit(Collider2D other)
     {
-        // 플레이어가 범위 밖으로 나갔을 때 사운드 정지
         if (_3DSFXSource.isPlaying)
             _3DSFXSource.Stop();
     }
