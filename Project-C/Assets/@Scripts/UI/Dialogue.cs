@@ -34,23 +34,27 @@ public class Dialogue : MonoBehaviour
 
     void LoadDialogueData()
     {
-        string filePath = Path.Combine(Application.dataPath, "@Resources/Data/", dialogueFileName + ".json");
+        //string filePath = Path.Combine(Application.dataPath, "@Resources/Data/", dialogueFileName + ".json");
 
-        if (File.Exists(filePath))
-        {
-            string json = File.ReadAllText(filePath);
-            dialogueData = JsonUtility.FromJson<DialogueData>(json);
-            //Debug.Log($"JSON 로드 성공: {dialogueData.npcName}");
-        }
-        else
-        {
-            Debug.LogError($"JSON 로드 실패: {filePath}");
-        }
+        //if (File.Exists(filePath))
+        //{
+        //    string json = File.ReadAllText(filePath);
+        //    dialogueData = JsonUtility.FromJson<DialogueData>(json);
+        //    //Debug.Log($"JSON 로드 성공: {dialogueData.npcName}");
+        //}
+        //else
+        //{
+        //    Debug.LogError($"JSON 로드 실패: {filePath}");
+        //}
+        var json = Managers.Resource.Load<TextAsset>("Dialogue_Redcap");
+        if (json == null)
+            Debug.LogWarning("와 샌즈");
+
+        dialogueData = JsonUtility.FromJson<DialogueData>(json.text);
     }
 
     void Update()
     {
-
         if (dialougeActivated == true && KeySetting.GetKeyDown(KeyInput.NEXT))
         {
             NPCCanvas.SetActive(true);

@@ -35,11 +35,23 @@ MonoBehaviour:
     m_SerializedLabels:
     - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2331405d195274f479c4ed71ce9805b4
+    m_Address: Dialogue_Redcap
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 931f3e17e01dfe24486e0edfbc373c0f
     m_Address: MonsterData
     m_ReadOnly: 0
     m_SerializedLabels:
     - MonsterDataSet
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b1b9e982af3a325438b4dd3ee3ae5c2c
+    m_Address: Dialogue_hunter
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - PreLoad
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bba8f77483c0a5e4da1716da57170771
     m_Address: PlayerData
