@@ -46,7 +46,10 @@ public class Dialogue : MonoBehaviour
         //{
         //    Debug.LogError($"JSON 로드 실패: {filePath}");
         //}
-        var json = Managers.Resource.Load<TextAsset>("Dialogue_Redcap");
+        
+        var json = Managers.Resource.Load<TextAsset>(dialogueFileName);
+        //if(dialogueData.npcName != "빨간모자") json = Managers.Resource.Load<TextAsset>("Dialogue_hunter");
+
         if (json == null)
             Debug.LogWarning("와 샌즈");
 
