@@ -7,15 +7,32 @@ using static Define;
 
 public class MainUIManager : MonoBehaviour
 {
-    public GameObject OptionPanel;
+    [SerializeField]private DUIManager _duiManager;
 
     bool _load = false;
+
+    private void Awake()
+    {
+        _duiManager = FindObjectOfType<DUIManager>();
+        if (_duiManager == null)
+        {
+            Debug.LogError("씬에 DUIManager가 없습니다! MainUIManager에서 OptionPanel을 찾을 수 없어요.");
+        }
+    }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            OptionPanel.gameObject.SetActive(!OptionPanel.gameObject.activeSelf);
+            if (_duiManager != null && _duiManager.OptionPanel != null)
+            {
+                bool currently = _duiManager.OptionPanel.activeSelf;
+                _duiManager.OptionPanel.SetActive(!currently);
+                if (!currently) // 이제 패널이 켜진 상태라면
+                    Time.timeScale = 0f;
+                else           // 이제 패널이 꺼진 상태라면
+                    Time.timeScale = 1f;
+            }
         }
     }
 
@@ -56,14 +73,13 @@ public class MainUIManager : MonoBehaviour
 
     public void OpenOption()
     {
-        OptionPanel.SetActive(true);
+        _duiManager.OptionPanel.SetActive(true);
         Time.timeScale = 0f;
-        Debug.Log("눌림");
     }    
     
     public void CloseOption()
     {
-        OptionPanel.SetActive(false);
+        _duiManager.OptionPanel.SetActive(false);
         Time.timeScale = 1f;
     }
 

@@ -7,7 +7,8 @@ using static Define;
 public class DUIManager : MonoBehaviour
 {
     [Header("Startup/UI")]
-    [SerializeField] private GameObject optionPanel;
+    [SerializeField] private GameObject _optionPanel;
+    public GameObject OptionPanel => _optionPanel;
     [SerializeField] private GameObject InventoryPanel;
     [SerializeField] private GameObject SkillPanel;
     [SerializeField] private GameObject MapPanel;
@@ -35,8 +36,8 @@ public class DUIManager : MonoBehaviour
         // ESC 누르면 옵션 패널 토글
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            TogglePanel(optionPanel);
-            Time.timeScale = activePanel == null ? 1f : 0f; //타임 스톱
+            TogglePanel(OptionPanel);
+            Time.timeScale = activePanel == null ? 1f : 0f;
             return;
         }
 
@@ -92,10 +93,15 @@ public class DUIManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == EScene.MainScene.ToString())
             return;
 
+        Time.timeScale = 1f;
+
+        if (OptionPanel != null && OptionPanel.activeSelf)
+            OptionPanel.SetActive(false);
+
         Managers.Game.Save();
         Managers.Scene.LoadScene(EScene.MainScene);
 
-        optionPanel.SetActive(false);
+        OptionPanel.SetActive(false);
     }
 
 
@@ -120,7 +126,7 @@ public class DUIManager : MonoBehaviour
         }
 
         Managers.Scene.LoadScene(Managers.Game.GameData.CurrentSavePoint.SceneType);
-        optionPanel.SetActive(false);
+        OptionPanel.SetActive(false);
         Time.timeScale = 1f;
     }
 }
