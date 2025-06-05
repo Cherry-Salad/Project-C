@@ -20,7 +20,7 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 122, // Z
+        "Key": 120, // X
         "KeyPressedTime": 0
       },
       "DisplayKR": { // 게임 UI 출력 관련 (한글)
@@ -48,7 +48,7 @@
       "Dynamics": {
         "Level": 0,
         "IsUnlock": true,
-        "Key": 120, // X
+        "Key": 100, // D
         "KeyPressedTime": 0.3
       },
       "DisplayKR": { // 게임 UI 출력 관련 (한글)

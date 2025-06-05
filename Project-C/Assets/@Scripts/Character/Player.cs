@@ -335,7 +335,7 @@ public class Player : Creature
 
     bool IsInteractionInput()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (KeySetting.GetKeyDown(KeyInput.NEXT))
         {
             // 세이브 포인트 활성화
             if (_inSavePointArea != null)
