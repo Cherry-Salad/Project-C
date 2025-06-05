@@ -70,7 +70,7 @@
       "NumberOfShots": 1,
       "DelayBetweenShots": 0,
       "InitialAngle": 0,
-      "DamageMultiplier": 1.5,
+      "DamageMultiplier": 2.0,
       "AttackRange": 0,
       "RetentionTime": 0,
       "Dynamics": {
@@ -98,7 +98,7 @@
       "NumberOfShots": 0,
       "DelayBetweenShots": 0,
       "InitialAngle": 0,
-      "DamageMultiplier": 2,
+      "DamageMultiplier": 3.0,
       "AttackRange": 0,
       "RetentionTime": 0,
       "Dynamics": {
