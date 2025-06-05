@@ -1,0 +1,19 @@
+{
+    "player": [
+      {
+        "DataID": 100001,
+        "Name": "Adventurer",
+        "Hp": 3,
+        "MaxHp": 3,
+        "HpLevel": 0,
+        "Mp": 3,
+        "MaxMP": 3,
+        "MpLevel": 0,
+        "Atk": 10.0,
+        "AtkLevel": 0,
+        "Speed": 5.0,
+        "AccessorySlot": 3,
+        "SkillIdList": [ 200001, 200011, 200021, 200031 ]
+      }
+    ]
+  }

@@ -6,6 +6,22 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/@Scenes/MainScene.unity
+    guid: 5d1b7c183fb419d4e9cd8a9a33a9e232
+  - enabled: 1
+    path: Assets/@Scenes/TutorialScene.unity
+    guid: 41bff40ff0233f8478fb16f6cccbf0c5
+  - enabled: 0
     path: Assets/@Scenes/GameScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
-  m_configObjects: {}
+  - enabled: 1
+    path: Assets/@Scenes/BossMonsterScene.unity
+    guid: 5b05ce9e7c6e68a468b1e5081ff5ea2e
+  - enabled: 1
+    path: Assets/@Scenes/VillageScene.unity
+    guid: 3fd8978ce9c10994989cecf834130e7d
+  - enabled: 1
+    path: Assets/@Scenes/EndingScene.unity
+    guid: 328a8c86b61ee6042be04964df21476e
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 50f99a9666fcfb84bad59d2af8e069bd, type: 2}

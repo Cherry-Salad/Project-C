@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - EnemyHitBox
+  - Audio
+  - Checkpoint
+  - Trap
+  - CameraBoundary
+  - Monster
+  - NPC
   layers:
   - Default
   - TransparentFX
@@ -11,16 +18,16 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Wall
+  - Ground
+  - Monster
+  - HitBox
+  - Player
+  - Projectile
+  - Trap
+  - Cherry
+  - NPC
+  - Env
   - 
   - 
   - 
