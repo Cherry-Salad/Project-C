@@ -10,9 +10,13 @@
 
 > 아래의 사진을 클릭하면 프로젝트 관리 페이지(Notion)로 이동합니다.
 
+
+
 <a href="https://mmmin.notion.site/1133446ccaf4803da6bdd3df87f2414a?pvs=74">
   <img src="https://github.com/user-attachments/assets/c1ce0bd2-474b-4537-8a43-68865f441ea0" alt="로고(수정)_체리 샐러드" width="30%">
 </a>
+
+- 💾 빌드 파일(.zip) 다운로드 제공 *(※ Windows 환경에서만 실행 가능)*
 
 ---
 
