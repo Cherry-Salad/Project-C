@@ -10,8 +10,6 @@
 
 > 아래의 사진을 클릭하면 프로젝트 관리 페이지(Notion)로 이동합니다.
 
-
-
 <a href="https://mmmin.notion.site/1133446ccaf4803da6bdd3df87f2414a?pvs=74">
   <img src="https://github.com/user-attachments/assets/c1ce0bd2-474b-4537-8a43-68865f441ea0" alt="로고(수정)_체리 샐러드" width="30%">
 </a>
@@ -20,18 +18,21 @@
 
 ---
 
-![001](https://github.com/user-attachments/assets/440fe3a3-7cb9-4d40-b1cc-d7f884f49e2e)
-![002](https://github.com/user-attachments/assets/ed70f456-ad69-483d-8be0-edbf5a78fdaf)
-![003](https://github.com/user-attachments/assets/78e87996-885f-4b57-9670-7c32e1ae3137)
-![004](https://github.com/user-attachments/assets/635865fa-2b3e-4584-adb2-6b6a59a7b018)
-![005](https://github.com/user-attachments/assets/289c674f-14d5-42b2-bd20-6620f7551822)
-![006](https://github.com/user-attachments/assets/62fabd6a-6095-470e-a4a7-2d7d9e3ea8d2)
-![007](https://github.com/user-attachments/assets/03b3cb74-d4b9-4e9d-9d72-0cde88356018)
-![008](https://github.com/user-attachments/assets/27ce0058-474c-4893-b81a-be40c58dbdc7)
-![009](https://github.com/user-attachments/assets/a2a5d054-8d6a-4ebd-a6aa-35e2e39b1835)
-![010](https://github.com/user-attachments/assets/1e4c43b4-2966-42ac-b373-3705fd87ea17)
-![011](https://github.com/user-attachments/assets/f43bf8cd-846d-4e65-b988-12b5988853e3)
-![012](https://github.com/user-attachments/assets/8d822d53-8704-497e-867f-02dfa266894b)
-![013](https://github.com/user-attachments/assets/55438741-cbc5-4aae-98e1-d3879a4102bb)
-[![014](https://github.com/user-attachments/assets/ca67e970-bbc5-41f1-bf69-f9a01f4cdf76)](https://youtu.be/f-qWu4S69pc?si=A0thLjgc_3LTxMYH)
-![015](https://github.com/user-attachments/assets/6bbed707-e39f-44f3-ac8f-98c63e20e4b2)
+<img width="1920" height="1080" alt="001" src="https://github.com/user-attachments/assets/402c494a-245b-42ad-9d81-172b2b358467" />
+<img width="1920" height="1080" alt="002" src="https://github.com/user-attachments/assets/25cda1b7-5811-46a4-aef3-0299dbe0c9d6" />
+<img width="1920" height="1080" alt="003" src="https://github.com/user-attachments/assets/2d869a42-c1f5-4766-b445-fc7bd2e54b03" />
+<img width="1920" height="1080" alt="004" src="https://github.com/user-attachments/assets/c6504e0a-8da9-47ef-b64a-b96f4976ab35" />
+<img width="1920" height="1080" alt="005" src="https://github.com/user-attachments/assets/731740b9-e3f3-42a3-85e5-102b560a4dd1" />
+<img width="1920" height="1080" alt="006" src="https://github.com/user-attachments/assets/02fc1496-99cb-4768-a63f-e469718fdd0a" />
+<img width="1920" height="1080" alt="007" src="https://github.com/user-attachments/assets/d3eb83cd-3967-4ffa-974c-fe69c5a7cc33" />
+<img width="1920" height="1080" alt="008" src="https://github.com/user-attachments/assets/9df4335f-46a3-4fbb-b0b6-95e8dfa34d73" />
+<img width="1920" height="1080" alt="009" src="https://github.com/user-attachments/assets/55a72c56-43cd-44b8-9f00-48f1608e7032" />
+<img width="1920" height="1080" alt="010" src="https://github.com/user-attachments/assets/82167efd-c879-4c72-a07d-18b4cb20d603" />
+<img width="1920" height="1080" alt="011" src="https://github.com/user-attachments/assets/c95740f5-c167-439e-90b0-ebe469190ee0" />
+<img width="1920" height="1080" alt="012" src="https://github.com/user-attachments/assets/3e3152b5-8040-4441-8fad-c415ca3160ff" />
+<img width="1920" height="1080" alt="013" src="https://github.com/user-attachments/assets/481131a8-099b-4cdd-925d-09776fb393b3" />
+<img width="1920" height="1080" alt="014" src="https://github.com/user-attachments/assets/79c7f958-b6a4-47e3-bd23-b3eb0ec54cb4" />
+<img width="1920" height="1080" alt="015" src="https://github.com/user-attachments/assets/546c1be0-74b0-4608-822c-615a05639fde" />
+<a href="https://youtu.be/f-qWu4S69pc?si=A0thLjgc_3LTxMYH"><img width="1920" height="1080" alt="016" src="https://github.com/user-attachments/assets/22a2a758-d7a7-4e04-8639-7d22ff97e389" /></a>
+<a href="https://mmmin.notion.site/1133446ccaf4803da6bdd3df87f2414a?pvs=74"><img width="1920" height="1080" alt="017" src="https://github.com/user-attachments/assets/0c0b0da8-53af-435d-b65d-dfad45fd3013" /></a>
+<img width="1920" height="1080" alt="018" src="https://github.com/user-attachments/assets/955576ff-c6bd-4fd5-9b2d-4b06fb53f047" />
