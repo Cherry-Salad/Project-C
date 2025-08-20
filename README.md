@@ -14,8 +14,6 @@
   <img src="https://github.com/user-attachments/assets/c1ce0bd2-474b-4537-8a43-68865f441ea0" alt="로고(수정)_체리 샐러드" width="30%">
 </a>
 
-- 💾 빌드 파일(.zip) 다운로드 제공 *(※ Windows 환경에서만 실행 가능)*
-
 ---
 
 <img width="1920" height="1080" alt="001" src="https://github.com/user-attachments/assets/402c494a-245b-42ad-9d81-172b2b358467" />
